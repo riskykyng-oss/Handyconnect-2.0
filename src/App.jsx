@@ -9,7 +9,7 @@ import HandymanLayout from '@/app/layouts/HandymanLayout';
 import AdminLayout from '@/app/layouts/AdminLayout';
 import ProtectedRoute from '@/app/router/ProtectedRoute';
 import RoleLayout from '@/app/router/RoleLayout';
-import Spinner from '@/components/ui/Spinner';
+import { PageSkeleton } from '@/components/ui/Skeleton';
 
 // Landing Page stays eager so first paint is instant
 import LandingPage from '@/features/landing/pages/LandingPage';
@@ -54,11 +54,7 @@ const AdminVerificationPage = lazy(() => import('@/features/admin/pages/AdminVer
 const AdminPayoutsPage = lazy(() => import('@/features/admin/pages/AdminPayoutsPage'));
 
 function PageFallback() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Spinner size="lg" label="Loading page" />
-    </div>
-  );
+  return <PageSkeleton />;
 }
 
 function App() {
