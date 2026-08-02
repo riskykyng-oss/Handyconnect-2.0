@@ -28,13 +28,25 @@ const QUICK_ACTIONS = [
   { label: 'Messages', icon: MessageCircle, to: '/handyman/messages' },
 ];
 
-const StatCard = ({ icon: Icon, label, value }) => (
-  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
-      <Icon size={18} />
-    </span>
+const StatCard = ({ icon: Icon, label, value, sub, delta }) => (
+  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
+    <div className="flex items-start justify-between">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+        <Icon size={18} />
+      </span>
+      {delta != null && delta !== 0 && (
+        <span
+          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+            delta > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
+          }`}
+        >
+          {delta > 0 ? '↑' : '↓'} {Math.abs(delta)}%
+        </span>
+      )}
+    </div>
     <p className="mt-3 font-display text-2xl font-extrabold text-gray-900">{value}</p>
-    <p className="mt-0.5 text-xs text-gray-500">{label}</p>
+    <p className="mt-0.5 text-xs font-bold text-gray-700">{label}</p>
+    {sub && <p className="mt-0.5 text-[11px] text-gray-400">{sub}</p>}
   </div>
 );
 
@@ -52,6 +64,7 @@ export default function MyJobsPage() {
   const [search, setSearch] = useState('');
   const [wallet, setWallet] = useState({ balance: 0 });
   const [rating, setRating] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);
   const [earnings, setEarnings] = useState({ today: 0, week: 0, month: 0, yesterday: 0 });
   const [weekly, setWeekly] = useState(WEEKDAY_LABELS.map((label) => ({ label, value: 0 })));
   const [confirmAction, setConfirmAction] = useState(null);
@@ -82,7 +95,10 @@ export default function MyJobsPage() {
     if (!currentUser) return undefined;
     const unsub = subscribeToWallet(currentUser.uid, setWallet);
     getUserProfile(currentUser.uid)
-      .then((p) => setRating(p?.rating ?? null))
+      .then((p) => {
+        setRating(p?.rating ?? null);
+        setMyLocation(p?.location || null);
+      })
       .catch(() => {});
     getTransactions(currentUser.uid)
       .then((txns) => {
@@ -197,7 +213,7 @@ export default function MyJobsPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-24 pt-5 lg:pb-10">
+    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-24 pt-5 lg:pb-10">
       {/* Greeting */}
       <div>
         <h1 className="font-display text-2xl font-extrabold tracking-tight text-gray-900">
@@ -219,29 +235,21 @@ export default function MyJobsPage() {
         </>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard icon={Briefcase} label="Active Jobs" value={activeCount} />
-            <StatCard icon={DollarSign} label="Earnings" value={`$${Number(wallet.balance || 0).toFixed(0)}`} />
-            <StatCard icon={Clock} label="Awaiting Payment" value={awaitingCount} />
-            <StatCard icon={Star} label="Rating" value={rating ? Number(rating).toFixed(1) : '—'} />
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard icon={Briefcase} label="Active Jobs" value={activeCount} sub="Currently in progress" />
+            <StatCard icon={DollarSign} label="Today's Earnings" value={`$${earnings.today.toFixed(0)}`} delta={todayDelta} sub="vs yesterday" />
+            <StatCard icon={Clock} label="Awaiting Payment" value={awaitingCount} sub="Ready to collect" />
+            <StatCard icon={Star} label="Rating" value={rating ? Number(rating).toFixed(1) : '—'} sub="Client feedback" />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* Today's earnings + weekly chart */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div className="grid gap-5 sm:grid-cols-2">
+            {/* Weekly earnings + chart */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-gray-500">Today's Earnings</p>
-                {earnings.today > 0 && (
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      todayDelta >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
-                    }`}
-                  >
-                    {todayDelta >= 0 ? '↗' : '↘'} {Math.abs(todayDelta)}%
-                  </span>
-                )}
+                <p className="text-xs font-medium text-gray-500">This Week</p>
+                <span className="text-[10px] font-semibold text-gray-400">Daily totals</span>
               </div>
-              <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${earnings.today.toFixed(2)}</p>
+              <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${earnings.week.toFixed(2)}</p>
               <div className="mt-5 flex items-end gap-1.5">
                 {weekly.map((d) => {
                   const h = d.value > 0 ? Math.max(8, Math.round((d.value / maxDay) * 48)) : 4;
@@ -256,7 +264,7 @@ export default function MyJobsPage() {
             </div>
 
             {/* Available balance */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
               <p className="text-xs font-medium text-gray-500">Available Balance</p>
               <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${Number(wallet.balance || 0).toFixed(2)}</p>
               <button
@@ -321,7 +329,7 @@ export default function MyJobsPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by job, description or client..."
+              placeholder="Search jobs, clients or locations..."
               className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
             />
             {search && (
@@ -335,15 +343,15 @@ export default function MyJobsPage() {
         {/* Content */}
         <div className="mt-4">
           {loading ? (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
               <JobCardSkeleton /><JobCardSkeleton /><JobCardSkeleton />
             </div>
           ) : jobs.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
               <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-semibold text-gray-500">No jobs yet</p>
+              <p className="text-sm font-semibold text-gray-500">No active jobs</p>
               <p className="mt-1 text-xs text-gray-400">
-                Browse open requests near you, accept a job, and start earning. Everything you work on will show up here.
+                Browse nearby work and start earning. Everything you take on will show up here.
               </p>
               <Link
                 to="/handyman/jobs"
@@ -365,12 +373,13 @@ export default function MyJobsPage() {
               </button>
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
               {filtered.map((job) => (
                 <HandymanJobCard
                   key={job.id}
                   job={job}
                   client={clients[job.clientId] || null}
+                  userLocation={myLocation}
                   onStart={() => setConfirmAction({ job, type: 'start' })}
                   onComplete={() => setConfirmAction({ job, type: 'complete' })}
                   onRequestPayment={() => setPaymentJob(job)}

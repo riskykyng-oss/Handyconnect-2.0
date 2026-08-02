@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -15,9 +15,12 @@ import {
   Clock,
   CalendarClock,
   FileText,
+  Timer,
 } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import { STATUS_META, deriveJobStatus } from '@/features/handyman/constants/jobStatus';
+
+const PLATFORM_FEE_RATE = 0.1;
 
 const toDate = (value) => (value?.toDate ? value.toDate() : value instanceof Date ? value : value ? new Date(value) : null);
 
@@ -46,16 +49,59 @@ const milestoneIndex = (job) => {
   return 1;
 };
 
+const Stars = ({ rating }) => {
+  const rounded = Math.round(Number(rating) || 0);
+  return (
+    <span className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <Star key={i} size={12} className={i <= rounded ? 'fill-amber-400 text-amber-400' : 'text-gray-300'} />
+      ))}
+      <span className="ml-1 text-xs font-bold text-gray-800">{Number(rating).toFixed(1)}</span>
+    </span>
+  );
+};
+
+const Elapsed = ({ since }) => {
+  const start = toDate(since)?.getTime();
+  const [ms, setMs] = useState(0);
+  useEffect(() => {
+    if (!start) return undefined;
+    const tick = () => setMs(Date.now() - start);
+    tick();
+    const t = setInterval(tick, 30000);
+    return () => clearInterval(t);
+  }, [start]);
+  if (!start) return null;
+  const totalMin = Math.max(0, Math.floor(ms / 60000));
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return (
+    <>
+      {h}h {m}m
+    </>
+  );
+};
+
+const haversineKm = (a, b) => {
+  const toRad = (d) => (d * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  const km = R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
+};
+
 const ActionButton = ({ onClick, disabled, icon: Icon, label, tone = 'neutral', className }) => (
   <button
     onClick={onClick}
     disabled={disabled}
     className={clsx(
-      'flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50',
-      tone === 'primary' && 'bg-orange-500 text-white hover:bg-orange-600',
-      tone === 'success' && 'bg-emerald-500 text-white hover:bg-emerald-600',
-      tone === 'purple' && 'bg-purple-500 text-white hover:bg-purple-600',
-      tone === 'neutral' && 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50',
+      'flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50 min-h-11',
+      tone === 'primary' && 'bg-orange-500 text-white shadow-sm shadow-orange-500/20 hover:bg-orange-600',
+      tone === 'success' && 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-600',
+      tone === 'purple' && 'bg-purple-500 text-white shadow-sm shadow-purple-500/20 hover:bg-purple-600',
+      tone === 'ghost' && 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300',
       className
     )}
   >
@@ -63,7 +109,7 @@ const ActionButton = ({ onClick, disabled, icon: Icon, label, tone = 'neutral', 
   </button>
 );
 
-export default function HandymanJobCard({ job, client, onStart, onComplete, onRequestPayment, onUpdateProgress, onChat, onNavigate }) {
+export default function HandymanJobCard({ job, client, userLocation, onStart, onComplete, onRequestPayment, onUpdateProgress, onChat, onNavigate }) {
   const [expanded, setExpanded] = useState(false);
   const [progressValue, setProgressValue] = useState(Number(job.progress) || 0);
   const [savingProgress, setSavingProgress] = useState(false);
@@ -76,6 +122,16 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
   const startedAt = job?.startedAt || job?.timeline?.find((t) => t.type === 'progress')?.createdAt;
   const progress = Number(job.progress) || 0;
 
+  const budget = Number(job.budget) || 0;
+  const fee = Math.round(budget * PLATFORM_FEE_RATE * 100) / 100;
+  const net = Math.max(0, budget - fee);
+  const showNet = budget > 0;
+
+  const distance =
+    client?.location?.lat != null && userLocation?.lat != null
+      ? haversineKm({ lat: client.location.lat, lng: client.location.lng }, { lat: userLocation.lat, lng: userLocation.lng })
+      : null;
+
   const updateProgress = async (value) => {
     setSavingProgress(true);
     try {
@@ -86,8 +142,8 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-      {/* Header: client + status */}
+    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
+      {/* Header: client + status badge */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar src={client?.photoURL} name={clientName} size="md" />
@@ -96,64 +152,86 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
               <p className="truncate text-sm font-bold text-gray-900">{clientName}</p>
               {client?.verified && <BadgeCheck size={15} className="shrink-0 text-blue-500" />}
             </div>
-            <div className="mt-0.5 flex items-center gap-1 text-xs text-gray-500">
-              {rating ? (
-                <>
-                  <Star size={12} className="fill-amber-400 text-amber-400" />
-                  <span>{Number(rating).toFixed(1)}</span>
-                </>
-              ) : (
-                <span>New client</span>
-              )}
-              <span className="text-gray-300">•</span>
-              <span className="flex items-center gap-0.5"><MapPin size={10} /> {area}</span>
+            <div className="mt-1 flex items-center">
+              {rating ? <Stars rating={rating} /> : <span className="text-[11px] font-medium text-gray-400">New client</span>}
             </div>
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
+              <MapPin size={11} className="text-gray-400" />
+              {distance ? `${distance} away` : area}
+            </p>
           </div>
         </div>
-        <span className={clsx('flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1', meta.chip)}>
+        <span className={clsx('flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ring-1', meta.chip)}>
           <span className={clsx('h-1.5 w-1.5 rounded-full', meta.dot)} /> {meta.label}
         </span>
       </div>
 
-      {/* Title */}
-      <p className="mt-3 font-display text-base font-bold text-gray-900">{job.title || 'Untitled job'}</p>
+      <div className="my-4 border-t border-gray-100" />
 
-      {/* Meta chips */}
-      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-500">
-        <span className="font-semibold text-gray-700">{money(job.budget)}</span>
-        {job.createdAt && <span className="flex items-center gap-1"><CalendarClock size={12} /> Posted {timeAgo(job.createdAt)}</span>}
-        {startedAt && <span className="flex items-center gap-1"><Play size={12} /> Started {timeAgo(startedAt)}</span>}
+      {/* Trade + title + description */}
+      {job.category && (
+        <p className="text-[10px] font-extrabold uppercase tracking-widest text-orange-600">{job.category}</p>
+      )}
+      <h3 className="mt-1 font-display text-base font-extrabold text-gray-900">{job.title || 'Untitled job'}</h3>
+      {job.description && (
+        <p className={clsx('mt-1.5 text-xs leading-relaxed text-gray-500', !expanded && 'line-clamp-2')}>{job.description}</p>
+      )}
+
+      <div className="my-4 border-t border-gray-100" />
+
+      {/* Budget + posted / elapsed */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Budget</p>
+          <p className="mt-0.5 font-display text-lg font-extrabold text-gray-900">{money(job.budget)}</p>
+          {showNet && (
+            <p className="mt-0.5 text-[10px] text-gray-400">
+              You'll receive <span className="font-bold text-gray-600">{money(net)}</span>
+            </p>
+          )}
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{startedAt ? 'Started' : 'Posted'}</p>
+          <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-gray-700">
+            {startedAt ? <Timer size={12} className="text-orange-500" /> : <CalendarClock size={12} className="text-gray-400" />}
+            {startedAt ? <Elapsed since={startedAt} /> : timeAgo(job.createdAt)}
+          </p>
+          {startedAt && <p className="mt-0.5 text-[10px] text-gray-400">elapsed</p>}
+        </div>
       </div>
 
       {/* Progress bar */}
       {status === 'in_progress' && (
-        <div className="mt-3">
+        <div className="mt-4">
           <div className="flex items-center justify-between text-[11px] font-semibold text-gray-500">
             <span>Progress</span>
             <span>{progress}%</span>
           </div>
-          <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+          <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
             <div className="h-full rounded-full bg-orange-500 transition-all" style={{ width: `${Math.min(100, progress)}%` }} />
           </div>
         </div>
       )}
 
-      {/* Description */}
-      {job.description && (
-        <p className={clsx('mt-2.5 text-xs leading-relaxed text-gray-500', !expanded && 'line-clamp-2')}>{job.description}</p>
-      )}
+      <div className="mt-4 border-t border-gray-100" />
 
-      {/* Primary actions */}
+      {/* Actions */}
       <div className="mt-4 flex items-center gap-2">
-        {status === 'accepted' && <ActionButton tone="primary" icon={Play} label="Start Work" onClick={() => onStart(job)} className="flex-1" />}
-        {status === 'in_progress' && <ActionButton tone="success" icon={CheckCircle2} label="Complete Job" onClick={() => onComplete(job)} className="flex-1" />}
-        {status === 'awaiting_payment' && <ActionButton tone="purple" icon={CircleDollarSign} label="Request Payment" onClick={() => onRequestPayment(job)} className="flex-1" />}
-        <ActionButton icon={MessageCircle} label="Chat" onClick={() => onChat(job)} />
-        <ActionButton icon={Navigation} label="Navigate" onClick={() => onNavigate(job)} />
+        {status === 'accepted' && (
+          <ActionButton tone="primary" icon={Play} label="Start Work" onClick={() => onStart(job)} className="flex-1 px-5 py-3 text-sm" />
+        )}
+        {status === 'in_progress' && (
+          <ActionButton tone="success" icon={CheckCircle2} label="Complete Job" onClick={() => onComplete(job)} className="flex-1 px-5 py-3 text-sm" />
+        )}
+        {status === 'awaiting_payment' && (
+          <ActionButton tone="purple" icon={CircleDollarSign} label="Request Payment" onClick={() => onRequestPayment(job)} className="flex-1 px-5 py-3 text-sm" />
+        )}
+        <ActionButton tone="ghost" icon={MessageCircle} label="Chat" onClick={() => onChat(job)} />
+        <ActionButton tone="ghost" icon={Navigation} label="Navigate" onClick={() => onNavigate(job)} />
         <button
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
+          className="flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
         >
           <ChevronDown size={16} className={clsx('transition-transform', expanded && 'rotate-180')} />
         </button>
@@ -189,6 +267,27 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
               })}
             </div>
           </div>
+
+          {/* Earnings breakdown */}
+          {showNet && (
+            <div className="rounded-xl bg-gray-50 p-3">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400">Estimated earnings</p>
+              <div className="mt-2 space-y-1.5 text-xs">
+                <div className="flex items-center justify-between text-gray-600">
+                  <span>Job budget</span>
+                  <span className="font-semibold text-gray-900">{money(budget)}</span>
+                </div>
+                <div className="flex items-center justify-between text-gray-500">
+                  <span>Platform fee (10%)</span>
+                  <span className="font-semibold text-red-500">−{money(fee)}</span>
+                </div>
+                <div className="flex items-center justify-between border-t border-gray-200 pt-1.5">
+                  <span className="font-bold text-gray-700">You'll receive</span>
+                  <span className="font-extrabold text-emerald-600">{money(net)}</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Timeline events */}
           {job.timeline?.length > 0 && (
