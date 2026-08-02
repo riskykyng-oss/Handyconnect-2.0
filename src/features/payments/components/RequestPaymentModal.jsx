@@ -174,7 +174,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
             <button
               onClick={handleCreate}
               disabled={!amount || creating}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
+              className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
             >
               {creating ? <Loader2 size={15} className="animate-spin" /> : <QrCode size={15} />}
               {creating ? 'Generating...' : 'Generate QR & code'}
@@ -206,7 +206,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
               </p>
               <button
                 onClick={copyCode}
-                className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-100"
+                className="mt-2.5 inline-flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-100"
               >
                 {copied ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                 {copied ? 'Copied' : 'Copy code'}
@@ -219,7 +219,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
             </div>
             <button
               onClick={handleClose}
-              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl bg-red-50 px-4 py-2.5 text-xs font-bold text-red-500 transition-colors hover:bg-red-100"
+              className="mt-3 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-red-50 px-4 text-xs font-bold text-red-500 transition-colors hover:bg-red-100"
             >
               <Ban size={13} /> Cancel request
             </button>
@@ -233,7 +233,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
             <p className="mt-1.5 text-sm text-gray-500">
               <span className="font-bold text-gray-900">${Number(payment?.amount || 0).toFixed(2)}</span> added to your wallet for "{linkedJob?.title || note || 'Custom payment'}".
             </p>
-            <button onClick={handleClose} className="mt-6 rounded-xl bg-orange-500 px-8 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+            <button onClick={handleClose} className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-orange-500 px-8 text-sm font-bold text-white transition-colors hover:bg-orange-600">
               Done
             </button>
           </div>

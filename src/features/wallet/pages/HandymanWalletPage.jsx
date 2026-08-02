@@ -278,7 +278,7 @@ export default function HandymanWalletPage() {
             <button
               onClick={() => setWithdrawOpen(true)}
               disabled={balance < MIN_WITHDRAWAL}
-              className="flex items-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+              className="flex h-11 items-center gap-1.5 rounded-xl bg-orange-500 px-4 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
             >
               <Landmark size={15} /> Withdraw
             </button>
@@ -288,7 +288,7 @@ export default function HandymanWalletPage() {
                 <button
                   key={m}
                   onClick={() => setWithdrawOpen(true)}
-                  className="rounded-xl border border-gray-200 px-2 py-3 text-xs font-bold text-gray-600 transition-colors hover:border-orange-200 hover:text-orange-600"
+                  className="flex h-11 items-center justify-center rounded-xl border border-gray-200 px-2 text-xs font-bold text-gray-600 transition-colors hover:border-orange-200 hover:text-orange-600"
                 >
                   {m}
                 </button>

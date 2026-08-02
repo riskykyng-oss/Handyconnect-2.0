@@ -290,7 +290,7 @@ export default function MyJobsPage() {
               <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${Number(wallet.balance || 0).toFixed(2)}</p>
               <button
                 onClick={() => navigate('/handyman/wallet')}
-                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
+                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
               >
                 <ArrowDownToLine size={14} /> Withdraw
               </button>
@@ -376,7 +376,7 @@ export default function MyJobsPage() {
               </p>
               <Link
                 to="/handyman/jobs"
-                className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
+                className="mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
               >
                 <Briefcase size={14} /> Find Work
               </Link>
@@ -388,7 +388,7 @@ export default function MyJobsPage() {
               <p className="mt-1 text-xs text-gray-400">Try a different filter or search term.</p>
               <button
                 onClick={() => { setFilter('all'); setSearch(''); }}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50"
+                className="mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50"
               >
                 <RotateCcw size={13} /> Reset filters
               </button>

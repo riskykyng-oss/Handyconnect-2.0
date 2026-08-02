@@ -97,7 +97,7 @@ const ActionButton = ({ onClick, disabled, icon: Icon, label, tone = 'neutral', 
     onClick={onClick}
     disabled={disabled}
     className={clsx(
-      'flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50 min-h-11',
+      'flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl px-4 text-xs font-bold transition-colors disabled:opacity-50',
       tone === 'primary' && 'bg-orange-500 text-white shadow-sm shadow-orange-500/20 hover:bg-orange-600',
       tone === 'success' && 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-600',
       tone === 'purple' && 'bg-purple-500 text-white shadow-sm shadow-purple-500/20 hover:bg-purple-600',
@@ -216,22 +216,22 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
       <div className="mt-4 border-t border-gray-100" />
 
       {/* Actions */}
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-4 flex items-stretch gap-2">
         {status === 'accepted' && (
-          <ActionButton tone="primary" icon={Play} label="Start Work" onClick={() => onStart(job)} className="flex-1 px-5 py-3 text-sm" />
+          <ActionButton tone="primary" icon={Play} label="Start Work" onClick={() => onStart(job)} className="flex-1" />
         )}
         {status === 'in_progress' && (
-          <ActionButton tone="success" icon={CheckCircle2} label="Complete Job" onClick={() => onComplete(job)} className="flex-1 px-5 py-3 text-sm" />
+          <ActionButton tone="success" icon={CheckCircle2} label="Complete Job" onClick={() => onComplete(job)} className="flex-1" />
         )}
         {status === 'awaiting_payment' && (
-          <ActionButton tone="purple" icon={CircleDollarSign} label="Request Payment" onClick={() => onRequestPayment(job)} className="flex-1 px-5 py-3 text-sm" />
+          <ActionButton tone="purple" icon={CircleDollarSign} label="Request Payment" onClick={() => onRequestPayment(job)} className="flex-1" />
         )}
         <ActionButton tone="ghost" icon={MessageCircle} label="Chat" onClick={() => onChat(job)} />
         <ActionButton tone="ghost" icon={Navigation} label="Navigate" onClick={() => onNavigate(job)} />
         <button
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
         >
           <ChevronDown size={16} className={clsx('transition-transform', expanded && 'rotate-180')} />
         </button>
@@ -314,7 +314,7 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
             <FileText size={14} className="text-gray-400" />
             <span className="text-xs text-gray-600">{area}</span>
             {client?.phone && (
-              <a href={`tel:${client.phone}`} className="ml-auto flex min-h-11 items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50">
+              <a href={`tel:${client.phone}`} className="ml-auto flex h-11 items-center gap-1.5 rounded-xl bg-white px-3.5 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50">
                 <Phone size={12} className="text-emerald-500" /> {client.phone}
               </a>
             )}
@@ -337,13 +337,13 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
                 className="mt-2 w-full accent-orange-500"
               />
               <div className="mt-2 flex justify-end gap-2">
-                <button onClick={() => setProgressValue(progress)} className="rounded-lg px-3 py-2 text-xs font-semibold text-gray-500 hover:bg-gray-100 min-h-11">
+                <button onClick={() => setProgressValue(progress)} className="flex h-11 items-center justify-center rounded-xl border border-gray-200 bg-white px-4 text-xs font-semibold text-gray-500 shadow-sm transition-colors hover:bg-gray-100">
                   Reset
                 </button>
                 <button
                   onClick={() => updateProgress(progressValue)}
                   disabled={savingProgress || progressValue === progress}
-                  className="rounded-lg bg-orange-500 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50 min-h-11"
+                  className="flex h-11 items-center justify-center rounded-xl bg-orange-500 px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
                 >
                   {savingProgress ? 'Saving...' : 'Save'}
                 </button>
