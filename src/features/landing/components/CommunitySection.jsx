@@ -112,7 +112,7 @@ export default function CommunitySection() {
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {cards.map((post, i) => (
               <motion.div
                 key={post.id || i}

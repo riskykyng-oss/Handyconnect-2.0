@@ -72,7 +72,7 @@ export default function HandymanDashboardPage() {
 
       {/* Stats */}
       <div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: CircleDollarSign, label: 'Earnings', value: '$0', to: '/handyman/wallet' },
             { icon: Wrench, label: 'Active Jobs', value: String(jobs.length), to: '/handyman/my-jobs' },
@@ -245,7 +245,7 @@ export default function HandymanDashboardPage() {
       {/* Get Started */}
       <div>
         <SectionHeader title="Get Started" subtitle="Set up your profile to win more jobs" />
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {[
             { label: 'Verify ID', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
             { label: 'Add Photos', icon: Star, color: 'text-amber-600', bg: 'bg-amber-50' },

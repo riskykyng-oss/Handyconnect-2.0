@@ -82,12 +82,12 @@ export default function ClientJobsPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search your jobs..."
-          className="h-12 w-full rounded-full border border-gray-200 bg-white px-4 text-sm font-medium text-gray-900 outline-none shadow-sm transition-all focus:border-orange-400 focus:ring-2 focus:ring-orange-500/10 placeholder:text-gray-400"
+          className="h-[52px] w-full rounded-full border border-gray-200 bg-white px-4 text-sm font-medium text-gray-900 outline-none shadow-sm transition-all focus:border-orange-400 focus:ring-2 focus:ring-orange-500/10 placeholder:text-gray-400"
         />
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map((s) => {
           const Icon = s.icon;
           const isActive = activeTab === s.tab;

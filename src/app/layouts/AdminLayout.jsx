@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { LayoutDashboard, Users, Briefcase, LogOut, Menu, X, Search, Bell, MessageSquare, Scale, BadgeCheck, Wallet } from 'lucide-react';
@@ -39,7 +39,7 @@ export default function AdminLayout() {
           <span className="font-display font-extrabold text-xl">
             Handy<span className="text-[#F97316]">Connect</span>
           </span>
-          <button className="md:hidden text-white/70" onClick={() => setSidebarOpen(false)}><X size={22} /></button>
+          <button className="md:hidden text-white/70 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(false)}><X size={22} /></button>
         </div>
 
         <div className="px-6 mb-6">
@@ -89,7 +89,7 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
-          <button className="md:hidden text-gray-900" onClick={() => setSidebarOpen(true)}>
+          <button className="md:hidden text-gray-900 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
             <Menu size={22} />
           </button>
 
@@ -118,7 +118,7 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="flex-1 w-full p-4 md:p-8 overflow-x-hidden pb-24 md:pb-8">
+        <main className="flex-1 w-full p-4 md:p-8 overflow-x-hidden pb-8">
           <Outlet />
         </main>
       </div>

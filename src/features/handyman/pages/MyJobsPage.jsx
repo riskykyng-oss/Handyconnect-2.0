@@ -209,7 +209,7 @@ export default function MyJobsPage() {
       {/* Stats + Earnings */}
       {loading ? (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatSkeleton /><StatSkeleton /><StatSkeleton /><StatSkeleton />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -219,7 +219,7 @@ export default function MyJobsPage() {
         </>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard icon={Briefcase} label="Active Jobs" value={activeCount} />
             <StatCard icon={DollarSign} label="Earnings" value={`$${Number(wallet.balance || 0).toFixed(0)}`} />
             <StatCard icon={Clock} label="Awaiting Payment" value={awaitingCount} />
@@ -316,7 +316,7 @@ export default function MyJobsPage() {
             })}
           </div>
 
-          <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm">
+          <div className="flex h-[52px] items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 shadow-sm">
             <Search size={15} className="shrink-0 text-gray-400" />
             <input
               value={search}

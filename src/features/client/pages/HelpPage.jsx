@@ -47,7 +47,7 @@ export default function HelpPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search help articles..."
-          className="h-12 w-full rounded-full border border-gray-200 bg-white px-4 text-sm font-medium text-gray-900 outline-none shadow-sm transition-all focus:border-orange-400 focus:ring-2 focus:ring-orange-500/10 placeholder:text-gray-400"
+          className="h-[52px] w-full rounded-full border border-gray-200 bg-white px-4 text-sm font-medium text-gray-900 outline-none shadow-sm transition-all focus:border-orange-400 focus:ring-2 focus:ring-orange-500/10 placeholder:text-gray-400"
         />
       </div>
 

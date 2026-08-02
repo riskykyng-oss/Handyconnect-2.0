@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/context/AuthContext';
 import {
   Home, Search, Briefcase, MessageSquare, User, Plus, Bell,
   Wallet, Users, Settings, LogOut, MapPin, ChevronDown,
-  Clock, Star, HelpCircle,
+  Clock, Star, HelpCircle, Menu, X,
 } from 'lucide-react';
 import WalletCard from '@/features/client/components/WalletCard';
 import NotificationsPreview from '@/features/client/components/NotificationsPreview';
@@ -39,7 +39,6 @@ const sidebarSecondary = [
 const bottomNavItems = [
   { name: 'Home', path: '/client/home', icon: Home },
   { name: 'Explore', path: '/client/explore', icon: Search },
-  { name: 'Community', path: '/community', icon: Users },
   { name: 'Post Job', path: '/client/home?post=1', icon: Plus, primary: true },
   { name: 'Messages', path: '/client/messages', icon: MessageSquare },
   { name: 'Profile', path: '/client/profile', icon: User },
@@ -139,6 +138,7 @@ export default function ClientLayout() {
   const showRail = !isCommunity && ['/client/home', '/client/explore', '/client/jobs'].includes(location.pathname);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const profileRef = useRef(null);
   const notifRef = useRef(null);
   const unreadMessages = useUnreadCount();
@@ -166,107 +166,158 @@ export default function ClientLayout() {
     ? <img src={currentUser.photoURL} alt="profile" className="h-full w-full object-cover" />
     : currentUser?.email?.[0]?.toUpperCase();
 
+  const renderSidebar = () => (
+    <>
+      <Link to="/client/home" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2 px-6 pt-8 pb-6">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500 text-sm font-extrabold text-white shadow-lg shadow-orange-500/20">
+          HC
+        </div>
+        <span className="font-display text-xl font-extrabold tracking-tight text-gray-900">
+          Handy<span className="text-orange-500">Connect</span>
+        </span>
+      </Link>
+
+      <nav className="flex flex-1 flex-col gap-1 px-3">
+        {sidebarItems.map((item) => {
+          const active = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setDrawerOpen(false)}
+              className={`group relative flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
+                active
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
+              }`}
+            >
+              <item.icon
+                size={20}
+                className={active ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'}
+              />
+              <span className="flex-1">{item.name}</span>
+              {item.name === 'Messages' && unreadMessages > 0 && (
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-bold text-white">
+                  {unreadMessages > 99 ? '99+' : unreadMessages}
+                </span>
+              )}
+              {active && (
+                <span className="absolute right-2 h-1.5 w-1.5 rounded-full bg-orange-500" />
+              )}
+            </Link>
+          );
+        })}
+
+        <div className="my-3 border-t border-gray-300/60" />
+
+        {sidebarSecondary.map((item) => {
+          const active = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setDrawerOpen(false)}
+              className={`group relative flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
+                active
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
+              }`}
+            >
+              <item.icon
+                size={20}
+                className={active ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'}
+              />
+              {item.name}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* User Profile Section */}
+      <div className="border-t border-gray-300/60 px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gray-400 text-sm font-bold text-white">
+              {avatar}
+            </div>
+            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#E5E7EB] bg-green-500" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-gray-900">{currentUser?.displayName || currentUser?.email}</p>
+            <p className="text-xs text-gray-500">Client</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 hover:bg-white hover:text-red-500 transition-colors"
+            title="Logout"
+          >
+            <LogOut size={16} />
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <div className="flex min-h-screen justify-center bg-gray-50 font-sans text-gray-900">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
-        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
-      `}</style>
-
       <div className="flex w-full max-w-[1500px]">
-        {/* Sidebar (Desktop) */}
-        <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 flex-col bg-[#E5E7EB] lg:flex">
-          <Link to="/client/home" className="flex items-center gap-2 px-6 pt-8 pb-6">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500 text-sm font-extrabold text-white shadow-lg shadow-orange-500/20">
-              HC
-            </div>
-            <span className="font-display text-xl font-extrabold tracking-tight text-gray-900">
-              Handy<span className="text-orange-500">Connect</span>
-            </span>
-          </Link>
-
-          <nav className="flex flex-1 flex-col gap-1 px-3">
-            {sidebarItems.map((item) => {
-              const active = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
-                    active
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
-                  }`}
-                >
-                  <item.icon
-                    size={20}
-                    className={active ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'}
-                  />
-                  <span className="flex-1">{item.name}</span>
-                  {item.name === 'Messages' && unreadMessages > 0 && (
-                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-bold text-white">
-                      {unreadMessages > 99 ? '99+' : unreadMessages}
-                    </span>
-                  )}
-                  {active && (
-                    <span className="absolute right-2 h-1.5 w-1.5 rounded-full bg-orange-500" />
-                  )}
-                </Link>
-              );
-            })}
-
-            <div className="my-3 border-t border-gray-300/60" />
-
-            {sidebarSecondary.map((item) => {
-              const active = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
-                    active
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
-                  }`}
-                >
-                  <item.icon
-                    size={20}
-                    className={active ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'}
-                  />
-                  {item.name}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* User Profile Section */}
-          <div className="border-t border-gray-300/60 px-4 py-4">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gray-400 text-sm font-bold text-white">
-                  {avatar}
-                </div>
-                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#E5E7EB] bg-green-500" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-gray-900">{currentUser?.displayName || currentUser?.email}</p>
-                <p className="text-xs text-gray-500">Client</p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-white hover:text-red-500 transition-colors"
-                title="Logout"
-              >
-                <LogOut size={16} />
-              </button>
-            </div>
-          </div>
+        {/* Sidebar (Desktop >=1024px) — 280px */}
+        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col bg-[#E5E7EB] lg:flex">
+          {renderSidebar()}
         </aside>
 
+        {/* Sidebar drawer (Tablet 768-1023px) */}
+        {drawerOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
+            <aside className="absolute left-0 top-0 h-full w-[280px] overflow-y-auto bg-[#E5E7EB] shadow-xl">
+              <button
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close menu"
+                className="absolute right-3 top-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white text-gray-600 shadow-sm transition-colors hover:bg-gray-100"
+              >
+                <X size={20} />
+              </button>
+              {renderSidebar()}
+            </aside>
+          </div>
+        )}
+
         {/* Main Content */}
-        <main className="flex min-w-0 flex-1 flex-col pb-24 lg:h-screen lg:overflow-y-auto lg:pb-0">
-          {/* Top Bar (Desktop) */}
+        <main className="flex min-w-0 flex-1 flex-col pb-24 md:pb-0 lg:h-screen lg:overflow-y-auto">
+          {/* Top Bar (Tablet 768-1023px) */}
+          <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md md:flex lg:hidden">
+            <button
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Open menu"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-gray-100"
+            >
+              <Menu size={22} />
+            </button>
+            <Link to="/client/home" className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-extrabold text-white">
+                HC
+              </div>
+              <span className="font-display text-base font-extrabold tracking-tight text-gray-900">
+                Handy<span className="text-orange-500">Connect</span>
+              </span>
+            </Link>
+            <div className="flex-1" />
+            <button
+              aria-label="Messages"
+              onClick={() => navigate('/client/messages')}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+            >
+              <MessageSquare size={20} className="text-gray-700" />
+              {!!unreadMessages && (
+                <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
+                  {unreadMessages}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Top Bar (Desktop >=1024px) */}
           <div className="sticky top-0 z-30 hidden border-b border-gray-200 bg-white/80 backdrop-blur-md lg:flex items-center justify-between gap-4 px-8 py-4">
             <div className="relative flex-1 max-w-md">
               <input
@@ -397,8 +448,8 @@ export default function ClientLayout() {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-xl lg:hidden">
+      {/* Mobile Bottom Navigation (<768px) */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-xl md:hidden">
         <div className="flex h-16 items-center justify-around">
           {bottomNavItems.map((item) => {
             const active = location.pathname === item.path || (item.path.includes('?') && location.pathname + '?' + location.search.split('?')[1] === item.path);

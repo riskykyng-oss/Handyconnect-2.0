@@ -51,7 +51,7 @@ const ActionButton = ({ onClick, disabled, icon: Icon, label, tone = 'neutral', 
     onClick={onClick}
     disabled={disabled}
     className={clsx(
-      'flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50',
+      'flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-colors disabled:opacity-50',
       tone === 'primary' && 'bg-orange-500 text-white hover:bg-orange-600',
       tone === 'success' && 'bg-emerald-500 text-white hover:bg-emerald-600',
       tone === 'purple' && 'bg-purple-500 text-white hover:bg-purple-600',
@@ -215,7 +215,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
             <FileText size={14} className="text-gray-400" />
             <span className="text-xs text-gray-600">{area}</span>
             {client?.phone && (
-              <a href={`tel:${client.phone}`} className="ml-auto flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50">
+              <a href={`tel:${client.phone}`} className="ml-auto flex min-h-11 items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50">
                 <Phone size={12} className="text-emerald-500" /> {client.phone}
               </a>
             )}
@@ -238,13 +238,13 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
                 className="mt-2 w-full accent-orange-500"
               />
               <div className="mt-2 flex justify-end gap-2">
-                <button onClick={() => setProgressValue(progress)} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-500 hover:bg-gray-100">
+                <button onClick={() => setProgressValue(progress)} className="rounded-lg px-3 py-2 text-xs font-semibold text-gray-500 hover:bg-gray-100 min-h-11">
                   Reset
                 </button>
                 <button
                   onClick={() => updateProgress(progressValue)}
                   disabled={savingProgress || progressValue === progress}
-                  className="rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+                  className="rounded-lg bg-orange-500 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50 min-h-11"
                 >
                   {savingProgress ? 'Saving...' : 'Save'}
                 </button>
