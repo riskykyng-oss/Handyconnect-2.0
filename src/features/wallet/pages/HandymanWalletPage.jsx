@@ -123,20 +123,23 @@ export default function HandymanWalletPage() {
       {tab === 'overview' && (
         <>
           {/* Earnings card */}
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <div className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-              <Wallet size={13} className="text-orange-500" /> Available Balance
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-gray-500">Available Balance</p>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+                <Wallet size={18} />
+              </span>
             </div>
-            <p className="mt-2 font-display text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">${balance.toFixed(2)}</p>
+            <p className="mt-1 font-display text-4xl font-extrabold tracking-tight text-gray-900">${balance.toFixed(2)}</p>
             <p className="mt-1 text-xs text-gray-400">USD · updates in real time</p>
-            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-gray-200/70 pt-4 dark:border-gray-700">
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-gray-200/70 pt-4">
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Pending</p>
-                <p className="mt-1 font-display text-lg font-extrabold text-amber-600 dark:text-amber-400">${pending.toFixed(2)}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Pending</p>
+                <p className="mt-1 font-display text-lg font-extrabold text-amber-600">${pending.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Lifetime Earnings</p>
-                <p className="mt-1 font-display text-lg font-extrabold text-emerald-600 dark:text-emerald-400">${lifetime.toFixed(2)}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Lifetime Earnings</p>
+                <p className="mt-1 font-display text-lg font-extrabold text-emerald-600">${lifetime.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -278,7 +281,7 @@ export default function HandymanWalletPage() {
                 </button>
               ))}
             </div>
-            <p className="mt-4 rounded-xl bg-gray-200/50 p-3 text-[11px] leading-relaxed text-gray-500 dark:bg-gray-800/60 dark:text-gray-400">
+            <p className="mt-4 rounded-xl bg-gray-200/50 p-3 text-[11px] leading-relaxed text-gray-500">
               No fees on your first withdrawal. Withdrawals are usually processed within 30 minutes, and the funds go to your linked account. Each payout is recorded in your transaction history.
             </p>
           </SectionCard>
@@ -332,7 +335,7 @@ export default function HandymanWalletPage() {
                     <FileText size={15} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{tx.description || 'Payment'}</p>
+                    <p className="truncate text-sm font-semibold text-gray-900">{tx.description || 'Payment'}</p>
                     <p className="text-xs text-gray-400">{format(normalizeDate(tx.createdAt), 'MMM d, yyyy')}</p>
                   </div>
                   <span className="shrink-0 font-display text-sm font-extrabold text-emerald-600">+${Number(tx.amount || 0).toFixed(2)}</span>
