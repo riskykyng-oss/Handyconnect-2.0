@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Home, Wrench, Shield, ArrowRight, Loader2, Check } from 'lucide-react';
+import { Home, Wrench, ArrowRight, Loader2, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const roles = [
@@ -22,15 +22,6 @@ const roles = [
     accent: 'bg-gray-900',
     iconBg: 'bg-gray-100 text-gray-700',
     features: ['Find nearby work', 'Build your portfolio', 'Get paid instantly', 'Grow your client base'],
-  },
-  {
-    id: 'admin',
-    name: 'Administrator',
-    tagline: 'I want to manage the platform',
-    Icon: Shield,
-    accent: 'bg-gray-900',
-    iconBg: 'bg-gray-100 text-gray-700',
-    features: ['Manage platform users', 'Moderate jobs & reviews', 'View reports & analytics', 'Maintain trust & safety'],
   },
 ];
 
@@ -64,7 +55,6 @@ export default function RoleSelectionPage() {
       await assignRole(role);
       if (role === 'client') navigate('/client/home');
       if (role === 'handyman') navigate('/handyman/dashboard');
-      if (role === 'admin') navigate('/admin/dashboard');
     } catch {
       setLoading(false);
       setSelectedRole(null);
@@ -94,7 +84,7 @@ export default function RoleSelectionPage() {
           <p className="mt-2 text-[15px] text-gray-500">Don&apos;t worry — you can update your profile details later.</p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
           {roles.map((role, idx) => {
             const isSelected = selectedRole === role.id && loading;
             return (
