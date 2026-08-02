@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { format } from 'date-fns';
-import { Briefcase, Search, Star, Play, CircleDollarSign, Wallet, ChevronRight, RotateCcw } from 'lucide-react';
+import { Briefcase, Search, Star, Play, CircleDollarSign, Wallet, RotateCcw } from 'lucide-react';
 import { getHandymanJobs, startJob, completeJob, updateJobProgress } from '@/services/jobService';
 import { getUserProfile } from '@/services/userService';
 import { subscribeToWallet, getTransactions } from '@/services/walletService';
@@ -22,26 +22,24 @@ const FILTERS = [
 
 const StatCard = ({ icon: Icon, label, value, tint }) => {
   const tints = {
-    orange: 'bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400',
+    orange: 'bg-orange-50 text-orange-500 dark:bg-orange-500/10 dark:text-orange-400',
     blue: 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400',
     purple: 'bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400',
     amber: 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400',
   };
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tints[tint]}`}>
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+      <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${tints[tint]}`}>
         <Icon size={18} />
-      </span>
-      <div className="min-w-0">
-        <p className="truncate text-[11px] font-semibold uppercase tracking-wide text-gray-400">{label}</p>
-        <p className="text-lg font-extrabold text-gray-900 dark:text-white">{value}</p>
       </div>
+      <p className="font-display text-2xl font-extrabold text-gray-900 dark:text-white">{value}</p>
+      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{label}</p>
     </div>
   );
 };
 
 const StatSkeleton = () => (
-  <div className="h-[74px] animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700" />
+  <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800" />
 );
 
 export default function MyJobsPage() {
@@ -174,11 +172,11 @@ export default function MyJobsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5 px-4 pb-24 pt-5 lg:pb-10">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-24 pt-5 lg:pb-10">
       {/* Header */}
       <div>
-        <p className="text-xs text-gray-500">{format(new Date(), 'EEEE, MMM d')}</p>
-        <h1 className="mt-0.5 text-xl font-bold text-gray-900">My Jobs</h1>
+        <p className="text-xs font-medium text-gray-500">{format(new Date(), 'EEEE, MMM d')}</p>
+        <h1 className="mt-0.5 font-display text-xl font-extrabold tracking-tight text-gray-900">My Jobs</h1>
       </div>
 
       {/* Stats + Earnings */}
@@ -187,36 +185,39 @@ export default function MyJobsPage() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <StatSkeleton /><StatSkeleton /><StatSkeleton /><StatSkeleton />
           </div>
-          <div className="animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700" style={{ height: 110 }} />
+          <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800" style={{ height: 118 }} />
         </>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard icon={Briefcase} label="Active Jobs" value={activeCount} tint="orange" />
             <StatCard icon={Play} label="In Progress" value={inProgressCount} tint="blue" />
             <StatCard icon={CircleDollarSign} label="Awaiting Payment" value={awaitingCount} tint="purple" />
             <StatCard icon={Star} label="Rating" value={rating ? Number(rating).toFixed(1) : '—'} tint="amber" />
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div>
-                <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-                  <Wallet size={12} /> Wallet balance
-                </p>
-                <p className="mt-1 font-display text-2xl font-extrabold text-orange-600">${Number(wallet.balance || 0).toFixed(2)}</p>
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-500 dark:bg-orange-500/10 dark:text-orange-400">
+                  <Wallet size={18} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Balance</p>
+                  <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${Number(wallet.balance || 0).toFixed(2)}</p>
+                </div>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">Today</p>
-                <p className="mt-1 text-lg font-extrabold text-gray-900 dark:text-white">${earnings.today.toFixed(2)}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Today</p>
+                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${earnings.today.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">This week</p>
-                <p className="mt-1 text-lg font-extrabold text-gray-900 dark:text-white">${earnings.week.toFixed(2)}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">This week</p>
+                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${earnings.week.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">This month</p>
-                <p className="mt-1 text-lg font-extrabold text-gray-900 dark:text-white">${earnings.month.toFixed(2)}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">This month</p>
+                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${earnings.month.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -268,29 +269,27 @@ export default function MyJobsPage() {
           <JobCardSkeleton /><JobCardSkeleton /><JobCardSkeleton />
         </div>
       ) : jobs.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center dark:border-gray-700 dark:bg-gray-800">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-500 dark:bg-orange-500/10">
-            <Briefcase size={26} />
-          </span>
-          <h3 className="mt-4 font-display text-lg font-bold text-gray-900 dark:text-white">No jobs yet</h3>
-          <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
+          <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+          <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">No jobs yet</p>
+          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
             Browse open requests near you, accept a job, and start earning. Everything you work on will show up here.
           </p>
           <Link
             to="/handyman/jobs"
-            className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange-600"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
           >
-            Find work <ChevronRight size={15} />
+            <Briefcase size={14} /> Find Work
           </Link>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-10 text-center dark:border-gray-700 dark:bg-gray-800">
-          <Search size={26} className="mx-auto text-gray-300" />
-          <h3 className="mt-3 font-display text-base font-bold text-gray-900 dark:text-white">No matches found</h3>
-          <p className="mt-1 text-sm text-gray-500">Try a different filter or search term.</p>
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
+          <Search className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+          <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">No matches found</p>
+          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Try a different filter or search term.</p>
           <button
             onClick={() => { setFilter('all'); setSearch(''); }}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
           >
             <RotateCcw size={13} /> Reset filters
           </button>
