@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { LayoutDashboard, Users, Briefcase, LogOut, Menu, X, Search, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Briefcase, LogOut, Menu, X, Search, Bell, MessageSquare, Scale, BadgeCheck, Wallet } from 'lucide-react';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 export default function AdminLayout() {
   const { currentUser, logout } = useAuth();
@@ -15,26 +16,25 @@ export default function AdminLayout() {
   };
 
   const menuItems = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard }, 
+    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Users', path: '/admin/users', icon: Users },
-    { name: 'Jobs', path: '/admin/jobs', icon: Briefcase }
+    { name: 'Jobs', path: '/admin/jobs', icon: Briefcase },
+    { name: 'Community', path: '/admin/community', icon: MessageSquare },
+    { name: 'Verification', path: '/admin/verifications', icon: BadgeCheck },
+    { name: 'Payouts', path: '/admin/payouts', icon: Wallet },
+    { name: 'Reports', path: '/admin/reports', icon: Scale },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans text-gray-900">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
-      `}</style>
+    <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex font-sans">
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar - Deep Dark Slate */}
-      <aside className={`fixed md:sticky top-0 left-0 h-screen w-72 bg-slate-900 text-white z-40 transform transition-transform duration-300 flex-shrink-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      {/* Sidebar - Deep Dark Gray */}
+      <aside className={`fixed md:sticky top-0 left-0 h-screen w-72 bg-gray-900 text-white z-40 transform transition-transform duration-300 flex-shrink-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="p-6 flex items-center justify-between flex-shrink-0">
           <span className="font-display font-extrabold text-xl">
             Handy<span className="text-[#F97316]">Connect</span>
@@ -55,7 +55,7 @@ export default function AdminLayout() {
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  active ? 'bg-[#F97316] text-white shadow-lg shadow-orange-500/20' : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                  active ? 'bg-[#F97316] text-white shadow-lg shadow-orange-500/20' : 'text-gray-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
                 <item.icon size={19} />
@@ -72,12 +72,12 @@ export default function AdminLayout() {
             </div>
             <div className="flex-1 overflow-hidden">
               <p className="text-sm font-medium truncate text-white">{currentUser?.email}</p>
-              <p className="text-xs text-slate-500">Administrator</p>
+              <p className="text-xs text-gray-500">Administrator</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
           >
             <LogOut size={19} />
             <span>Logout</span>
@@ -88,12 +88,12 @@ export default function AdminLayout() {
       {/* Main column */}
       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 py-3 flex items-center gap-4">
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
           <button className="md:hidden text-gray-900" onClick={() => setSidebarOpen(true)}>
             <Menu size={22} />
           </button>
 
-          <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-slate-100 rounded-full px-4 py-2.5">
+          <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-gray-100 rounded-full px-4 py-2.5">
             <Search size={17} className="text-gray-400" />
             <input
               type="text"
@@ -107,11 +107,12 @@ export default function AdminLayout() {
           </span>
 
           <div className="flex items-center gap-2 ml-auto">
-            <button className="relative w-10 h-10 rounded-full hover:bg-slate-100 flex items-center justify-center transition-colors">
+            <ThemeToggle />
+            <button className="relative w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
               <Bell size={19} className="text-gray-700" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#F97316] rounded-full" />
             </button>
-            <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
               {currentUser?.email?.[0]?.toUpperCase()}
             </div>
           </div>

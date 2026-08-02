@@ -1,101 +1,181 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { User, Wrench, ArrowRight, Loader2 } from 'lucide-react';
+import { Home, Wrench, Shield, ArrowRight, Loader2, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const roles = [
+  {
+    id: 'client',
+    name: 'Client',
+    tagline: 'I want to hire professionals',
+    Icon: Home,
+    accent: 'bg-[#F97316]',
+    iconBg: 'bg-orange-50 text-[#F97316]',
+    features: ['Hire professionals', 'Post jobs & get quotes', 'Track progress in real time', 'Pay securely & manage invoices'],
+  },
+  {
+    id: 'handyman',
+    name: 'Professional',
+    tagline: 'I want to offer my services',
+    Icon: Wrench,
+    accent: 'bg-gray-900',
+    iconBg: 'bg-gray-100 text-gray-700',
+    features: ['Find nearby work', 'Build your portfolio', 'Get paid instantly', 'Grow your client base'],
+  },
+  {
+    id: 'admin',
+    name: 'Administrator',
+    tagline: 'I want to manage the platform',
+    Icon: Shield,
+    accent: 'bg-gray-900',
+    iconBg: 'bg-gray-100 text-gray-700',
+    features: ['Manage platform users', 'Moderate jobs & reviews', 'View reports & analytics', 'Maintain trust & safety'],
+  },
+];
+
+const loadingMessages = ['Creating your account...', 'Preparing your workspace...', 'Almost ready...'];
 
 export default function RoleSelectionPage() {
-  const { assignRole, userRole } = useAuth(); 
+  const { assignRole, userRole } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [msgIndex, setMsgIndex] = useState(0);
 
-  // If they already have a role, redirect them automatically!
   useEffect(() => {
     if (userRole === 'client') navigate('/client/home', { replace: true });
-    if (userRole === 'handyman') navigate('/handyman/jobs', { replace: true });
+    if (userRole === 'handyman') navigate('/handyman/dashboard', { replace: true });
     if (userRole === 'admin') navigate('/admin/dashboard', { replace: true });
   }, [userRole, navigate]);
 
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => {
+      setMsgIndex((i) => Math.min(i + 1, loadingMessages.length - 1));
+    }, 800);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleSelectRole = async (role) => {
+    setSelectedRole(role);
     setLoading(true);
     try {
       await assignRole(role);
-      
-      // Redirect based on role
       if (role === 'client') navigate('/client/home');
-      if (role === 'handyman') navigate('/handyman/jobs');
-    } catch (error) {
-      console.error("Error setting role:", error);
+      if (role === 'handyman') navigate('/handyman/dashboard');
+      if (role === 'admin') navigate('/admin/dashboard');
+    } catch {
       setLoading(false);
+      setSelectedRole(null);
     }
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 md:p-8 font-sans text-white overflow-hidden bg-slate-900">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
-      `}</style>
-
-      {/* Blurred Background Image & Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1581244277943-fe4a9c777189?q=80&w=2070&auto=format&fit=crop" 
-          alt="Tools background" 
-          className="w-full h-full object-cover blur-md scale-105 opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-black/90"></div>
-      </div>
-
-      {/* Glassmorphism Card Container */}
-      <div className="relative z-10 w-full max-w-3xl bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-2xl p-8 md:p-12">
-        
-        <div className="flex flex-col items-center text-center mb-10">
-          <Link to="/" className="font-display font-extrabold text-2xl mb-6 inline-flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#F97316] rounded-lg flex items-center justify-center text-white text-sm">H</div>
+    <div className="flex min-h-screen items-center justify-center bg-[#F5F6F8] px-4 py-10 sm:px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="my-auto w-full max-w-5xl"
+      >
+        {/* Logo */}
+        <div className="mb-8 flex items-center justify-center gap-2.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-[#F97316] text-sm font-extrabold text-white shadow-md">HC</span>
+          <span className="font-display text-xl font-extrabold tracking-tight text-gray-900">
             Handy<span className="text-[#F97316]">Connect</span>
-          </Link>
-          <h1 className="font-display font-extrabold text-3xl md:text-4xl mb-3">Choose Your Path</h1>
-          <p className="text-slate-400 text-lg">How do you want to use HandyConnect?</p>
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Client Role */}
-          <button 
-            onClick={() => handleSelectRole('client')}
-            disabled={loading}
-            className="group relative bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#F97316]/50 rounded-2xl p-8 text-left transition-all duration-300 overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            <div className="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#F97316] group-hover:border-[#F97316] transition-colors">
-              <User className="text-[#F97316] group-hover:text-white transition-colors" size={28} />
-            </div>
-            <h3 className="font-display font-bold text-xl mb-2 text-white">I'm a Client</h3>
-            <p className="text-slate-400 text-sm">I need to find trusted handymen for my projects.</p>
-            <ArrowRight className="absolute bottom-8 right-8 text-slate-600 group-hover:text-[#F97316] group-hover:translate-x-1 transition-all" size={20} />
-          </button>
+        <div className="text-center">
+          <h1 className="font-display text-3xl font-extrabold tracking-[-0.03em] text-gray-900 sm:text-4xl">
+            Choose how you&apos;ll use HandyConnect
+          </h1>
+          <p className="mt-2 text-[15px] text-gray-500">Don&apos;t worry — you can update your profile details later.</p>
+        </div>
 
-          {/* Handyman Role */}
-          <button 
-            onClick={() => handleSelectRole('handyman')}
-            disabled={loading}
-            className="group relative bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#F97316]/50 rounded-2xl p-8 text-left transition-all duration-300 overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            <div className="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#F97316] group-hover:border-[#F97316] transition-colors">
-              <Wrench className="text-[#F97316] group-hover:text-white transition-colors" size={28} />
-            </div>
-            <h3 className="font-display font-bold text-xl mb-2 text-white">I'm a Handyman</h3>
-            <p className="text-slate-400 text-sm">I want to offer my services and find work.</p>
-            <ArrowRight className="absolute bottom-8 right-8 text-slate-600 group-hover:text-[#F97316] group-hover:translate-x-1 transition-all" size={20} />
-          </button>
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {roles.map((role, idx) => {
+            const isSelected = selectedRole === role.id && loading;
+            return (
+              <motion.div
+                key={role.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + idx * 0.08, duration: 0.3 }}
+              >
+                <button
+                  onClick={() => handleSelectRole(role.id)}
+                  disabled={loading}
+                  className={`group relative flex h-full w-full flex-col rounded-[28px] border-2 bg-white p-6 text-left transition-all duration-200 ${
+                    isSelected
+                      ? 'border-[#F97316] shadow-[0_20px_50px_rgba(249,115,22,0.15)]'
+                      : 'border-transparent shadow-[0_12px_30px_rgba(15,23,42,0.06)] hover:-translate-y-1 hover:border-[#F97316]/60 hover:shadow-[0_20px_50px_rgba(15,23,42,0.1)]'
+                  } disabled:cursor-not-allowed`}
+                >
+                  {isSelected && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 14 }}
+                      className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#F97316] text-white shadow-md"
+                    >
+                      <Check size={16} strokeWidth={3} />
+                    </motion.div>
+                  )}
+
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-[14px] ${role.iconBg}`}>
+                    <role.Icon size={24} />
+                  </div>
+                  <h3 className="mt-5 font-display text-xl font-bold text-gray-900">{role.name}</h3>
+                  <p className="mt-1 text-sm text-gray-500">{role.tagline}</p>
+
+                  <div className="mt-5 space-y-2.5">
+                    {role.features.map((f) => (
+                      <div key={f} className="flex items-center gap-2.5 text-sm text-gray-700">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F97316]" />
+                        {f}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div
+                    className={`mt-6 flex items-center justify-center gap-2 rounded-[16px] py-3 text-sm font-bold text-white transition-all duration-200 ${role.accent} ${
+                      isSelected ? 'opacity-80' : 'group-hover:brightness-110'
+                    }`}
+                  >
+                    {isSelected ? (
+                      <Loader2 size={18} className="animate-spin" />
+                    ) : (
+                      <>
+                        Continue as {role.name} <ArrowRight size={18} />
+                      </>
+                    )}
+                  </div>
+                </button>
+              </motion.div>
+            );
+          })}
         </div>
 
         {loading && (
-          <div className="flex justify-center items-center mt-8 text-slate-400 text-sm">
-            <Loader2 size={18} className="animate-spin mr-2" /> Setting up your account...
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 flex justify-center"
+          >
+            <div className="flex items-center gap-3 rounded-[16px] bg-white px-6 py-3 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
+              <Loader2 size={18} className="animate-spin text-[#F97316]" />
+              <span className="text-sm font-medium text-gray-500">{loadingMessages[msgIndex]}</span>
+            </div>
+          </motion.div>
         )}
-      </div>
+
+        <p className="mx-auto mt-8 max-w-lg text-center text-xs leading-relaxed text-gray-400">
+          Your dashboard will be customized based on your selection. You can complete your professional profile after
+          registration.
+        </p>
+      </motion.div>
     </div>
   );
 }

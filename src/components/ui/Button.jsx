@@ -1,38 +1,36 @@
+import { motion } from 'framer-motion';
+import clsx from 'clsx';
+
 export default function Button({
   children,
   type = "button",
   variant = "primary",
+  size = 'md',
+  loading = false,
+  fullWidth = true,
   className = "",
+  disabled,
   ...props
 }) {
-
   const styles = {
-    primary:
-      "bg-orange-500 hover:bg-orange-600 text-white shadow-sm shadow-orange-500/30",
-    secondary:
-      "bg-gray-100 hover:bg-gray-200 text-gray-900",
-    danger:
-      "bg-red-500 hover:bg-red-600 text-white shadow-sm shadow-red-500/30"
+    primary: 'bg-orange-500 text-white shadow-sm hover:bg-orange-600',
+    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
+    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
+    outline: 'border border-gray-300 bg-transparent text-gray-800 hover:bg-gray-50',
+    danger: 'bg-red-600 text-white shadow-sm shadow-red-600/20 hover:bg-red-700',
   };
+  const sizes = { sm: 'min-h-9 px-3 py-2 text-sm', md: 'min-h-11 px-4 py-2.5 text-sm', lg: 'min-h-12 px-5 py-3 text-base' };
 
   return (
-    <button
+    <motion.button
       type={type}
-      className={`
-        w-full
-        rounded-2xl
-        py-3
-        font-semibold
-        transition-all duration-200 /* Smooth animation */
-        shadow-lg
-        active:scale-95 /* Click animation */
-        disabled:opacity-70 disabled:cursor-not-allowed disabled:active:scale-100
-        ${styles[variant]}
-        ${className}
-      `}
+      whileTap={disabled || loading ? undefined : { scale: 0.98 }}
+      className={clsx('inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors duration-200 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50', fullWidth && 'w-full', sizes[size], styles[variant], className)}
+      disabled={disabled || loading}
       {...props}
     >
+      {loading && <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden="true" />}
       {children}
-    </button>
+    </motion.button>
   );
 }

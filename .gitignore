@@ -23,4 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment Variables (CRITICAL: Do not
+# Environment Variables (CRITICAL: Do not commit real secrets)
+.env
+.env.*
+!.env.example
+.vercel
+.env*

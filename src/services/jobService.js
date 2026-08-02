@@ -1,4 +1,4 @@
-import { collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, doc, updateDoc, setDoc, increment, getDoc } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, doc, updateDoc, setDoc, increment, getDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
 // Create a new job
@@ -8,6 +8,10 @@ export const createJob = async (jobData, clientUid) => {
     ...jobData,
     clientId: clientUid,
     status: 'open',
+    timeline: [{ type: 'posted', label: 'Job posted', createdAt: new Date() }],
+    milestones: [],
+    quotes: [],
+    attachments: jobData.attachments || [],
     createdAt: serverTimestamp()
   });
   return docRef.id;
@@ -71,3 +75,10 @@ export const completeJob = async (jobId, handymanId, budget) => {
   }
   await updateDoc(walletRef, { balance: increment(budget) });
 };
+
+export const submitQuote = async (jobId, quote) => updateDoc(doc(db, 'jobs', jobId), { quotes: arrayUnion({ ...quote, createdAt: new Date(), status: 'pending' }), timeline: arrayUnion({ type: 'quote', label: 'New quote received', createdAt: new Date() }) });
+export const addMilestone = async (jobId, milestone) => updateDoc(doc(db, 'jobs', jobId), { milestones: arrayUnion({ ...milestone, status: 'pending', createdAt: new Date() }), timeline: arrayUnion({ type: 'milestone', label: milestone.title, createdAt: new Date() }) });
+export const updateJobProgress = async (jobId, progress, label = 'Progress updated') => updateDoc(doc(db, 'jobs', jobId), { progress, timeline: arrayUnion({ type: 'progress', label, createdAt: new Date() }) });
+export const openDispute = async (jobId, reason, openedBy) => updateDoc(doc(db, 'jobs', jobId), { status: 'disputed', dispute: { reason, openedBy, openedAt: new Date(), status: 'open' }, timeline: arrayUnion({ type: 'dispute', label: 'Dispute opened', createdAt: new Date() }) });
+export const getJob = async (jobId) => { const snap = await getDoc(doc(db, 'jobs', jobId)); return snap.exists() ? { id: snap.id, ...snap.data() } : null; };
+export const estimatePrice = ({ category, urgency = 'standard' }) => { const base = { plumbing: 45, electrical: 55, cleaning: 25, carpentry: 40, painting: 35 }[category?.toLowerCase()] || 35; const multiplier = urgency === 'urgent' ? 1.4 : 1; return { low: Math.round(base * multiplier), high: Math.round(base * multiplier * 2.2), currency: 'USD' }; };

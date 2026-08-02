@@ -7,7 +7,7 @@ export default function ProtectedRoute({ allowedRoles }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <p className="text-gray-500 animate-pulse">Loading...</p>
       </div>
     );
@@ -24,7 +24,7 @@ export default function ProtectedRoute({ allowedRoles }) {
   // If the user's role is not in the allowedRoles array, send them to their actual dashboard
   if (allowedRoles && !allowedRoles.includes(userRole)) {
     if (userRole === 'client') return <Navigate to="/client/home" replace />;
-    if (userRole === 'handyman') return <Navigate to="/handyman/jobs" replace />;
+    if (userRole === 'handyman') return <Navigate to="/handyman/dashboard" replace />;
     if (userRole === 'admin') return <Navigate to="/admin/dashboard" replace />;
   }
 

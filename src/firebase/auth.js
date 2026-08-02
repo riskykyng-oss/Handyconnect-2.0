@@ -4,10 +4,12 @@ import {
   signOut, 
   sendPasswordResetEmail,
   sendEmailVerification,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { auth } from './config';
-import { createUserDocument } from './firestore';
+import { createUserDocument, getUserDocument } from './firestore';
 
 export const registerUser = async (email, password, displayName) => {
   try {
@@ -40,4 +42,20 @@ export const logoutUser = async () => {
 
 export const resetPassword = async (email) => {
   await sendPasswordResetEmail(auth, email);
+};
+
+export const loginWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  const userCredential = await signInWithPopup(auth, provider);
+  const existingUser = await getUserDocument(userCredential.user.uid);
+  if (!existingUser) {
+    await createUserDocument(userCredential.user.uid, {
+      email: userCredential.user.email,
+      displayName: userCredential.user.displayName || '',
+      role: null,
+      createdAt: new Date(),
+    });
+  }
+  return userCredential.user;
 };

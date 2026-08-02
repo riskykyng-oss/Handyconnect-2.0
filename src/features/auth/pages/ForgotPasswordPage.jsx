@@ -1,142 +1,150 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowLeft, ShieldCheck, Check } from 'lucide-react';
+import AuthShell, { Field, AuthInput, AuthButton, FormAlert } from '../components/AuthShell';
 import { useAuth } from '../context/AuthContext';
-import { Mail, ArrowRight, ArrowLeft, MailCheck, Star } from 'lucide-react';
+
+const secondaryButtonClass =
+  'flex h-[60px] w-full items-center justify-center gap-2 rounded-[16px] border border-[#E5E7EB] bg-white text-[15px] font-bold text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-[#F8F8F8] hover:shadow-[0_12px_30px_rgba(15,23,42,0.08)]';
 
 export default function ForgotPasswordPage() {
   const { resetPassword } = useAuth();
-
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       await resetPassword(email);
       setSent(true);
-    } catch (err) {
-      setError("Couldn't send a reset link. Check the email and try again.");
+    } catch {
+      setError('We couldn\'t send a reset link. Check the email and try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  const resend = async () => {
+    setError('');
+    setResending(true);
+    try {
+      await resetPassword(email);
+    } catch {
+      setError('We couldn\'t send another link. Please try again.');
+    } finally {
+      setResending(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 md:p-8 font-sans overflow-hidden">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
-      `}</style>
-
-      {/* Main Curved Container */}
-      <div className="w-full max-w-5xl grid md:grid-cols-2 rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-700/50">
-        
-        {/* Left Visual Panel (Dark Grey + Image) */}
-        <div className="relative hidden md:block bg-slate-800 h-[680px]">
-          <img 
-            src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1528&auto=format&fit=crop" 
-            alt="Professional Handyman" 
-            className="absolute inset-0 w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
-          
-          <div className="relative z-10 h-full flex flex-col justify-between p-12 text-white">
-            <Link to="/" className="font-display font-extrabold text-xl flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#F97316] rounded-lg flex items-center justify-center text-white text-sm">H</div>
-              Handy<span className="text-[#F97316]">Connect</span>
-            </Link>
-            
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-xs font-semibold text-[#F97316] mb-6">
-                <Star size={12} className="fill-[#F97316] text-[#F97316]" /> Trusted by 10,000+ users
-              </div>
-              <h2 className="font-display font-extrabold text-4xl lg:text-5xl leading-tight mb-4 max-w-md">
-                Locked out? Happens to everyone.
-              </h2>
-              <p className="text-slate-300 text-lg max-w-sm">
-                Pop in the email on your account and we'll send a link to get you straight back in.
-              </p>
+    <AuthShell mode="reset" noHeader>
+      <AnimatePresence mode="wait">
+        {sent ? (
+          <motion.div
+            key="sent"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <div className="flex justify-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.1 }}
+                className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#F97316] to-[#EA580C] text-white shadow-[0_16px_40px_rgba(249,115,22,0.35)]"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 12, delay: 0.3 }}
+                >
+                  <Check size={32} strokeWidth={3} />
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
-        </div>
 
-        {/* Right Form Panel (Dimmed Soft Grey) */}
-        <div className="flex items-center justify-center p-8 md:p-12 bg-slate-100 rounded-none md:rounded-r-[2.5rem]">
-          <div className="w-full max-w-md">
-            <div className="md:hidden mb-10 text-center">
-              <Link to="/" className="font-display font-extrabold text-2xl text-gray-900 inline-flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#F97316] rounded-lg flex items-center justify-center text-white text-sm">H</div>
-                Handy<span className="text-[#F97316]">Connect</span>
+            <h1 className="mt-7 text-center font-display text-3xl font-extrabold tracking-[-0.03em] text-gray-900">
+              Email sent
+            </h1>
+            <p className="mt-3 text-center text-[15px] leading-relaxed text-gray-500">
+              We&apos;ve sent a password reset link to <strong className="text-gray-900">{email}</strong>. Please check
+              your inbox and spam folder.
+            </p>
+
+            <p className="mt-6 text-center text-sm font-medium text-gray-400">Didn&apos;t receive it?</p>
+
+            <div className="mt-3 space-y-3">
+              <AuthButton type="button" loading={resending} loadingText="Sending..." onClick={resend}>
+                Resend Email
+              </AuthButton>
+              <Link to="/auth/login" className={secondaryButtonClass}>
+                Back to Login
               </Link>
             </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex justify-center">
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 220, damping: 16 }}
+                className="flex h-20 w-20 items-center justify-center rounded-full bg-[#FFF4EB] text-[#F97316] shadow-[0_10px_25px_rgba(249,115,22,0.18)]"
+              >
+                <ShieldCheck size={34} />
+              </motion.div>
+            </div>
 
-            {!sent ? (
-              <>
-                <h1 className="font-display font-extrabold text-3xl md:text-4xl mb-2 text-gray-900">Reset your password</h1>
-                <p className="text-gray-500 text-lg mb-10">Enter the email address linked to your account.</p>
+            <h1 className="mt-7 text-center font-display text-3xl font-extrabold tracking-[-0.03em] text-gray-900">
+              Reset your password
+            </h1>
+            <p className="mt-3 text-center text-[15px] leading-relaxed text-gray-500">
+              Enter your email address and we&apos;ll send you a secure link to reset your password.
+            </p>
 
-                {error && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm">
-                    {error}
-                  </div>
-                )}
+            <AnimatePresence>{error && <div className="mt-6"><FormAlert>{error}</FormAlert></div>}</AnimatePresence>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                    <div className="relative">
-                      <Mail size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
-                      <input 
-                        type="email" 
-                        placeholder="you@example.com" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required 
-                        className="w-full pl-14 pr-5 py-4 bg-white border border-slate-200 rounded-2xl text-base text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-[#F97316] focus:border-transparent outline-none transition-all shadow-sm"
-                      />
-                    </div>
-                  </div>
+            <form onSubmit={submit} className="mt-8 space-y-5">
+              <Field label="Email address" htmlFor="email">
+                <AuthInput
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                />
+              </Field>
+              <AuthButton loading={loading} loadingText="Sending...">
+                Send reset link
+              </AuthButton>
+            </form>
 
-                  <button 
-                    type="submit" 
-                    disabled={loading} 
-                    className="w-full flex items-center justify-center gap-2 bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-2xl text-base transition-colors duration-200 active:scale-[0.98] disabled:opacity-60 shadow-lg shadow-orange-500/30 mt-6"
-                  >
-                    {loading ? 'Sending link...' : (<>Send reset link <ArrowRight size={20} /></>)}
-                  </button>
-                </form>
-              </>
-            ) : (
-              <div>
-                <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mb-6">
-                  <MailCheck className="text-[#F97316]" size={26} />
-                </div>
-                <h1 className="font-display font-extrabold text-3xl md:text-4xl mb-2 text-gray-900">Check your inbox</h1>
-                <p className="text-gray-500 text-lg mb-2">
-                  We've sent a password reset link to <span className="font-semibold text-gray-900">{email}</span>.
-                </p>
-                <p className="text-gray-400 text-sm mb-8">Didn't get it? Check spam, or try again in a couple of minutes.</p>
-                <button 
-                  onClick={() => setSent(false)} 
-                  className="text-sm text-[#F97316] font-bold hover:underline"
-                >
-                  Use a different email
-                </button>
-              </div>
-            )}
-
-            <Link to="/auth/login" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mt-10 font-medium transition-colors">
-              <ArrowLeft size={16} /> Back to login
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div className="mt-6 border-t border-gray-100 pt-6">
+              <Link
+                to="/auth/login"
+                className="inline-flex w-full items-center justify-center gap-2 text-sm font-bold text-gray-600 transition-colors hover:text-[#F97316]"
+              >
+                <ArrowLeft size={16} /> Back to sign in
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </AuthShell>
   );
 }

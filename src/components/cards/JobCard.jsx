@@ -34,7 +34,7 @@ export default function JobCard({ job, onMessage, isClient }) {
   };
 
   const statusStyles = isCompleted
-    ? 'bg-slate-900 text-white' // Deep dark slate for completed
+    ? 'bg-gray-900 text-white' // Deep dark gray for completed
     : isAssigned
     ? 'bg-orange-100 text-orange-700' // Soft orange for assigned
     : 'bg-amber-100 text-amber-700'; // Amber for waiting
@@ -51,7 +51,7 @@ export default function JobCard({ job, onMessage, isClient }) {
         <p className="text-gray-500 text-sm mb-4 line-clamp-2">{job.description}</p>
       </div>
 
-      <div className="flex items-center justify-between mt-2 border-t border-slate-100 pt-4">
+      <div className="flex items-center justify-between mt-2 border-t border-gray-100 pt-4">
         <div className="flex flex-col gap-1">
           <span className="flex items-center font-display font-bold text-[#F97316]">
             <DollarSign size={17} /> {job.budget}
@@ -93,7 +93,7 @@ export default function JobCard({ job, onMessage, isClient }) {
             </Button>
           )}
           {isClient && isCompleted && (
-            <span className="flex items-center text-sm font-semibold text-slate-900 gap-1 bg-slate-100 px-3 py-1.5 rounded-full">
+            <span className="flex items-center text-sm font-semibold text-gray-900 gap-1 bg-gray-100 px-3 py-1.5 rounded-full">
               <PartyPopper size={14} className="text-[#F97316]" /> Funds released
             </span>
           )}
@@ -101,7 +101,7 @@ export default function JobCard({ job, onMessage, isClient }) {
             <Button
               variant="outline"
               onClick={onMessage}
-              className="rounded-full border-slate-200 text-gray-700 hover:bg-slate-100 hover:border-slate-300"
+              className="rounded-full border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300"
             >
               Message
             </Button>

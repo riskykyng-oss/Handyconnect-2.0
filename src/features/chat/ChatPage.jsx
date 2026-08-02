@@ -1,129 +1,78 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { sendMessage, subscribeToMessages, markMessagesAsRead } from '@/services/chatService';
-import { ArrowLeft, Send, CheckCheck, Check } from 'lucide-react';
-
-const formatTime = (date) => {
-  if (!date) return '';
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-};
+import { getJob } from '@/services/jobService';
+import { createConversation, createDirectConversation } from '@/services/chatService';
+import { getPublicPro } from '@/services/portfolioService';
+import ChatThread from './ChatThread';
 
 export default function ChatPage() {
-  const { jobId } = useParams();
-  const { currentUser } = useAuth();
+  const { jobId, convId, otherId } = useParams();
+  const { currentUser, userRole } = useAuth();
   const navigate = useNavigate();
-  
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [loading, setLoading] = useState(true);
-  const messagesEndRef = useRef(null);
+  const messagesPath = `/${userRole === 'handyman' ? 'handyman' : 'client'}/messages`;
+  const [conv, setConv] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!jobId) return;
+    if (!currentUser) return;
+    let active = true;
+    (async () => {
+      try {
+        if (otherId) {
+          // Direct chat with a specific professional — create or reuse the conversation.
+          if (otherId === currentUser.uid) { navigate(messagesPath); return; }
+          const partner = await getPublicPro(otherId);
+          if (!partner) { navigate(messagesPath); return; }
+          const cid = await createDirectConversation(currentUser.uid, otherId, {
+            aName: currentUser.displayName || currentUser.email,
+            aAvatar: currentUser.photoURL || null,
+            bName: partner.name,
+            bAvatar: partner.avatar,
+            bTrade: partner.trade,
+          });
+          const snap = await getDoc(doc(db, 'conversations', cid));
+          if (active && snap.exists()) setConv({ id: cid, ...snap.data() });
+        } else if (convId) {
+          const snap = await getDoc(doc(db, 'conversations', convId));
+          if (active && snap.exists()) setConv({ id: convId, ...snap.data() });
+          else if (active) navigate(messagesPath);
+        } else if (jobId) {
+          const jobData = await getJob(jobId);
+          if (!jobData) { navigate(messagesPath); return; }
+          const cid = await createConversation(jobId, jobData.clientId, jobData.assignedTo, jobData.title);
+          if (active) setConv({ id: cid, type: 'job', jobId });
+        }
+      } catch {
+        if (active) setError(true);
+      }
+    })();
+    return () => { active = false; };
+  }, [jobId, convId, otherId, currentUser, navigate]);
 
-    const unsubscribe = subscribeToMessages(jobId, (fetchedMessages) => {
-      setMessages(fetchedMessages);
-      setLoading(false);
-    });
-
-    if (currentUser) {
-      markMessagesAsRead(jobId, currentUser.uid);
-    }
-
-    return () => unsubscribe();
-  }, [jobId, currentUser]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-
-    try {
-      const senderName = currentUser.displayName || currentUser.email;
-      await sendMessage(jobId, currentUser.uid, senderName, newMessage.trim());
-      setNewMessage('');
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
-
-  return (
-    <div className="max-w-3xl mx-auto h-[calc(100vh-8rem)] flex flex-col bg-slate-50 rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
-      `}</style>
-
-      {/* Header */}
-      <div className="flex items-center gap-4 p-4 border-b border-slate-200 bg-white">
-        <button onClick={() => navigate(-1)} className="text-gray-500 hover:text-gray-900 transition-colors">
-          <ArrowLeft size={24} />
-        </button>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-[#F97316] font-bold">
-            {jobId?.[0]?.toUpperCase()}
-          </div>
-          <div>
-            <h2 className="font-display font-bold text-gray-900 text-lg">Job Chat</h2>
-            <p className="text-xs text-gray-400 font-mono">{jobId?.substring(0, 12)}...</p>
-          </div>
+  if (error) {
+    return (
+      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center sm:h-[calc(100dvh-5rem)]">
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="font-display text-lg font-bold text-gray-900">Could not open this conversation</p>
+          <Link to={messagesPath} className="mt-3 inline-block rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+            Back to messages
+          </Link>
         </div>
       </div>
+    );
+  }
 
-      {/* Messages List */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50">
-        {loading ? (
-          <p className="text-center text-gray-400 mt-10">Loading messages...</p>
-        ) : messages.length === 0 ? (
-          <p className="text-center text-gray-400 mt-10">No messages yet. Say hello!</p>
-        ) : (
-          messages.map(msg => {
-            const isMe = msg.senderId === currentUser.uid;
-            return (
-              <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm transition-all ${
-                  isMe 
-                    ? 'bg-[#F97316] text-white rounded-br-none' 
-                    : 'bg-white text-gray-900 border border-slate-100 rounded-bl-none'
-                }`}>
-                  {!isMe && <p className="text-xs font-bold text-[#F97316] mb-1">{msg.senderName}</p>}
-                  <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
-                  
-                  <div className={`flex items-center gap-1 mt-1 justify-end ${isMe ? 'text-orange-100' : 'text-gray-400'}`}>
-                    <span className="text-[10px]">{formatTime(msg.createdAt)}</span>
-                    {isMe && (
-                      msg.read ? <CheckCheck size={14} className="text-blue-200" /> : <Check size={14} />
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        )}
-        <div ref={messagesEndRef} />
+  if (!conv) {
+    return (
+      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center sm:h-[calc(100dvh-5rem)]">
+        <Loader2 size={32} className="animate-spin text-orange-500" />
       </div>
+    );
+  }
 
-      {/* Input Area */}
-      <form onSubmit={handleSend} className="p-4 border-t border-slate-200 bg-white flex items-center gap-3">
-        <input
-          type="text"
-          className="flex-1 px-4 py-3 bg-slate-100 rounded-xl focus:ring-2 focus:ring-[#F97316] focus:bg-white outline-none transition-all text-gray-900 placeholder:text-gray-400"
-          placeholder="Type your message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-        />
-        <button 
-          type="submit" 
-          className="w-12 h-12 flex items-center justify-center bg-[#F97316] hover:bg-orange-600 text-white rounded-xl transition-colors active:scale-95 disabled:opacity-50 shadow-lg shadow-orange-500/20"
-          disabled={!newMessage.trim()}
-        >
-          <Send size={20} />
-        </button>
-      </form>
-    </div>
-  );
+  return <ChatThread conv={conv} onBack={() => navigate(messagesPath)} />;
 }

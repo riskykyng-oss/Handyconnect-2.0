@@ -1,129 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { JobCardSkeleton } from '@/components/ui/Skeleton'; // Imported Skeleton
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getOpenJobs, acceptJob } from '@/services/jobService';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { MapPin, DollarSign, X } from 'lucide-react';
+import { JobCardSkeleton } from '@/components/ui/Skeleton';
+import { MapPin, DollarSign, X, Briefcase, Wrench, Zap } from 'lucide-react';
 
 export default function JobsPage() {
   const { currentUser } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selected, setSelected] = useState(null);
   const [accepting, setAccepting] = useState(false);
+  const [search, setSearch] = useState('');
 
-  const fetchJobs = async () => {
+  const fetch = async () => {
     setLoading(true);
     try {
-      const openJobs = await getOpenJobs();
-      setJobs(openJobs);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
+      setJobs(await getOpenJobs());
+    } catch (e) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  useEffect(() => { const raf = requestAnimationFrame(() => fetch()); return () => cancelAnimationFrame(raf); }, []);
 
-  const handleAcceptJob = async () => {
-    if (!selectedJob || !currentUser) return;
+  const handleAccept = async () => {
+    if (!selected || !currentUser) return;
     setAccepting(true);
     try {
-      const handymanName = currentUser.displayName || currentUser.email;
-      await acceptJob(selectedJob.id, currentUser.uid, handymanName);
-      
-      setSelectedJob(null);
-      await fetchJobs();
-    } catch (error) {
-      console.error("Error accepting job:", error);
+      await acceptJob(selected.id, currentUser.uid, currentUser.displayName || currentUser.email);
+      setSelected(null);
+      await fetch();
+    } catch (e) {
+      console.error(e);
     } finally {
       setAccepting(false);
     }
   };
 
+  const filtered = jobs.filter((j) => j.title?.toLowerCase().includes(search.toLowerCase()) || j.description?.toLowerCase().includes(search.toLowerCase()));
+
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Available Jobs</h1>
-        <p className="text-gray-500 mt-2">Browse open requests from clients in your area.</p>
+    <div className="mx-auto max-w-5xl space-y-5 px-4 pb-24 pt-5 lg:pb-10">
+      <div>
+        <p className="text-xs text-gray-500">Find Work</p>
+        <h1 className="mt-0.5 text-xl font-bold text-gray-900">Browse open requests</h1>
+      </div>
+
+      <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2.5">
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search jobs..." className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400" />
       </div>
 
       {loading ? (
-        // NEW: Show 4 skeleton cards while loading from Firebase
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <JobCardSkeleton />
-          <JobCardSkeleton />
-          <JobCardSkeleton />
-          <JobCardSkeleton />
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[1, 2, 3, 4].map((i) => (<JobCardSkeleton key={i} />))}
         </div>
-      ) : jobs.length === 0 ? (
-        <Card>
-          <p className="text-gray-500 text-center py-8">No open jobs right now. Check back soon!</p>
-        </Card>
+      ) : filtered.length === 0 ? (
+        <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
+          <Briefcase size={28} className="mx-auto text-gray-300" />
+          <p className="mt-3 text-sm font-medium text-gray-500">No open jobs right now</p>
+          <p className="mt-0.5 text-xs text-gray-400">Check back soon</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {jobs.map(job => (
-            <Card key={job.id} className="flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-xl font-bold text-gray-900">{job.title}</h3>
-                  <span className="flex items-center font-bold text-orange-500 text-lg">
-                    <DollarSign size={18} />
-                    {job.budget}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {filtered.map((job) => (
+            <motion.button
+              key={job.id}
+              layout
+              onClick={() => setSelected(job)}
+              className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 text-left transition-colors hover:bg-gray-50"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-500 font-semibold text-sm">
+                    {job.title?.[0]?.toUpperCase() || 'J'}
                   </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-900">{job.title}</p>
+                    <p className="flex items-center gap-1 text-xs text-gray-500 mt-0.5"><MapPin size={10} /> Nearby</p>
+                  </div>
                 </div>
-                <p className="text-gray-600 mb-6 line-clamp-2">{job.description}</p>
-              </div>
-              
-              <div className="flex items-center justify-between mt-4 border-t pt-4">
-                <span className="flex items-center text-sm text-gray-500 gap-1">
-                  <MapPin size={16} /> Remote
+                <span className="flex shrink-0 items-center gap-0.5 rounded-md bg-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-600">
+                  <DollarSign size={11} /> {job.budget}
                 </span>
-                <Button onClick={() => setSelectedJob(job)}>View Details</Button>
               </div>
-            </Card>
+              {job.description && <p className="mt-2 text-xs text-gray-500 line-clamp-2">{job.description}</p>}
+            </motion.button>
           ))}
         </div>
       )}
 
-      {/* Job Details Modal */}
-      {selectedJob && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/50 z-40" onClick={() => setSelectedJob(null)}></div>
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 z-50 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-2xl font-bold text-gray-900">{selectedJob.title}</h3>
-              <button onClick={() => setSelectedJob(null)} className="text-gray-400 hover:text-gray-900">
-                <X size={24} />
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center text-xl font-bold text-orange-500">
-                <DollarSign size={20} /> {selectedJob.budget}
-              </div>
-              
-              <div>
-                <h4 className="text-sm font-semibold text-gray-900 mb-1">Description</h4>
-                <p className="text-gray-600 whitespace-pre-wrap">{selectedJob.description}</p>
-              </div>
-            </div>
+      {/* Detail sheet */}
+      <AnimatePresence>
+        {selected && (
+          <div className="fixed inset-0 z-[100] flex items-end justify-center sm:p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/20" onClick={() => setSelected(null)} />
+            <motion.div
+              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="relative w-full max-w-lg rounded-t-2xl border border-gray-200 bg-white shadow-xl sm:rounded-2xl z-10"
+            >
+              <div className="flex justify-center pt-3 pb-1"><div className="h-1 w-10 rounded-full bg-gray-300" /></div>
+              <div className="px-5 pb-5">
+                <div className="flex items-start justify-between gap-4 pt-2">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-500"><Wrench size={20} /></span>
+                    <div className="min-w-0">
+                      <p className="text-base font-bold text-gray-900">{selected.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">Job details</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setSelected(null)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100"><X size={15} /></button>
+                </div>
 
-            <div className="mt-8 flex gap-3">
-              <Button variant="ghost" className="flex-1" onClick={() => setSelectedJob(null)}>
-                Close
-              </Button>
-              <Button className="flex-1" onClick={handleAcceptJob} disabled={accepting}>
-                {accepting ? 'Accepting...' : 'Accept Job'}
-              </Button>
-            </div>
+                <div className="mt-4 inline-flex items-center gap-1 rounded-md bg-orange-50 px-3 py-1 text-sm font-semibold text-orange-600">
+                  <DollarSign size={14} /> {selected.budget}
+                </div>
+
+                {selected.description && (
+                  <div className="mt-4">
+                    <p className="text-xs font-semibold text-gray-900 mb-1.5">Description</p>
+                    <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{selected.description}</p>
+                  </div>
+                )}
+
+                <div className="mt-5 flex gap-3">
+                  <button onClick={() => setSelected(null)} className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50">Close</button>
+                  <button onClick={handleAccept} disabled={accepting} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-orange-500 py-2.5 text-sm font-medium text-white transition-colors hover:bg-orange-600 disabled:opacity-60">
+                    {accepting ? 'Accepting...' : (<><Zap size={15} /> Accept</>)}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

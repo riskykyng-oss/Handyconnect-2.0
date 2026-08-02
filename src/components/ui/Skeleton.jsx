@@ -1,12 +1,12 @@
 import React from 'react';
 
 export const Skeleton = ({ className = '' }) => (
-  <div className={`bg-slate-200 rounded-xl animate-pulse ${className}`}></div>
+  <div aria-hidden="true" className={`animate-pulse rounded-xl bg-gray-200 ${className}`}></div>
 );
 
 // A specific skeleton for Job Cards
 export const JobCardSkeleton = () => (
-  <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between">
+  <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
     <div>
       <div className="flex justify-between mb-3">
         <Skeleton className="w-2/3 h-6" />

@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../firebase/config';
-import { getUserDocument, updateUserRole } from '../../../firebase/firestore';
-import { loginUser, registerUser, logoutUser, resetPassword } from '../../../firebase/auth';
+import { auth } from '@/firebase/config';
+import { getUserDocument, updateUserRole } from '@/firebase/firestore';
+import { loginUser, registerUser, logoutUser, resetPassword, loginWithGoogle } from '@/firebase/auth';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
@@ -16,10 +17,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log("Firebase Auth: User logged in!");
         setCurrentUser(user);
-        const userDoc = await getUserDocument(user.uid);
-        setUserRole(userDoc?.role || null);
+        
+        // Fetch user role, but catch errors so the app doesn't freeze
+        try {
+          const userDoc = await getUserDocument(user.uid);
+          console.log("Firestore: User document fetched:", userDoc);
+          setUserRole(userDoc?.role || null);
+        } catch (error) {
+          console.error("Error fetching user document. Check Firestore rules!", error);
+          setUserRole(null);
+        }
       } else {
+        console.log("Firebase Auth: No user logged in.");
         setCurrentUser(null);
         setUserRole(null);
       }
@@ -29,11 +40,10 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  // NEW: This function updates Firestore AND the local context state simultaneously
   const assignRole = async (role) => {
     if (!currentUser) throw new Error("No user logged in");
     await updateUserRole(currentUser.uid, role);
-    setUserRole(role); // <--- This is the magic line that fixes the redirect!
+    setUserRole(role);
   };
 
   const value = {
@@ -44,7 +54,8 @@ export const AuthProvider = ({ children }) => {
     register: registerUser,
     logout: logoutUser,
     resetPassword: resetPassword,
-    assignRole // Expose the new function
+    loginWithGoogle,
+    assignRole
   };
 
   return (
