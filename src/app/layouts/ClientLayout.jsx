@@ -48,7 +48,6 @@ const bottomNavItems = [
 function UpcomingJobs() {
   const navigate = useNavigate();
   const jobs = [
-    { title: 'Fix leaking faucet', pro: 'Tawanda M.', time: 'Today, 2:00 PM', amount: '$45' },
     { title: 'Electrical wiring', pro: 'Kuda D.', time: 'Tomorrow, 10:00 AM', amount: '$120' },
   ];
   return (
@@ -77,7 +76,6 @@ function UpcomingJobs() {
 
 function UnreadMessages() {
   const msgs = [
-    { name: 'Tawanda M.', preview: 'Sure, I can come by tomorrow...', time: '5m ago', unread: true },
     { name: 'Kuda D.', preview: 'The estimate is ready', time: '1h ago', unread: false },
   ];
   return (
