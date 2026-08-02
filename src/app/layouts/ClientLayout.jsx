@@ -41,7 +41,7 @@ const bottomNavItems = [
   { name: 'Explore', path: '/client/explore', icon: Search },
   { name: 'Post Job', path: '/client/home?post=1', icon: Plus, primary: true },
   { name: 'Messages', path: '/client/messages', icon: MessageSquare },
-  { name: 'Profile', path: '/client/profile', icon: User },
+  { name: 'Community', path: '/community', icon: Users },
 ];
 
 function UpcomingJobs() {

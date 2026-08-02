@@ -15,13 +15,13 @@ const nav = [
   { name: 'Profile', path: '/handyman/profile', icon: UserCircle },
 ];
 
-// Mobile bottom nav — 5 items, Instagram-style. Wallet is the primary (center) action.
+// Mobile bottom nav — 5 items, Instagram-style. Dashboard is the primary (center) action.
 const bottomNav = [
   { name: 'Work', path: '/handyman/jobs', icon: Briefcase },
   { name: 'My Jobs', path: '/handyman/my-jobs', icon: ClipboardCheck },
-  { name: 'Wallet', path: '/handyman/wallet', icon: Wallet, primary: true },
+  { name: 'Dashboard', path: '/handyman/dashboard', icon: Home, primary: true },
   { name: 'Messages', path: '/handyman/messages', icon: MessageSquare },
-  { name: 'Profile', path: '/handyman/profile', icon: UserCircle },
+  { name: 'Community', path: '/community', icon: Users },
 ];
 
 function SidebarContent({ onNavigate, unread }) {
