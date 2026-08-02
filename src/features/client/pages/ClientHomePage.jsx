@@ -23,7 +23,7 @@ const prosFromUsers = (users) =>
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
     rating: typeof u.rating === 'number' ? u.rating : 5,
     jobs: u.jobs || 0,
-    image: u.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80',
+    image: u.photoURL || null,
   }));
 
 function timeAgo(date) {
@@ -140,7 +140,13 @@ export default function ClientHomePage() {
                 className="flex shrink-0 flex-col items-center gap-3 rounded-2xl bg-white p-5 shadow-sm border border-gray-200 w-[150px]"
               >
                 <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-orange-200">
-                  <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
+                  {pro.image ? (
+                    <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center bg-orange-100 text-sm font-bold text-orange-700">
+                      {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?'}
+                    </span>
+                  )}
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-bold text-gray-900">{pro.name}</p>

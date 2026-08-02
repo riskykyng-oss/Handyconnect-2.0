@@ -40,7 +40,7 @@ const cardFromUser = (u) => ({
   completion: u.completionRate ? `${u.completionRate}%` : '—',
   response: u.avgResponseTime ? `${u.avgResponseTime}` : '—',
   price: u.hourlyRate ? `$${u.hourlyRate}/hr` : '—',
-  image: u.photoURL || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+  image: u.photoURL || null,
   available: u.available !== false,
   verified: !!u.verified,
   distance: '—',
@@ -59,7 +59,15 @@ function ProCard({ pro, index }) {
       onClick={() => navigate('/client/messages')}
     >
       <div className="relative h-32 overflow-hidden">
-        <img src={pro.image} alt={pro.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        {pro.image ? (
+          <img src={pro.image} alt={pro.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-orange-100">
+            <span className="font-display text-3xl font-extrabold text-orange-600">
+              {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?'}
+            </span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         {pro.available && (
           <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-bold text-white shadow">
@@ -108,7 +116,13 @@ function ProCardCompact({ pro, index, onMessage }) {
     >
       <div className="relative shrink-0">
         <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-orange-200 transition-transform duration-200 group-hover:scale-105">
-          <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
+          {pro.image ? (
+            <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center bg-orange-100 text-sm font-bold text-orange-700">
+              {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?'}
+            </span>
+          )}
         </div>
         <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white ${pro.available ? 'bg-emerald-500' : 'bg-gray-300'}`} />
       </div>
