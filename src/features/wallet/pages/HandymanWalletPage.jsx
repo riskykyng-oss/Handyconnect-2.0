@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { format, startOfDay, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 import { Loader2, Wallet, BarChart3, Landmark, ReceiptText, Send, History, Download, Check, RefreshCcw, FileText, Settings, QrCode } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { subscribeToWallet, getTransactions } from '@/services/walletService';
+import { subscribeToWallet, subscribeToTransactions } from '@/services/walletService';
 import { subscribeToUserPayments, subscribeToMyPayouts, MIN_WITHDRAWAL } from '@/services/paymentService';
 import WalletTabs from '@/features/wallet/components/WalletTabs';
 import SectionCard from '@/features/wallet/components/SectionCard';
@@ -47,10 +47,10 @@ export default function HandymanWalletPage() {
       setWallet(w);
       setLoading(false);
     });
-    getTransactions(currentUser.uid).then(setTransactions).catch(() => setTransactions([]));
+    const unsubTxs = subscribeToTransactions(currentUser.uid, setTransactions);
     const unsubPayments = subscribeToUserPayments(currentUser.uid, 'recipientId', setPayments);
     const unsubPayouts = subscribeToMyPayouts(currentUser.uid, setPayouts);
-    return () => { unsubWallet(); unsubPayments(); unsubPayouts(); };
+    return () => { unsubWallet(); unsubTxs(); unsubPayments(); unsubPayouts(); };
   }, [currentUser]);
 
   const balance = Number(wallet?.balance || 0);
@@ -58,6 +58,11 @@ export default function HandymanWalletPage() {
 
   const creditTxs = useMemo(() => transactions.filter((tx) => tx.kind === 'credit'), [transactions]);
   const lifetime = useMemo(() => creditTxs.reduce((s, tx) => s + Number(tx.amount || 0), 0), [creditTxs]);
+
+  const totalWithdrawn = useMemo(
+    () => transactions.filter((tx) => tx.kind === 'debit' && tx.type === 'withdrawal').reduce((s, tx) => s + Number(tx.amount || 0), 0),
+    [transactions]
+  );
 
   const breakdown = useMemo(() => {
     const now = new Date();
@@ -140,6 +145,14 @@ export default function HandymanWalletPage() {
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Lifetime Earnings</p>
                 <p className="mt-1 font-display text-lg font-extrabold text-emerald-600">${lifetime.toFixed(2)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Total Withdrawn</p>
+                <p className="mt-1 font-display text-lg font-extrabold text-gray-900">-${totalWithdrawn.toFixed(2)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Net After Withdrawals</p>
+                <p className="mt-1 font-display text-lg font-extrabold text-blue-600">${Math.max(0, lifetime - totalWithdrawn).toFixed(2)}</p>
               </div>
             </div>
           </div>

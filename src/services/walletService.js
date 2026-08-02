@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, onSnapshot, collection, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
 export const getWallet = async (uid) => {
@@ -16,4 +16,15 @@ export const getTransactions = async (uid) => {
   const q = query(collection(db, 'transactions'), where('uid', '==', uid), orderBy('createdAt', 'desc'));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+};
+
+export const subscribeToTransactions = (uid, callback) => {
+  const q = query(collection(db, 'transactions'), where('uid', '==', uid), orderBy('createdAt', 'desc'));
+  return onSnapshot(
+    q,
+    (snap) => {
+      callback(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    },
+    () => callback([])
+  );
 };

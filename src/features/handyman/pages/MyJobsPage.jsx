@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Briefcase, Search, Star, Clock, DollarSign, ArrowDownToLine, Wallet, Image, MessageCircle, RotateCcw } from 'lucide-react';
 import { getHandymanJobs, startJob, completeJob, updateJobProgress } from '@/services/jobService';
 import { getUserProfile } from '@/services/userService';
-import { subscribeToWallet, getTransactions } from '@/services/walletService';
+import { subscribeToWallet, subscribeToTransactions } from '@/services/walletService';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { JobCardSkeleton } from '@/components/ui/Skeleton';
 import { toast } from '@/app/providers/ToastProvider';
@@ -94,47 +94,45 @@ export default function MyJobsPage() {
   useEffect(() => {
     if (!currentUser) return undefined;
     const unsub = subscribeToWallet(currentUser.uid, setWallet);
+    const unsubTx = subscribeToTransactions(currentUser.uid, (txns) => {
+      const now = new Date();
+      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfYesterday = new Date(startOfDay);
+      startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+      const dow = (now.getDay() + 6) % 7;
+      const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow);
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const byDay = {};
+      for (let i = 0; i < 7; i += 1) {
+        byDay[new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i).toDateString()] = 0;
+      }
+      const sums = { today: 0, week: 0, month: 0, yesterday: 0 };
+      txns.forEach((t) => {
+        if (t.kind !== 'credit' || t.type !== 'payment') return;
+        const d = t.createdAt?.toDate ? t.createdAt.toDate() : new Date(t.createdAt);
+        if (Number.isNaN(d.getTime())) return;
+        const amt = Number(t.amount) || 0;
+        if (d >= startOfDay) sums.today += amt;
+        if (d >= startOfYesterday && d < startOfDay) sums.yesterday += amt;
+        if (d >= monday) sums.week += amt;
+        if (d >= startOfMonth) sums.month += amt;
+        if (d.toDateString() in byDay) byDay[d.toDateString()] += amt;
+      });
+      setEarnings(sums);
+      setWeekly(
+        WEEKDAY_LABELS.map((label, i) => {
+          const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+          return { label, value: byDay[d.toDateString()] || 0 };
+        })
+      );
+    });
     getUserProfile(currentUser.uid)
       .then((p) => {
         setRating(p?.rating ?? null);
         setMyLocation(p?.location || null);
       })
       .catch(() => {});
-    getTransactions(currentUser.uid)
-      .then((txns) => {
-        const now = new Date();
-        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const startOfYesterday = new Date(startOfDay);
-        startOfYesterday.setDate(startOfYesterday.getDate() - 1);
-        const dow = (now.getDay() + 6) % 7;
-        const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow);
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const byDay = {};
-        for (let i = 0; i < 7; i += 1) {
-          byDay[new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i).toDateString()] = 0;
-        }
-        const sums = { today: 0, week: 0, month: 0, yesterday: 0 };
-        txns.forEach((t) => {
-          if (t.kind !== 'credit' || t.type !== 'payment') return;
-          const d = t.createdAt?.toDate ? t.createdAt.toDate() : new Date(t.createdAt);
-          if (Number.isNaN(d.getTime())) return;
-          const amt = Number(t.amount) || 0;
-          if (d >= startOfDay) sums.today += amt;
-          if (d >= startOfYesterday && d < startOfDay) sums.yesterday += amt;
-          if (d >= monday) sums.week += amt;
-          if (d >= startOfMonth) sums.month += amt;
-          if (d.toDateString() in byDay) byDay[d.toDateString()] += amt;
-        });
-        setEarnings(sums);
-        setWeekly(
-          WEEKDAY_LABELS.map((label, i) => {
-            const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
-            return { label, value: byDay[d.toDateString()] || 0 };
-          })
-        );
-      })
-      .catch(() => {});
-    return unsub;
+    return () => { unsub(); unsubTx(); };
   }, [currentUser]);
 
   const statuses = useMemo(() => jobs.map(deriveJobStatus), [jobs]);
@@ -167,7 +165,17 @@ export default function MyJobsPage() {
     return Math.round(((earnings.today - earnings.yesterday) / earnings.yesterday) * 100);
   }, [earnings]);
 
-  const maxDay = useMemo(() => Math.max(...weekly.map((d) => d.value), 0.01), [weekly]);
+  const dailyDeltas = useMemo(() => {
+    const deltas = [];
+    for (let i = 0; i < weekly.length; i += 1) {
+      const prev = i > 0 ? weekly[i - 1].value : 0;
+      const cur = weekly[i].value;
+      deltas.push({ label: weekly[i].label, value: cur, delta: cur - prev });
+    }
+    return deltas;
+  }, [weekly]);
+
+  const maxDelta = useMemo(() => Math.max(...dailyDeltas.map((d) => Math.abs(d.delta)), 0.01), [dailyDeltas]);
 
   const handleConfirm = async () => {
     if (!confirmAction) return;
@@ -243,23 +251,36 @@ export default function MyJobsPage() {
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
-            {/* Weekly earnings + chart */}
+            {/* Daily change + month tally */}
             <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-gray-500">This Week</p>
-                <span className="text-[10px] font-semibold text-gray-400">Daily totals</span>
+                <p className="text-xs font-medium text-gray-500">Daily Earnings</p>
+                <span className="text-[10px] font-semibold text-gray-400">Change vs prior day</span>
               </div>
               <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${earnings.week.toFixed(2)}</p>
               <div className="mt-5 flex items-end gap-1.5">
-                {weekly.map((d) => {
-                  const h = d.value > 0 ? Math.max(8, Math.round((d.value / maxDay) * 48)) : 4;
+                {dailyDeltas.map((d) => {
+                  const up = d.delta > 0;
+                  const down = d.delta < 0;
+                  const h = d.delta !== 0 ? Math.max(8, Math.round((Math.abs(d.delta) / maxDelta) * 48)) : 4;
                   return (
                     <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5">
-                      <div className="w-full rounded-md bg-orange-500" style={{ height: h }} title={`${d.label}: $${d.value.toFixed(2)}`} />
+                      <span className={`text-[9px] font-bold ${up ? 'text-emerald-600' : down ? 'text-red-500' : 'text-gray-300'}`}>
+                        {d.delta !== 0 ? `${up ? '+' : ''}$${d.delta.toFixed(0)}` : ''}
+                      </span>
+                      <div
+                        className={`w-full rounded-md ${up ? 'bg-emerald-500' : down ? 'bg-red-400' : 'bg-gray-200'}`}
+                        style={{ height: h }}
+                        title={`${d.label}: ${up ? '+' : ''}$${d.delta.toFixed(2)} ($${d.value.toFixed(2)} total)`}
+                      />
                       <span className="text-[10px] font-medium text-gray-400">{d.label}</span>
                     </div>
                   );
                 })}
+              </div>
+              <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Month Tally</p>
+                <p className="font-display text-sm font-extrabold text-gray-900">${earnings.month.toFixed(2)}</p>
               </div>
             </div>
 
@@ -273,7 +294,7 @@ export default function MyJobsPage() {
               >
                 <ArrowDownToLine size={14} /> Withdraw
               </button>
-              <p className="mt-2 text-center text-[10px] text-gray-400">This week · ${earnings.week.toFixed(2)}</p>
+              <p className="mt-2 text-center text-[10px] text-gray-400">This month · ${earnings.month.toFixed(2)}</p>
             </div>
           </div>
         </>
