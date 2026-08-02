@@ -55,7 +55,7 @@ const ActionButton = ({ onClick, disabled, icon: Icon, label, tone = 'neutral', 
       tone === 'primary' && 'bg-orange-500 text-white hover:bg-orange-600',
       tone === 'success' && 'bg-emerald-500 text-white hover:bg-emerald-600',
       tone === 'purple' && 'bg-purple-500 text-white hover:bg-purple-600',
-      tone === 'neutral' && 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
+      tone === 'neutral' && 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50',
       className
     )}
   >
@@ -86,14 +86,14 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       {/* Header: client + status */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar src={client?.photoURL} name={clientName} size="md" />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="truncate text-sm font-bold text-gray-900 dark:text-white">{clientName}</p>
+              <p className="truncate text-sm font-bold text-gray-900">{clientName}</p>
               {client?.verified && <BadgeCheck size={15} className="shrink-0 text-blue-500" />}
             </div>
             <div className="mt-0.5 flex items-center gap-1 text-xs text-gray-500">
@@ -116,11 +116,11 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
       </div>
 
       {/* Title */}
-      <p className="mt-3 font-display text-base font-bold text-gray-900 dark:text-white">{job.title || 'Untitled job'}</p>
+      <p className="mt-3 font-display text-base font-bold text-gray-900">{job.title || 'Untitled job'}</p>
 
       {/* Meta chips */}
       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-500">
-        <span className="font-semibold text-gray-700 dark:text-gray-300">{money(job.budget)}</span>
+        <span className="font-semibold text-gray-700">{money(job.budget)}</span>
         {job.createdAt && <span className="flex items-center gap-1"><CalendarClock size={12} /> Posted {timeAgo(job.createdAt)}</span>}
         {startedAt && <span className="flex items-center gap-1"><Play size={12} /> Started {timeAgo(startedAt)}</span>}
       </div>
@@ -132,7 +132,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
             <span>Progress</span>
             <span>{progress}%</span>
           </div>
-          <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
+          <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-gray-100">
             <div className="h-full rounded-full bg-orange-500 transition-all" style={{ width: `${Math.min(100, progress)}%` }} />
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
 
       {/* Description */}
       {job.description && (
-        <p className={clsx('mt-2.5 text-xs leading-relaxed text-gray-500 dark:text-gray-400', !expanded && 'line-clamp-2')}>{job.description}</p>
+        <p className={clsx('mt-2.5 text-xs leading-relaxed text-gray-500', !expanded && 'line-clamp-2')}>{job.description}</p>
       )}
 
       {/* Primary actions */}
@@ -153,7 +153,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
         <button
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
         >
           <ChevronDown size={16} className={clsx('transition-transform', expanded && 'rotate-180')} />
         </button>
@@ -161,7 +161,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
 
       {/* Expanded details */}
       {expanded && (
-        <div className="mt-4 space-y-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+        <div className="mt-4 space-y-4 border-t border-gray-100 pt-4">
           {/* Milestones */}
           <div>
             <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400">Job timeline</p>
@@ -174,15 +174,15 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
                       <span
                         className={clsx(
                           'flex h-6 w-6 items-center justify-center rounded-full border-2 text-[9px] font-bold',
-                          reached ? 'border-orange-500 bg-orange-500 text-white' : 'border-gray-200 bg-white text-gray-400 dark:border-gray-600 dark:bg-gray-800'
+                          reached ? 'border-orange-500 bg-orange-500 text-white' : 'border-gray-200 bg-white text-gray-400'
                         )}
                       >
                         {reached ? '✓' : i + 1}
                       </span>
-                      <span className={clsx('mt-1 text-[9px] font-semibold', reached ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400')}>{step}</span>
+                      <span className={clsx('mt-1 text-[9px] font-semibold', reached ? 'text-gray-700' : 'text-gray-400')}>{step}</span>
                     </div>
                     {i < MILESTONES.length - 1 && (
-                      <div className={clsx('mx-1 mb-4 h-0.5 flex-1 rounded-full', i < milestoneIndex(job) - 1 ? 'bg-orange-500' : 'bg-gray-200 dark:bg-gray-600')} />
+                      <div className={clsx('mx-1 mb-4 h-0.5 flex-1 rounded-full', i < milestoneIndex(job) - 1 ? 'bg-orange-500' : 'bg-gray-200')} />
                     )}
                   </div>
                 );
@@ -201,7 +201,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
                   <div key={i} className="flex items-start gap-2.5">
                     <Icon size={15} className={clsx('mt-0.5 shrink-0', tMeta.cls)} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{t.label}</p>
+                      <p className="text-xs font-semibold text-gray-700">{t.label}</p>
                       <p className="text-[10px] text-gray-400">{timeAgo(t.createdAt)}</p>
                     </div>
                   </div>
@@ -211,11 +211,11 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
           )}
 
           {/* Client contact */}
-          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-gray-50 p-3 dark:bg-gray-700/40">
+          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-gray-50 p-3">
             <FileText size={14} className="text-gray-400" />
-            <span className="text-xs text-gray-600 dark:text-gray-300">{area}</span>
+            <span className="text-xs text-gray-600">{area}</span>
             {client?.phone && (
-              <a href={`tel:${client.phone}`} className="ml-auto flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-600">
+              <a href={`tel:${client.phone}`} className="ml-auto flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50">
                 <Phone size={12} className="text-emerald-500" /> {client.phone}
               </a>
             )}
@@ -223,9 +223,9 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
 
           {/* Progress control */}
           {status === 'in_progress' && (
-            <div className="rounded-xl bg-gray-50 p-3 dark:bg-gray-700/40">
+            <div className="rounded-xl bg-gray-50 p-3">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-bold text-gray-700 dark:text-gray-200">Update progress</p>
+                <p className="text-xs font-bold text-gray-700">Update progress</p>
                 <span className="text-xs font-bold text-orange-600">{progressValue}%</span>
               </div>
               <input
@@ -238,7 +238,7 @@ export default function HandymanJobCard({ job, client, onStart, onComplete, onRe
                 className="mt-2 w-full accent-orange-500"
               />
               <div className="mt-2 flex justify-end gap-2">
-                <button onClick={() => setProgressValue(progress)} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <button onClick={() => setProgressValue(progress)} className="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-500 hover:bg-gray-100">
                   Reset
                 </button>
                 <button

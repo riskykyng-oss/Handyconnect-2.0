@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { format } from 'date-fns';
-import { Briefcase, Search, Star, Play, CircleDollarSign, Wallet, RotateCcw } from 'lucide-react';
+import { Briefcase, Search, Star, Clock, DollarSign, ArrowDownToLine, Wallet, Image, MessageCircle, RotateCcw } from 'lucide-react';
 import { getHandymanJobs, startJob, completeJob, updateJobProgress } from '@/services/jobService';
 import { getUserProfile } from '@/services/userService';
 import { subscribeToWallet, getTransactions } from '@/services/walletService';
@@ -20,26 +19,27 @@ const FILTERS = [
   { id: 'completed', label: 'Completed' },
 ];
 
-const StatCard = ({ icon: Icon, label, value, tint }) => {
-  const tints = {
-    orange: 'bg-orange-50 text-orange-500 dark:bg-orange-500/10 dark:text-orange-400',
-    blue: 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400',
-    purple: 'bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400',
-    amber: 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400',
-  };
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${tints[tint]}`}>
-        <Icon size={18} />
-      </div>
-      <p className="font-display text-2xl font-extrabold text-gray-900 dark:text-white">{value}</p>
-      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{label}</p>
-    </div>
-  );
-};
+const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+const QUICK_ACTIONS = [
+  { label: 'Find Work', icon: Search, to: '/handyman/jobs' },
+  { label: 'Portfolio', icon: Image, to: '/handyman/portfolio' },
+  { label: 'Wallet', icon: Wallet, to: '/handyman/wallet' },
+  { label: 'Messages', icon: MessageCircle, to: '/handyman/messages' },
+];
+
+const StatCard = ({ icon: Icon, label, value }) => (
+  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+      <Icon size={18} />
+    </span>
+    <p className="mt-3 font-display text-2xl font-extrabold text-gray-900">{value}</p>
+    <p className="mt-0.5 text-xs text-gray-500">{label}</p>
+  </div>
+);
 
 const StatSkeleton = () => (
-  <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800" />
+  <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" />
 );
 
 export default function MyJobsPage() {
@@ -52,7 +52,8 @@ export default function MyJobsPage() {
   const [search, setSearch] = useState('');
   const [wallet, setWallet] = useState({ balance: 0 });
   const [rating, setRating] = useState(null);
-  const [earnings, setEarnings] = useState({ today: 0, week: 0, month: 0 });
+  const [earnings, setEarnings] = useState({ today: 0, week: 0, month: 0, yesterday: 0 });
+  const [weekly, setWeekly] = useState(WEEKDAY_LABELS.map((label) => ({ label, value: 0 })));
   const [confirmAction, setConfirmAction] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [paymentJob, setPaymentJob] = useState(null);
@@ -87,20 +88,34 @@ export default function MyJobsPage() {
       .then((txns) => {
         const now = new Date();
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() - now.getDay());
+        const startOfYesterday = new Date(startOfDay);
+        startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+        const dow = (now.getDay() + 6) % 7;
+        const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow);
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const sums = { today: 0, week: 0, month: 0 };
+        const byDay = {};
+        for (let i = 0; i < 7; i += 1) {
+          byDay[new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i).toDateString()] = 0;
+        }
+        const sums = { today: 0, week: 0, month: 0, yesterday: 0 };
         txns.forEach((t) => {
           if (t.kind !== 'credit' || t.type !== 'payment') return;
           const d = t.createdAt?.toDate ? t.createdAt.toDate() : new Date(t.createdAt);
           if (Number.isNaN(d.getTime())) return;
           const amt = Number(t.amount) || 0;
           if (d >= startOfDay) sums.today += amt;
-          if (d >= startOfWeek) sums.week += amt;
+          if (d >= startOfYesterday && d < startOfDay) sums.yesterday += amt;
+          if (d >= monday) sums.week += amt;
           if (d >= startOfMonth) sums.month += amt;
+          if (d.toDateString() in byDay) byDay[d.toDateString()] += amt;
         });
         setEarnings(sums);
+        setWeekly(
+          WEEKDAY_LABELS.map((label, i) => {
+            const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+            return { label, value: byDay[d.toDateString()] || 0 };
+          })
+        );
       })
       .catch(() => {});
     return unsub;
@@ -108,7 +123,6 @@ export default function MyJobsPage() {
 
   const statuses = useMemo(() => jobs.map(deriveJobStatus), [jobs]);
   const activeCount = statuses.filter((s) => s === 'accepted' || s === 'in_progress').length;
-  const inProgressCount = statuses.filter((s) => s === 'in_progress').length;
   const awaitingCount = statuses.filter((s) => s === 'awaiting_payment').length;
   const completedCount = statuses.filter((s) => s === 'completed' || s === 'paid').length;
 
@@ -127,6 +141,17 @@ export default function MyJobsPage() {
       return true;
     });
   }, [jobs, filter, search, clients]);
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
+  const firstName = (currentUser?.displayName || '').split(' ')[0] || 'there';
+
+  const todayDelta = useMemo(() => {
+    if (earnings.yesterday <= 0) return earnings.today > 0 ? 100 : 0;
+    return Math.round(((earnings.today - earnings.yesterday) / earnings.yesterday) * 100);
+  }, [earnings]);
+
+  const maxDay = useMemo(() => Math.max(...weekly.map((d) => d.value), 0.01), [weekly]);
 
   const handleConfirm = async () => {
     if (!confirmAction) return;
@@ -173,144 +198,191 @@ export default function MyJobsPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-24 pt-5 lg:pb-10">
-      {/* Header */}
+      {/* Greeting */}
       <div>
-        <p className="text-xs font-medium text-gray-500">{format(new Date(), 'EEEE, MMM d')}</p>
-        <h1 className="mt-0.5 font-display text-xl font-extrabold tracking-tight text-gray-900">My Jobs</h1>
+        <h1 className="font-display text-2xl font-extrabold tracking-tight text-gray-900">
+          {greeting}, {firstName}
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">Here's an overview of today's work.</p>
       </div>
 
       {/* Stats + Earnings */}
       {loading ? (
         <>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatSkeleton /><StatSkeleton /><StatSkeleton /><StatSkeleton />
           </div>
-          <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800" style={{ height: 118 }} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" style={{ height: 180 }} />
+            <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" style={{ height: 180 }} />
+          </div>
         </>
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <StatCard icon={Briefcase} label="Active Jobs" value={activeCount} tint="orange" />
-            <StatCard icon={Play} label="In Progress" value={inProgressCount} tint="blue" />
-            <StatCard icon={CircleDollarSign} label="Awaiting Payment" value={awaitingCount} tint="purple" />
-            <StatCard icon={Star} label="Rating" value={rating ? Number(rating).toFixed(1) : '—'} tint="amber" />
+            <StatCard icon={Briefcase} label="Active Jobs" value={activeCount} />
+            <StatCard icon={DollarSign} label="Earnings" value={`$${Number(wallet.balance || 0).toFixed(0)}`} />
+            <StatCard icon={Clock} label="Awaiting Payment" value={awaitingCount} />
+            <StatCard icon={Star} label="Rating" value={rating ? Number(rating).toFixed(1) : '—'} />
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-500 dark:bg-orange-500/10 dark:text-orange-400">
-                  <Wallet size={18} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Balance</p>
-                  <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${Number(wallet.balance || 0).toFixed(2)}</p>
-                </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Today's earnings + weekly chart */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium text-gray-500">Today's Earnings</p>
+                {earnings.today > 0 && (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      todayDelta >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'
+                    }`}
+                  >
+                    {todayDelta >= 0 ? '↗' : '↘'} {Math.abs(todayDelta)}%
+                  </span>
+                )}
               </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Today</p>
-                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${earnings.today.toFixed(2)}</p>
+              <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${earnings.today.toFixed(2)}</p>
+              <div className="mt-5 flex items-end gap-1.5">
+                {weekly.map((d) => {
+                  const h = d.value > 0 ? Math.max(8, Math.round((d.value / maxDay) * 48)) : 4;
+                  return (
+                    <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5">
+                      <div className="w-full rounded-md bg-orange-500" style={{ height: h }} title={`${d.label}: $${d.value.toFixed(2)}`} />
+                      <span className="text-[10px] font-medium text-gray-400">{d.label}</span>
+                    </div>
+                  );
+                })}
               </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">This week</p>
-                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${earnings.week.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">This month</p>
-                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-white">${earnings.month.toFixed(2)}</p>
-              </div>
+            </div>
+
+            {/* Available balance */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+              <p className="text-xs font-medium text-gray-500">Available Balance</p>
+              <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${Number(wallet.balance || 0).toFixed(2)}</p>
+              <button
+                onClick={() => navigate('/handyman/wallet')}
+                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
+              >
+                <ArrowDownToLine size={14} /> Withdraw
+              </button>
+              <p className="mt-2 text-center text-[10px] text-gray-400">This week · ${earnings.week.toFixed(2)}</p>
             </div>
           </div>
         </>
       )}
 
-      {/* Filters + search */}
-      <div className="flex flex-col gap-3">
-        <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4">
-          {FILTERS.map((f) => {
-            const count = f.id === 'all' ? jobs.length : f.id === 'active' ? activeCount : f.id === 'awaiting' ? awaitingCount : completedCount;
-            const active = filter === f.id;
-            return (
-              <button
-                key={f.id}
-                onClick={() => setFilter(f.id)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold transition-colors ${
-                  active
-                    ? 'bg-orange-500 text-white shadow-sm'
-                    : 'bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700'
-                }`}
-              >
-                {f.label}
-                <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${active ? 'bg-white/20' : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'}`}>{count}</span>
-              </button>
-            );
-          })}
+      {/* Quick actions */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {QUICK_ACTIONS.map((a) => (
+          <Link
+            key={a.label}
+            to={a.to}
+            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-colors hover:bg-gray-50"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+              <a.icon size={18} />
+            </span>
+            <p className="mt-3 text-sm font-bold text-gray-900">{a.label}</p>
+          </Link>
+        ))}
+      </div>
+
+      {/* My Jobs */}
+      <div>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-display text-lg font-extrabold tracking-tight text-gray-900">My Jobs</h2>
+            <p className="mt-0.5 text-xs text-gray-500">Track your work, payments and client updates.</p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <Search size={15} className="shrink-0 text-gray-400" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by job, description or client..."
-            className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400 dark:text-white"
-          />
-          {search && (
-            <button onClick={() => setSearch('')} className="shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Clear search">
-              <RotateCcw size={13} />
-            </button>
+        <div className="mt-4 flex flex-col gap-3">
+          <div className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4">
+            {FILTERS.map((f) => {
+              const count = f.id === 'all' ? jobs.length : f.id === 'active' ? activeCount : f.id === 'awaiting' ? awaitingCount : completedCount;
+              const active = filter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setFilter(f.id)}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold transition-colors ${
+                    active ? 'bg-orange-500 text-white shadow-sm' : 'bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50'
+                  }`}
+                >
+                  {f.label}
+                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${active ? 'bg-white/20' : 'bg-gray-100 text-gray-500'}`}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm">
+            <Search size={15} className="shrink-0 text-gray-400" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by job, description or client..."
+              className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+            />
+            {search && (
+              <button onClick={() => setSearch('')} className="shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-100" aria-label="Clear search">
+                <RotateCcw size={13} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="mt-4">
+          {loading ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <JobCardSkeleton /><JobCardSkeleton /><JobCardSkeleton />
+            </div>
+          ) : jobs.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
+              <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+              <p className="text-sm font-semibold text-gray-500">No jobs yet</p>
+              <p className="mt-1 text-xs text-gray-400">
+                Browse open requests near you, accept a job, and start earning. Everything you work on will show up here.
+              </p>
+              <Link
+                to="/handyman/jobs"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
+              >
+                <Briefcase size={14} /> Find Work
+              </Link>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
+              <Search className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+              <p className="text-sm font-semibold text-gray-500">No matches found</p>
+              <p className="mt-1 text-xs text-gray-400">Try a different filter or search term.</p>
+              <button
+                onClick={() => { setFilter('all'); setSearch(''); }}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50"
+              >
+                <RotateCcw size={13} /> Reset filters
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {filtered.map((job) => (
+                <HandymanJobCard
+                  key={job.id}
+                  job={job}
+                  client={clients[job.clientId] || null}
+                  onStart={() => setConfirmAction({ job, type: 'start' })}
+                  onComplete={() => setConfirmAction({ job, type: 'complete' })}
+                  onRequestPayment={() => setPaymentJob(job)}
+                  onUpdateProgress={handleUpdateProgress}
+                  onChat={handleChat}
+                  onNavigate={handleNavigate}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
-
-      {/* Content */}
-      {loading ? (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <JobCardSkeleton /><JobCardSkeleton /><JobCardSkeleton />
-        </div>
-      ) : jobs.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
-          <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-          <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">No jobs yet</p>
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
-            Browse open requests near you, accept a job, and start earning. Everything you work on will show up here.
-          </p>
-          <Link
-            to="/handyman/jobs"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
-          >
-            <Briefcase size={14} /> Find Work
-          </Link>
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800">
-          <Search className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-          <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">No matches found</p>
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Try a different filter or search term.</p>
-          <button
-            onClick={() => { setFilter('all'); setSearch(''); }}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-          >
-            <RotateCcw size={13} /> Reset filters
-          </button>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {filtered.map((job) => (
-            <HandymanJobCard
-              key={job.id}
-              job={job}
-              client={clients[job.clientId] || null}
-              onStart={() => setConfirmAction({ job, type: 'start' })}
-              onComplete={() => setConfirmAction({ job, type: 'complete' })}
-              onRequestPayment={() => setPaymentJob(job)}
-              onUpdateProgress={handleUpdateProgress}
-              onChat={handleChat}
-              onNavigate={handleNavigate}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Confirm dialogs */}
       <ConfirmDialog
