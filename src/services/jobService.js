@@ -50,6 +50,25 @@ export const getAssignedJobs = async (handymanId) => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+// Fetch every job a handyman has ever worked on (any status)
+export const getHandymanJobs = async (handymanId) => {
+  const q = query(
+    collection(db, 'jobs'),
+    where('handymanId', '==', handymanId),
+    orderBy('createdAt', 'desc')
+  );
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+// Handyman marks an assigned job as started
+export const startJob = async (jobId) =>
+  updateDoc(doc(db, 'jobs', jobId), {
+    progress: 10,
+    startedAt: serverTimestamp(),
+    timeline: arrayUnion({ type: 'progress', label: 'Work started', createdAt: new Date() }),
+  });
+
 // Handyman accepts a job
 export const acceptJob = async (jobId, handymanId, handymanName) => {
   const jobRef = doc(db, 'jobs', jobId);
