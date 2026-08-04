@@ -99,48 +99,48 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center py-20"><Loader2 className="animate-spin text-orange-500" size={28} /></div>;
+    return <div className="flex items-center justify-center py-20"><Loader2 className="animate-spin text-hc-ink-3" size={28} /></div>;
   }
 
   return (
     <div className="mx-auto max-w-3xl space-y-5 px-4 pb-24 pt-5 lg:pb-10">
       <div>
-        <p className="text-xs text-gray-500">Profile</p>
-        <h1 className="mt-0.5 text-xl font-bold text-gray-900">Edit your profile</h1>
+        <p className="text-xs text-hc-caption">Profile</p>
+        <h1 className="mt-0.5 text-xl font-semibold tracking-tight text-hc-ink">Edit your profile</h1>
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+      <div className="rounded-xl border border-black/[0.07] bg-white overflow-hidden">
         {/* Avatar */}
-        <div className="flex items-center gap-5 bg-orange-50/50 p-5 sm:p-6">
+        <div className="flex items-center gap-5 bg-hc-tile p-5 sm:p-6">
           <div className="relative shrink-0">
             <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-gray-100 shadow-sm">
-              {profile.photoURL ? <img src={profile.photoURL} alt="" className="h-full w-full object-cover" /> : <User size={30} className="text-gray-400" />}
+              {profile.photoURL ? <img src={profile.photoURL} alt="" className="h-full w-full object-cover" /> : <User size={30} className="text-hc-ink-3" />}
             </div>
-            <button type="button" onClick={() => fileRef.current?.click()} className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-orange-500 text-white shadow-sm border-2 border-white hover:bg-orange-600 transition-colors">
-              {uploading ? <Loader2 size={12} className="animate-spin" /> : <Camera size={12} />}
+            <button type="button" onClick={() => fileRef.current?.click()} className="absolute -bottom-0.5 -right-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-hc-brand text-white shadow-sm border-2 border-white hover:bg-hc-brand-strong transition-colors">
+              {uploading ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
             </button>
             {profile.photoURL && (
               <button
                 type="button"
                 onClick={handleRemovePhoto}
                 title="Remove photo"
-                className="absolute -bottom-0.5 -left-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-white text-red-500 shadow-sm border-2 border-white hover:bg-red-50 transition-colors"
+                className="absolute -bottom-0.5 -left-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-white text-red-500 shadow-sm border-2 border-white hover:bg-red-50 transition-colors"
               >
-                <Trash2 size={12} />
+                <Trash2 size={13} />
               </button>
             )}
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImage} />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-base font-semibold text-gray-900">{profile.displayName || 'Your name'}</p>
-              {verified && <BadgeCheck size={16} className="shrink-0 fill-orange-500 text-white" />}
+              <p className="text-base font-semibold text-hc-ink">{profile.displayName || 'Your name'}</p>
+              {verified && <BadgeCheck size={16} className="shrink-0 fill-emerald-500 text-white" />}
             </div>
             <div className="flex items-center gap-1 text-sm text-amber-500 mt-0.5"><Star size={13} className="fill-amber-400" /> 0.0</div>
             {!verified && (
               <div className="mt-2">
                 {verifiedRequest === 'pending' ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-700">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-black/[0.06] px-2.5 py-1 text-[11px] font-bold text-hc-ink-2">
                     <Clock size={12} /> Verification pending review
                   </span>
                 ) : (
@@ -148,7 +148,7 @@ export default function ProfilePage() {
                     type="button"
                     onClick={handleVerifyRequest}
                     disabled={verifyBusy}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-2.5 py-1 text-[11px] font-bold text-orange-600 transition-colors hover:bg-orange-100 disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-black/[0.06] px-2.5 py-1 text-[11px] font-bold text-hc-ink-2 transition-colors hover:bg-black/[0.1] disabled:opacity-60"
                   >
                     {verifyBusy ? <Loader2 size={12} className="animate-spin" /> : <BadgeCheck size={12} />}
                     {verifiedRequest === 'rejected' ? 'Re-request verification' : 'Request verified badge'}
@@ -156,42 +156,42 @@ export default function ProfilePage() {
                 )}
               </div>
             )}
-            {verifyMsg && <p className="mt-1.5 text-[11px] font-medium text-gray-500">{verifyMsg}</p>}
+            {verifyMsg && <p className="mt-1.5 text-[11px] font-medium text-hc-caption">{verifyMsg}</p>}
           </div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSave} className="space-y-4 p-5 sm:p-6">
           <div>
-            <label className="text-xs font-medium text-gray-700 mb-1 block">Full Name</label>
+            <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Full Name</label>
             <input value={profile.displayName} onChange={(e) => setProfile({ ...profile, displayName: e.target.value })} placeholder="Your full name"
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-orange-400 focus:bg-white" />
+              className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-700 mb-1 block">Bio</label>
+            <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Bio</label>
             <textarea value={profile.bio} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} rows={3} placeholder="Tell clients about your experience..."
-              className="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-orange-400 focus:bg-white" />
+              className="w-full resize-none rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="text-xs font-medium text-gray-700 mb-1 block">Trade / Job type</label>
+              <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Trade / Job type</label>
               <input value={profile.skills} onChange={(e) => setProfile({ ...profile, skills: e.target.value })} placeholder="Type your trade, e.g. Electrician, Plumber..."
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-orange-400 focus:bg-white" />
-              <p className="mt-1 text-[11px] text-gray-400">Free text. Separate multiple trades with commas — the first one is shown as your primary job type.</p>
+                className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
+              <p className="mt-1 text-[11px] text-hc-caption">Free text. Separate multiple trades with commas — the first one is shown as your primary job type.</p>
             </div>
             <div>
-              <label className="text-xs font-medium text-gray-700 mb-1 block">Hourly Rate ($)</label>
+              <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Hourly Rate ($)</label>
               <input type="number" value={profile.hourlyRate} onChange={(e) => setProfile({ ...profile, hourlyRate: e.target.value })} placeholder="25"
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-orange-400 focus:bg-white" />
+                className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
             </div>
           </div>
           <div>
-            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-gray-700"><MapPin size={13} className="text-orange-500" /> Service Location</label>
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-hc-ink-2"><MapPin size={13} className="text-gray-400" /> Service Location</label>
             <LocationPicker initialLocation={location} onLocationChange={(loc) => setLocation(loc)} />
           </div>
           <div className="flex justify-end pt-2">
             <button type="submit" disabled={saving}
-              className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600 disabled:opacity-60">
+              className="inline-flex items-center gap-2 rounded-lg bg-hc-brand px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-60">
               {saving ? <Loader2 size={15} className="animate-spin" /> : null}
               {saving ? 'Saving...' : 'Save changes'}
             </button>

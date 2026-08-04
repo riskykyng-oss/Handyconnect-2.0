@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { getUserProfile } from '@/services/userService';
@@ -43,7 +43,7 @@ export default function JobCard({ job, onMessage, isClient }) {
     <Card className="flex flex-col justify-between rounded-2xl hover:shadow-lg transition-shadow duration-300">
       <div>
         <div className="flex justify-between items-start mb-3 gap-3">
-          <h3 className="font-display font-bold text-lg text-gray-900">{job.title}</h3>
+          <h3 className="font-semibold tracking-tight text-lg text-hc-ink">{job.title}</h3>
           <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize flex-shrink-0 ${statusStyles}`}>
             {job.status}
           </span>
@@ -53,15 +53,15 @@ export default function JobCard({ job, onMessage, isClient }) {
 
       <div className="flex items-center justify-between mt-2 border-t border-gray-100 pt-4">
         <div className="flex flex-col gap-1">
-          <span className="flex items-center font-display font-bold text-[#F97316]">
+          <span className="flex items-center font-semibold text-hc-ink">
             <DollarSign size={17} /> {job.budget}
           </span>
 
           {isAssigned ? (
             handyman ? (
               <div className="text-sm">
-                <p className="font-semibold flex items-center gap-1 text-gray-900">
-                  <CheckCircle2 size={13} className="text-[#F97316]" /> {handyman.displayName || job.handymanName}
+                <p className="font-semibold flex items-center gap-1 text-hc-ink">
+                  <CheckCircle2 size={13} className="text-emerald-500" /> {handyman.displayName || job.handymanName}
                 </p>
                 {handyman.skills && (
                   <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
@@ -87,14 +87,14 @@ export default function JobCard({ job, onMessage, isClient }) {
               variant="secondary"
               onClick={handleComplete}
               disabled={completing}
-              className="rounded-full bg-[#F97316] hover:bg-orange-600 text-white border-0 shadow-sm shadow-orange-500/20"
+              className="rounded-full bg-hc-brand hover:bg-hc-brand-strong text-white border-0 shadow-sm"
             >
               {completing ? 'Processing...' : 'Mark complete'}
             </Button>
           )}
           {isClient && isCompleted && (
-            <span className="flex items-center text-sm font-semibold text-gray-900 gap-1 bg-gray-100 px-3 py-1.5 rounded-full">
-              <PartyPopper size={14} className="text-[#F97316]" /> Funds released
+            <span className="flex items-center text-sm font-semibold text-hc-ink gap-1 bg-gray-100 px-3 py-1.5 rounded-full">
+              <PartyPopper size={14} className="text-emerald-500" /> Funds released
             </span>
           )}
           {isAssigned && !isCompleted && onMessage && (

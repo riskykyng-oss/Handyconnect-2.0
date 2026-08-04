@@ -1,18 +1,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Users, UserCheck, Briefcase, ClipboardCheck, CheckCircle, CircleDollarSign, MessageSquare, TrendingUp, Activity, Megaphone } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 import StatCard from '@/features/admin/components/StatCard';
 import PendingActions from '@/features/admin/components/PendingActions';
 import BroadcastModal from '@/features/admin/components/BroadcastModal';
 import { subscribeToUsers, subscribeToJobs } from '@/services/adminService';
 import { subscribeToPosts } from '@/services/postService';
+import { timeAgo } from '@/utils/time';
 
 const TRADE_ACCENTS = [
-  'bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400',
-  'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400',
-  'bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400',
-  'bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400',
-  'bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400',
+  'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300',
+  'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300',
+  'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300',
+  'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300',
+  'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300',
 ];
 
 const toMillis = (v) => (v?.toMillis ? v.toMillis() : v instanceof Date ? v.getTime() : Number(v) || 0);
@@ -26,10 +27,10 @@ function BarChart({ data }) {
         <div key={d.label} className="group relative flex flex-1 flex-col items-center justify-end gap-1.5">
           <span className="text-[10px] font-bold text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 dark:text-gray-500">{d.count}</span>
           <div
-            className={`w-full rounded-t-md transition-colors ${d.count > 0 ? 'bg-orange-500 hover:bg-orange-600' : 'bg-gray-100 dark:bg-gray-800'}`}
+            className={`w-full rounded-t-md transition-colors ${d.count > 0 ? 'bg-hc-brand hover:bg-hc-brand-strong' : 'bg-gray-100 dark:bg-gray-800'}`}
             style={{ height: `${Math.max((d.count / max) * 100, d.count > 0 ? 8 : 3)}%` }}
           />
-          <span className={`text-[10px] text-gray-400 dark:text-gray-500 ${d.isToday ? 'font-bold text-orange-500 dark:text-orange-400' : ''}`}>
+          <span className={`text-[10px] text-gray-400 dark:text-gray-500 ${d.isToday ? 'font-bold text-hc-brand dark:text-hc-brand-strong' : ''}`}>
             {d.isToday ? todayLabel : format(d.label, 'dd')}
           </span>
         </div>
@@ -90,7 +91,7 @@ export default function AdminDashboardPage() {
     const jobEvents = jobs.slice(0, 5).map((j) => ({
       id: `j-${j.id}`,
       icon: Briefcase,
-      accent: 'bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400',
+      accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300',
       title: `${j.title || 'A job'} posted`,
       detail: j.description ? j.description.slice(0, 60) : `Budget $${j.budget || 0}`,
       time: toMillis(j.createdAt),
@@ -98,7 +99,7 @@ export default function AdminDashboardPage() {
     const userEvents = users.slice(0, 5).map((u) => ({
       id: `u-${u.id}`,
       icon: Users,
-      accent: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400',
+      accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300',
       title: `${u.displayName || u.email} joined`,
       detail: `New ${u.role || 'pending'} account`,
       time: toMillis(u.createdAt),
@@ -108,19 +109,19 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="mx-auto max-w-7xl font-sans text-gray-900 dark:text-gray-100">
-      <div className="mb-8 flex items-center justify-between rounded-2xl bg-gray-900 p-8 text-white shadow-lg dark:border dark:border-gray-700">
+      <div className="mb-8 flex items-center justify-between gap-4 rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900 md:p-8">
         <div>
-          <h1 className="font-display text-3xl font-extrabold tracking-tight">Platform Overview</h1>
-          <p className="mt-1 text-gray-400">Monitor users, jobs, revenue and community activity in real time.</p>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">Platform Overview</h1>
+          <p className="mt-1 text-gray-500 dark:text-gray-400">Monitor users, jobs, revenue and community activity in real time.</p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setBroadcastOpen(true)}
-            className="hidden items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-colors hover:bg-orange-600 md:flex"
+            className="hidden items-center gap-2 rounded-full bg-hc-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-hc-brand-strong md:flex"
           >
             <Megaphone size={15} /> Broadcast
           </button>
-          <div className="hidden items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-orange-400 md:flex">
+          <div className="hidden items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-300 md:flex">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
@@ -130,15 +131,15 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-        <StatCard label="Total Users" value={stats.total} icon={Users} accent="bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400" trendLabel={`${stats.handymen} handymen · ${stats.clients} clients`} />
-        <StatCard label="Handymen" value={stats.handymen} icon={UserCheck} accent="bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400" trendLabel={`${stats.proCompletion}% have a photo`} />
-        <StatCard label="Clients" value={stats.clients} icon={Users} accent="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" />
-        <StatCard label="Total Jobs" value={stats.jobs} icon={Briefcase} accent="bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400" trendLabel={`${stats.active} active`} />
-        <StatCard label="Active Assignments" value={stats.active} icon={ClipboardCheck} accent="bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400" />
-        <StatCard label="Completed" value={stats.completed} icon={CheckCircle} accent="bg-green-100 text-green-600 dark:bg-green-500/10 dark:text-green-400" />
-        <StatCard label="Revenue" value={`$${stats.revenue.toLocaleString()}`} icon={CircleDollarSign} accent="bg-sky-100 text-sky-600 dark:bg-sky-500/10 dark:text-sky-400" trendLabel="From completed jobs" />
-        <StatCard label="Community Posts" value={stats.posts} icon={MessageSquare} accent="bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Total Users" value={stats.total} icon={Users} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" trendLabel={`${stats.handymen} handymen · ${stats.clients} clients`} />
+        <StatCard label="Handymen" value={stats.handymen} icon={UserCheck} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" trendLabel={`${stats.proCompletion}% have a photo`} />
+        <StatCard label="Clients" value={stats.clients} icon={Users} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
+        <StatCard label="Total Jobs" value={stats.jobs} icon={Briefcase} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" trendLabel={`${stats.active} active`} />
+        <StatCard label="Active Assignments" value={stats.active} icon={ClipboardCheck} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
+        <StatCard label="Completed" value={stats.completed} icon={CheckCircle} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
+        <StatCard label="Revenue" value={`$${stats.revenue.toLocaleString()}`} icon={CircleDollarSign} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" trendLabel="From completed jobs" />
+        <StatCard label="Community Posts" value={stats.posts} icon={MessageSquare} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
       </div>
 
       <div className="mt-6">
@@ -146,21 +147,21 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2 dark:border-gray-700 dark:bg-gray-900">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm lg:col-span-2 dark:border-gray-700 dark:bg-gray-900">
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Jobs Posted</h2>
+              <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Jobs Posted</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Last 14 days</p>
             </div>
-            <span className="flex items-center gap-1.5 text-xs font-bold text-orange-500"><TrendingUp size={14} /> {chartData.reduce((s, d) => s + d.count, 0)} this period</span>
+            <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 dark:text-gray-400"><TrendingUp size={14} /> {chartData.reduce((s, d) => s + d.count, 0)} this period</span>
           </div>
           <BarChart data={chartData} />
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
           <div className="mb-4 flex items-center gap-2">
-            <Activity size={16} className="text-orange-500" />
-            <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Recent Activity</h2>
+            <Activity size={16} className="text-gray-500 dark:text-gray-400" />
+            <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Recent Activity</h2>
           </div>
           <div className="space-y-1">
             {activity.map((item) => (
@@ -173,7 +174,7 @@ export default function AdminDashboardPage() {
                   <p className="truncate text-xs text-gray-500 dark:text-gray-400">{item.detail}</p>
                 </div>
                 <span className="shrink-0 text-[10px] text-gray-400 dark:text-gray-500">
-                  {item.time ? formatDistanceToNow(item.time, { addSuffix: true }) : '—'}
+                  {item.time ? timeAgo(item.time) : '—'}
                 </span>
               </div>
             ))}
@@ -182,8 +183,8 @@ export default function AdminDashboardPage() {
       </div>
 
       {revenueByTrade.length > 0 && (
-        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-          <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Revenue by Trade</h2>
+        <div className="mt-6 rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Revenue by Trade</h2>
           <p className="mb-5 text-xs text-gray-500 dark:text-gray-400">From completed jobs</p>
           <div className="space-y-4">
             {revenueByTrade.map(([trade, amount], i) => {

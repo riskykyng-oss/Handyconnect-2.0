@@ -6,7 +6,7 @@ function ReadReceipt({ read, isOwn }) {
   if (!isOwn) return null;
   return (
     <span className="ml-1 inline-flex">
-      {read ? <CheckCheck size={13} className="text-blue-500" /> : <Check size={13} className="text-gray-400" />}
+      {read ? <CheckCheck size={13} className="text-emerald-500" /> : <Check size={13} className="text-gray-400" />}
     </span>
   );
 }
@@ -27,8 +27,8 @@ export default function ChatBubble({ message, isOwn }) {
 
   const bubbleBase = 'max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm break-words';
   const bubbleStyle = isOwn
-    ? 'bg-orange-500 text-white rounded-br-sm'
-    : 'bg-gray-100 text-gray-900 rounded-bl-sm';
+    ? 'bg-hc-brand text-white rounded-br-sm'
+    : 'bg-gray-100 text-hc-ink rounded-bl-sm dark:bg-gray-700 dark:text-gray-100';
 
   return (
     <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-2.5`}>
@@ -36,7 +36,7 @@ export default function ChatBubble({ message, isOwn }) {
         {/* Image message */}
         {type === 'image' && m.attachment?.url && (
           <div className="mb-1.5 -mx-4 -mt-2.5 overflow-hidden rounded-t-2xl">
-            {!imgLoaded && <div className="h-48 w-full animate-pulse bg-gray-200" />}
+            {!imgLoaded && <div className="h-48 w-full animate-pulse bg-gray-200 dark:bg-gray-600" />}
             <img
               src={m.attachment.url}
               alt="Shared image"
@@ -76,13 +76,13 @@ export default function ChatBubble({ message, isOwn }) {
         {m.text && <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">{m.text}</p>}
         {/* Reply reference */}
         {m.replyTo && (
-          <div className={`mt-1.5 rounded-lg border-l-4 ${isOwn ? 'border-white/40 bg-white/10' : 'border-orange-300 bg-white/50'} px-2 py-1 text-xs opacity-70`}>
+          <div className={`mt-1.5 rounded-lg border-l-4 ${isOwn ? 'border-white/40 bg-white/10' : 'border-gray-300 bg-white/50'} px-2 py-1 text-xs opacity-70`}>
             <p className="font-semibold">{m.replyTo.senderName}</p>
             <p className="truncate">{m.replyTo.text}</p>
           </div>
         )}
         {/* Footer */}
-        <div className={`mt-1 flex items-end justify-end gap-1 ${isOwn ? 'text-white/70' : 'text-gray-400'}`}>
+        <div className={`mt-1 flex items-end justify-end gap-1 ${isOwn ? 'text-white/70' : 'text-hc-ink-3'}`}>
           <TimeBadge date={m.createdAt} />
           <ReadReceipt read={m.read} isOwn={isOwn} />
         </div>

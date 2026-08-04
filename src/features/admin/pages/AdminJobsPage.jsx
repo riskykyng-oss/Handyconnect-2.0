@@ -1,13 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Briefcase, ChevronDown, ChevronUp, Ban, Scale, MapPin, DollarSign } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 import PageHeader from '@/features/admin/components/PageHeader';
 import FilterTabs from '@/features/admin/components/FilterTabs';
 import StatusBadge from '@/features/admin/components/StatusBadge';
 import ConfirmDialog from '@/features/admin/components/ConfirmDialog';
 import { subscribeToJobs, subscribeToUsers, adminCancelJob, adminResolveDispute } from '@/services/adminService';
-
-const toMillis = (v) => (v?.toMillis ? v.toMillis() : v instanceof Date ? v.getTime() : Number(v) || 0);
+import { timeAgo } from '@/utils/time';
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -98,7 +97,7 @@ export default function AdminJobsPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
+      <div className="overflow-hidden rounded-xl border border-black/[0.07] bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-800/60">
@@ -166,13 +165,13 @@ function JobRow({ job, clientName, handymanName, expanded, onToggle, onCancel, o
         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">{clientName}</td>
         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">{handymanName}</td>
         <td className="whitespace-nowrap px-6 py-4">
-          <span className="flex items-center gap-1 text-sm font-bold text-orange-500">
+          <span className="flex items-center gap-1 text-sm font-bold text-gray-900 dark:text-white">
             <DollarSign size={14} /> {Number(job.budget) || 0}
           </span>
         </td>
         <td className="whitespace-nowrap px-6 py-4"><StatusBadge status={job.status} /></td>
         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-          {job.createdAt ? formatDistanceToNow(toMillis(job.createdAt), { addSuffix: true }) : '—'}
+          {job.createdAt ? timeAgo(job.createdAt) : '—'}
         </td>
         <td className="whitespace-nowrap px-6 py-4 text-right">
           <div className="flex items-center justify-end gap-2">
@@ -203,7 +202,7 @@ function JobRow({ job, clientName, handymanName, expanded, onToggle, onCancel, o
                 <div className="space-y-1.5">
                   {(job.timeline || []).slice().reverse().map((t, i) => (
                     <div key={i} className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-500" />
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400 dark:bg-gray-500" />
                       <span className="font-medium capitalize">{t.label}</span>
                       <span className="text-gray-400">{format(t.createdAt?.toDate ? t.createdAt.toDate() : new Date(t.createdAt), 'dd MMM, HH:mm')}</span>
                     </div>

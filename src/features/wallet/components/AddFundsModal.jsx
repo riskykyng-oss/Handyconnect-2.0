@@ -57,11 +57,11 @@ export default function AddFundsModal({ open, onClose }) {
     >
       {done ? (
         <div className="px-6 py-8 text-center">
-          <p className="font-display text-3xl font-extrabold text-gray-900 dark:text-white">+${Number(amount).toFixed(2)}</p>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">via {method}</p>
+          <p className="font-display text-3xl font-semibold text-hc-ink dark:text-white">+${Number(amount).toFixed(2)}</p>
+          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">via {method}</p>
           <button
             onClick={onClose}
-            className="mt-6 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600"
+            className="mt-6 w-full rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong"
           >
             Done
           </button>
@@ -76,7 +76,7 @@ export default function AddFundsModal({ open, onClose }) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-8 pr-3.5 text-lg font-bold text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-8 pr-3.5 text-lg font-bold text-hc-ink outline-none transition-all placeholder:text-gray-400 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
           </div>
           <div className="mt-3 flex gap-2">
@@ -84,18 +84,18 @@ export default function AddFundsModal({ open, onClose }) {
               <button
                 key={a}
                 onClick={() => setAmount(String(a))}
-                className="rounded-lg bg-gray-100 px-3.5 py-1.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200"
+                className="rounded-lg bg-gray-100 px-3.5 py-1.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 ${a}
               </button>
             ))}
           </div>
-          <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Pay with</label>
+          <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Pay with</label>
           <MethodSelect methods={METHODS} value={method} onChange={setMethod} />
           <button
             onClick={handleAddClick}
             disabled={busy || !Number(amount) || Number(amount) <= 0}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
           >
             {busy ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
             {busy ? 'Adding...' : `Add $${Number(amount) || 0}`}

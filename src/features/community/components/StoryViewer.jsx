@@ -2,16 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { isStoryExpired, hoursLeft } from '@/services/storyService';
+import { timeAgo } from '@/utils/time';
 
 const STORY_DURATION = 5000;
-
-const timeAgo = (date) => {
-  const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
-  if (minutes < 1) return 'Just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  if (minutes < 1440) return `${Math.floor(minutes / 60)}h ago`;
-  return new Date(date).toLocaleDateString();
-};
 
 export default function StoryViewer({ stories, initialIndex = 0, onClose }) {
   const [index, setIndex] = useState(initialIndex);
@@ -88,11 +81,11 @@ export default function StoryViewer({ stories, initialIndex = 0, onClose }) {
 
           {/* Header */}
           <div className="absolute left-0 right-0 top-6 z-20 flex items-center gap-3 px-4 pt-3">
-            <span className="rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 p-[2px]">
+            <span className="rounded-full bg-white/20 p-[2px]">
               <img src={story.avatar} alt={story.name} className="h-10 w-10 rounded-full border-2 border-gray-900 object-cover" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold text-white">{story.name}</p>
+              <p className="truncate text-sm font-semibold text-white">{story.name}</p>
               <p className="truncate text-xs text-white/60">{story.trade} &middot; {timeAgo(story.postedAt)}</p>
             </div>
             {expired ? (
@@ -110,7 +103,7 @@ export default function StoryViewer({ stories, initialIndex = 0, onClose }) {
 
           {/* Caption */}
           <div className="absolute bottom-0 left-0 right-0 z-20 p-5">
-            <p className="font-display text-lg font-bold text-white">{story.caption}</p>
+            <p className="font-display text-lg font-semibold text-white">{story.caption}</p>
             {expired && <p className="mt-1 text-xs text-white/60">This story has passed the 24-hour window.</p>}
           </div>
 

@@ -23,6 +23,7 @@ const RoleSelectionPage = lazy(() => import('@/features/auth/pages/RoleSelection
 // Feature Pages
 const ClientHomePage = lazy(() => import('@/features/client/pages/ClientHomePage'));
 const ExplorePage = lazy(() => import('@/features/client/pages/ExplorePage'));
+const MapPage = lazy(() => import('@/features/client/pages/MapPage'));
 const ClientJobsPage = lazy(() => import('@/features/client/pages/ClientJobsPage'));
 const ClientProfilePage = lazy(() => import('@/features/client/pages/ClientProfilePage'));
 const SettingsPage = lazy(() => import('@/features/client/pages/SettingsPage'));
@@ -40,9 +41,6 @@ const GroupPage = lazy(() => import('@/features/community/pages/GroupPage'));
 const HandymanDashboardPage = lazy(() => import('@/features/handyman/pages/HandymanDashboardPage'));
 const PortfolioPage = lazy(() => import('@/features/handyman/pages/PortfolioPage'));
 const ProPortfolioPage = lazy(() => import('@/features/portfolio/pages/ProPortfolioPage'));
-
-// TEMPORARY dev route — remove after demo data purge
-const PurgeStoriesPage = lazy(() => import('@/dev/PurgeStoriesPage'));
 
 // Admin Pages
 const AdminDashboardPage = lazy(() => import('@/features/admin/pages/AdminDashboardPage'));
@@ -98,14 +96,12 @@ function App() {
               </Route>
             </Route>
 
-            {/* TEMPORARY dev route — remove after demo data purge */}
-            <Route path="/dev/purge" element={<PurgeStoriesPage />} />
-
             {/* Protected Client Routes */}
             <Route element={<ProtectedRoute allowedRoles={['client']} />}>
               <Route element={<ClientLayout />}>
                 <Route path="/client/home" element={<ClientHomePage />} />
                 <Route path="/client/explore" element={<ExplorePage />} />
+                <Route path="/client/map" element={<MapPage />} />
                 <Route path="/client/jobs" element={<ClientJobsPage />} />
                 <Route path="/client/profile" element={<ClientProfilePage />} />
                 <Route path="/client/settings" element={<SettingsPage />} />

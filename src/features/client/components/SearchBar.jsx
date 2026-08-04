@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Mic, Clock, TrendingUp, SlidersHorizontal } from 'lucide-react';
+import { Search, Mic, Clock, TrendingUp, SlidersHorizontal } from 'lucide-react';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');

@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Wallet, CircleDollarSign, Receipt, X, Send } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
 import PageHeader from '@/features/admin/components/PageHeader';
 import StatCard from '@/features/admin/components/StatCard';
 import { listAllWallets, listAllPayouts, adminProcessPayout, subscribeToUsers } from '@/services/adminService';
+import { timeAgo } from '@/utils/time';
 
 const PAYOUT_METHODS = ['Mobile Money', 'Bank Transfer', 'Cash'];
 
@@ -78,14 +78,14 @@ export default function AdminPayoutsPage() {
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Available for payout" value={`$${totalAvailable.toLocaleString()}`} icon={Wallet} accent="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" trendLabel={`${due.length} wallets`} />
-        <StatCard label="Payouts processed" value={payouts.length} icon={Receipt} accent="bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400" />
-        <StatCard label="Total paid out" value={`$${totalPaid.toLocaleString()}`} icon={CircleDollarSign} accent="bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400" />
+        <StatCard label="Available for payout" value={`$${totalAvailable.toLocaleString()}`} icon={Wallet} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" trendLabel={`${due.length} wallets`} />
+        <StatCard label="Payouts processed" value={payouts.length} icon={Receipt} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
+        <StatCard label="Total paid out" value={`$${totalPaid.toLocaleString()}`} icon={CircleDollarSign} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-          <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Pending Withdrawals</h2>
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Pending Withdrawals</h2>
           <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">Handyman wallets with a positive balance</p>
           <div className="space-y-2.5">
             {due.map((wallet) => (
@@ -97,7 +97,7 @@ export default function AdminPayoutsPage() {
                   <p className="truncate text-sm font-bold text-gray-900 dark:text-white">{nameMap[wallet.id] || wallet.id.slice(0, 12)}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Available: <span className="font-bold text-emerald-600 dark:text-emerald-400">${Number(wallet.balance).toLocaleString()}</span>{Number(wallet.pending) > 0 ? ` · Pending: $${Number(wallet.pending)}` : ''}</p>
                 </div>
-                <button onClick={() => openPayout(wallet)} className="shrink-0 rounded-lg bg-orange-500 px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-orange-600">
+                <button onClick={() => openPayout(wallet)} className="shrink-0 rounded-lg bg-hc-brand px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-hc-brand-strong">
                   Pay out
                 </button>
               </div>
@@ -111,8 +111,8 @@ export default function AdminPayoutsPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-          <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Payout History</h2>
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Payout History</h2>
           <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">Recently processed payouts</p>
           <div className="space-y-2.5">
             {payouts.slice(0, 10).map((p) => (
@@ -122,7 +122,7 @@ export default function AdminPayoutsPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{nameMap[p.handymanId] || p.handymanId.slice(0, 12)}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{p.method} · {p.createdAt ? formatDistanceToNow(p.createdAt.toDate ? p.createdAt.toDate() : new Date(p.createdAt), { addSuffix: true }) : '—'}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{p.method} · {p.createdAt ? timeAgo(p.createdAt) : '—'}</p>
                 </div>
                 <span className="shrink-0 text-sm font-bold text-emerald-600 dark:text-emerald-400">${Number(p.amount).toLocaleString()}</span>
               </div>
@@ -139,9 +139,9 @@ export default function AdminPayoutsPage() {
 
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+          <div className="w-full max-w-sm rounded-xl border border-black/[0.07] bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-display text-lg font-bold text-gray-900 dark:text-white">Process payout</h3>
+              <h3 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Process payout</h3>
               <button onClick={() => setSelected(null)} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800" aria-label="Close">
                 <X size={16} />
               </button>
@@ -164,7 +164,7 @@ export default function AdminPayoutsPage() {
                 <button
                   key={m}
                   onClick={() => setMethod(m)}
-                  className={`rounded-xl border px-2 py-2 text-xs font-bold transition-colors ${method === m ? 'border-orange-400 bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400' : 'border-gray-200 text-gray-500 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400'}`}
+                  className={`rounded-xl border px-2 py-2 text-xs font-bold transition-colors ${method === m ? 'border-gray-900 bg-gray-900 text-white dark:border-white dark:bg-white dark:text-gray-900' : 'border-gray-200 text-gray-500 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400'}`}
                 >
                   {m}
                 </button>
@@ -173,7 +173,7 @@ export default function AdminPayoutsPage() {
             <button
               onClick={doPayout}
               disabled={processing || !Number(amount) || Number(amount) > Number(selected.balance)}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
             >
               <Send size={15} />
               {processing ? 'Processing...' : `Payout $${Number(amount) || 0}`}

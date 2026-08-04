@@ -103,19 +103,19 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
   const linkedJob = job || jobOptions.find((j) => j.id === selectedJobId) || null;
 
   const inputClass =
-    'w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10';
+    'w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm text-hc-ink outline-none transition-all placeholder:text-gray-400 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={handleClose}>
-      <div className="flex max-h-[90dvh] w-full max-w-lg flex-col overflow-y-auto rounded-3xl border border-gray-200 bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-6 py-5">
+      <div className="flex max-h-[85vh] w-full max-w-md flex-col overflow-y-auto rounded-xl border border-black/[0.07] bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between gap-3 border-b border-gray-200/70 px-5 py-4 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
               <QrCode size={18} />
             </div>
             <div>
-              <h2 className="font-display text-lg font-extrabold text-gray-900">Request Payment</h2>
-              <p className="mt-0.5 text-xs text-gray-500">{linkedJob?.title || 'Receive a payment'}</p>
+              <h2 className="text-lg font-semibold tracking-tight text-hc-ink dark:text-white">Request Payment</h2>
+              <p className="mt-0.5 text-xs text-hc-caption dark:text-gray-400">{linkedJob?.title || 'Receive a payment'}</p>
             </div>
           </div>
           <button onClick={handleClose} className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" aria-label="Close">
@@ -125,7 +125,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
 
         {step === 'setup' && (
           <div className="p-6">
-            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-500">Amount (USD)</label>
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount (USD)</label>
             <div className="relative">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">$</span>
               <input
@@ -141,7 +141,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
 
             {!job && (
               <>
-                <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-gray-500">Job (optional)</label>
+                <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Job (optional)</label>
                 <div className="relative">
                   <Briefcase size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
                   <select
@@ -156,7 +156,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
                   </select>
                 </div>
 
-                <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-gray-500">Note (optional)</label>
+                <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Note (optional)</label>
                 <input
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
@@ -167,14 +167,14 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
               </>
             )}
 
-            <div className="mt-5 rounded-xl bg-orange-50 p-3 text-xs text-orange-700">
+            <div className="mt-5 rounded-xl bg-gray-100 p-3 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">
               A unique payment code and QR are generated automatically — the client scans the QR or enters the code to pay you.
             </div>
             {error && <p className="mt-2 text-xs font-semibold text-red-500">{error}</p>}
             <button
               onClick={handleCreate}
               disabled={!amount || creating}
-              className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
+              className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
             >
               {creating ? <Loader2 size={15} className="animate-spin" /> : <QrCode size={15} />}
               {creating ? 'Generating...' : 'Generate QR & code'}
@@ -184,29 +184,29 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
 
         {step === 'active' && (
           <div className="p-6">
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Payment QR</p>
-              <div className="mx-auto mt-4 flex w-fit items-center justify-center rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
+            <div className="rounded-xl border border-gray-200/80 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-800/60">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Payment QR</p>
+              <div className="mx-auto mt-4 flex w-fit items-center justify-center rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
                 <QRCodeCanvas value={token} size={216} level="M" includeMargin={false} />
               </div>
-              <h3 className="mt-5 font-display text-3xl font-extrabold text-gray-900">
+              <h3 className="mt-5 font-display text-3xl font-semibold text-hc-ink dark:text-white">
                 ${Number(payment?.amount || 0).toFixed(2)}
               </h3>
-              <p className="mt-1 text-xs text-gray-500">
-                Ask the client to open <span className="font-bold text-gray-700">Scan &amp; Pay</span> and scan this code.
+              <p className="mt-1 text-xs text-hc-caption dark:text-gray-400">
+                Ask the client to open <span className="font-semibold text-hc-ink dark:text-white">Scan &amp; Pay</span> and scan this code.
               </p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
-              <p className="flex items-center justify-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <div className="mt-4 rounded-xl border border-gray-200/80 bg-gray-50 p-4 text-center dark:border-gray-700 dark:bg-gray-800/60">
+              <p className="flex items-center justify-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">
                 <KeyRound size={11} /> Auto-generated payment code
               </p>
-              <p className="mt-1.5 font-mono text-2xl font-extrabold tracking-[0.35em] text-gray-900">
+              <p className="mt-1.5 font-mono text-2xl font-semibold tracking-[0.35em] text-hc-ink dark:text-white">
                 {payment?.code || '······'}
               </p>
               <button
                 onClick={copyCode}
-                className="mt-2.5 inline-flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-100"
+                className="mt-2.5 inline-flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
               >
                 {copied ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                 {copied ? 'Copied' : 'Copy code'}
@@ -229,11 +229,11 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
         {step === 'success' && (
           <div className="px-6 py-12 text-center">
             <CheckCircle2 size={48} className="mx-auto mb-4 text-emerald-500" />
-            <h3 className="font-display text-xl font-bold text-gray-900">Payment received</h3>
-            <p className="mt-1.5 text-sm text-gray-500">
-              <span className="font-bold text-gray-900">${Number(payment?.amount || 0).toFixed(2)}</span> added to your wallet for "{linkedJob?.title || note || 'Custom payment'}".
+            <h3 className="font-display text-xl font-semibold text-hc-ink dark:text-white">Payment received</h3>
+            <p className="mt-1.5 text-sm text-hc-caption dark:text-gray-400">
+              <span className="font-semibold text-hc-ink dark:text-white">${Number(payment?.amount || 0).toFixed(2)}</span> added to your wallet for "{linkedJob?.title || note || 'Custom payment'}".
             </p>
-            <button onClick={handleClose} className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-orange-500 px-8 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+            <button onClick={handleClose} className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-hc-brand px-8 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong">
               Done
             </button>
           </div>

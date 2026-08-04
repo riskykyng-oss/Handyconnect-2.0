@@ -16,7 +16,7 @@ export default function BeforeAfterSlider({ before, after, beforeLabel = 'Before
   return (
     <div
       ref={ref}
-      className="relative aspect-[4/3] w-full max-h-[520px] overflow-hidden bg-gray-100 select-none touch-none"
+      className="relative aspect-[4/3] w-full max-h-[360px] overflow-hidden bg-gray-100 select-none touch-none dark:bg-gray-700"
       onPointerDown={(e) => { dragging.current = true; e.currentTarget.setPointerCapture(e.pointerId); update(e.clientX); }}
       onPointerMove={(e) => dragging.current && update(e.clientX)}
       onPointerUp={() => { dragging.current = false; }}

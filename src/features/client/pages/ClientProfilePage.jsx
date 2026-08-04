@@ -13,6 +13,7 @@ import { getUserProfile, updateUserProfile } from '@/services/userService';
 import { uploadFile, deleteFile } from '@/services/storageService';
 import { getClientJobs } from '@/services/jobService';
 import { subscribeToWallet } from '@/services/walletService';
+import { timeAgo } from '@/utils/time';
 
 const COVER = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80';
 
@@ -21,14 +22,6 @@ function getGreeting() {
   if (h < 12) return 'Good Morning';
   if (h < 18) return 'Good Afternoon';
   return 'Good Evening';
-}
-
-function timeAgo(date) {
-  const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-  if (s < 60) return 'just now';
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  return `${Math.floor(s / 86400)}d ago`;
 }
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
@@ -41,13 +34,13 @@ function SectionHeading({ icon: Icon, title, action }) {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-2.5">
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
           <Icon size={16} />
         </span>
-        <h2 className="font-display text-lg font-extrabold text-gray-900">{title}</h2>
+        <h2 className="text-lg font-semibold tracking-tight text-hc-ink">{title}</h2>
       </div>
       {action && (
-        <button className="text-xs font-semibold text-orange-600 hover:text-orange-700 transition-colors">{action}</button>
+        <button className="text-xs font-semibold text-hc-ink-2 transition-colors hover:text-hc-brand">{action}</button>
       )}
     </div>
   );
@@ -126,10 +119,10 @@ export default function ClientProfilePage() {
   }, [jobs]);
 
   const statCards = [
-    { label: 'Jobs Posted', value: jobs.length, icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-100' },
-    { label: 'Completed', value: completed, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-100' },
-    { label: 'In Progress', value: inProgress, icon: Clock, color: 'text-orange-600', bg: 'bg-orange-100' },
-    { label: 'Open', value: open, icon: Star, color: 'text-blue-600', bg: 'bg-blue-100' },
+    { label: 'Jobs Posted', value: jobs.length, icon: Briefcase, color: 'text-gray-500', bg: 'bg-gray-100' },
+    { label: 'Completed', value: completed, icon: CheckCircle, color: 'text-gray-500', bg: 'bg-gray-100' },
+    { label: 'In Progress', value: inProgress, icon: Clock, color: 'text-gray-500', bg: 'bg-gray-100' },
+    { label: 'Open', value: open, icon: Star, color: 'text-gray-500', bg: 'bg-gray-100' },
   ];
 
   return (
@@ -141,19 +134,19 @@ export default function ClientProfilePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10" />
           <div className="absolute bottom-5 left-5 sm:bottom-7 sm:left-8">
             <p className="text-sm font-semibold text-white/80">{greeting}</p>
-            <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white drop-shadow-sm">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white drop-shadow-sm">
               {currentUser?.displayName || 'Client'}
             </h1>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/70">
-              <span className="flex items-center gap-1"><CheckCircle size={12} className="text-orange-400" /> Verified Client</span>
+              <span className="flex items-center gap-1"><CheckCircle size={12} className="text-emerald-400" /> Verified Client</span>
               <span className="flex items-center gap-1"><MapPin size={12} /> {wallet?.currency || 'Zimbabwe'}</span>
             </div>
           </div>
           <button
             onClick={() => fileRef.current?.click()}
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-xl bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 transition-colors"
+            className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-xl bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 transition-colors"
           >
-            <Camera size={14} />
+            <Camera size={17} />
           </button>
         </div>
       </motion.div>
@@ -175,44 +168,44 @@ export default function ClientProfilePage() {
                 <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-emerald-500" />
                 <button
                   onClick={() => fileRef.current?.click()}
-                  className="absolute bottom-0 left-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-orange-500 text-white shadow-md hover:bg-orange-600 transition-colors"
+                  className="absolute bottom-0 left-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-hc-brand text-white shadow-md hover:bg-hc-brand-strong transition-colors"
                 >
-                  {photoBusy ? <Loader2 size={12} className="animate-spin" /> : <Camera size={12} />}
+                  {photoBusy ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
                 </button>
                 {avatar && (
                   <button
                     onClick={handleRemovePhoto}
                     title="Remove photo"
-                    className="absolute -left-1 top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-white text-red-500 shadow-md hover:bg-red-50 transition-colors"
+                    className="absolute -left-1 top-2 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-white text-red-500 shadow-md hover:bg-red-50 transition-colors"
                   >
-                    <Trash2 size={11} />
+                    <Trash2 size={13} />
                   </button>
                 )}
-                <div className="absolute -right-1 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-white shadow-md">
+                <div className="absolute -right-1 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-hc-brand text-white shadow-md">
                   <CheckCircle size={14} />
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { handlePhotoUpload(e); e.target.value = ''; }} />
               </div>
-              <h2 className="font-display text-xl font-extrabold text-gray-900">{currentUser?.displayName || 'Client'}</h2>
-              <p className="text-xs text-gray-500">{currentUser?.email}</p>
+              <h2 className="text-xl font-semibold tracking-tight text-hc-ink">{currentUser?.displayName || 'Client'}</h2>
+              <p className="text-xs text-hc-caption">{currentUser?.email}</p>
               <div className="mt-3 flex items-center gap-2">
-                <Badge variant="primary" className="text-[10px]">Verified Client</Badge>
+                <Badge variant="success" className="text-[10px]">Verified Client</Badge>
                 <Badge variant="neutral" className="text-[10px]">{jobs.length} Jobs</Badge>
               </div>
               <div className="mt-4 flex w-full items-center justify-center gap-6 text-center">
                 <div>
-                  <p className="text-lg font-extrabold text-gray-900">{jobs.length}</p>
-                  <p className="text-[10px] font-medium text-gray-500">Posted</p>
+                  <p className="text-lg font-semibold text-hc-ink">{jobs.length}</p>
+                  <p className="text-[10px] font-medium text-hc-caption">Posted</p>
                 </div>
                 <div className="h-8 w-px bg-gray-200" />
                 <div>
-                  <p className="text-lg font-extrabold text-gray-900">{completed}</p>
-                  <p className="text-[10px] font-medium text-gray-500">Done</p>
+                  <p className="text-lg font-semibold text-hc-ink">{completed}</p>
+                  <p className="text-[10px] font-medium text-hc-caption">Done</p>
                 </div>
                 <div className="h-8 w-px bg-gray-200" />
                 <div>
-                  <p className="text-lg font-extrabold text-gray-900">{inProgress}</p>
-                  <p className="text-[10px] font-medium text-gray-500">Active</p>
+                  <p className="text-lg font-semibold text-hc-ink">{inProgress}</p>
+                  <p className="text-[10px] font-medium text-hc-caption">Active</p>
                 </div>
               </div>
             </div>
@@ -230,13 +223,13 @@ export default function ClientProfilePage() {
                   whileHover={{ y: -3, boxShadow: '0 8px 25px rgba(0,0,0,0.08)' }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate('/client/jobs')}
-                  className="rounded-2xl border border-gray-100 bg-white p-5 text-left shadow-sm transition-shadow"
+                  className="rounded-xl border border-black/[0.07] bg-white p-5 text-left shadow-sm transition-shadow"
                 >
                   <div className={`mb-1 flex h-8 w-8 items-center justify-center rounded-xl ${s.bg}`}>
                     <Icon size={16} className={s.color} />
                   </div>
-                  <p className="mt-1 text-3xl font-extrabold tracking-tight text-gray-900">{s.value}</p>
-                  <p className="mt-0.5 text-xs font-medium text-gray-500">{s.label}</p>
+                  <p className="mt-1 text-3xl font-semibold tracking-tight text-hc-ink">{s.value}</p>
+                  <p className="mt-0.5 text-xs font-medium text-hc-caption">{s.label}</p>
                 </motion.button>
               );
             })}
@@ -251,11 +244,11 @@ export default function ClientProfilePage() {
           {/* Recent Activity */}
           <motion.div variants={itemAnim}>
             <SectionHeading icon={Clock} title="Recent Activity" action="My Jobs" />
-            <Card className="divide-y divide-gray-50 !p-0 overflow-hidden">
+            <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
               {activity.length === 0 ? (
                 <div className="px-5 py-10 text-center">
-                  <p className="text-sm font-semibold text-gray-500">No activity yet</p>
-                  <p className="mt-1 text-xs text-gray-400">Post your first job to get started.</p>
+                  <p className="text-sm font-semibold text-hc-ink-2">No activity yet</p>
+                  <p className="mt-1 text-xs text-hc-caption">Post your first job to get started.</p>
                 </div>
               ) : (
                 activity.map((a, i) => {
@@ -268,12 +261,12 @@ export default function ClientProfilePage() {
                       transition={{ delay: 0.4 + i * 0.06 }}
                       className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50/60 transition-colors cursor-pointer"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
                         <Icon size={16} />
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{a.text}</p>
-                        <p className="text-xs text-gray-400">{a.time}</p>
+                        <p className="text-sm font-semibold text-hc-ink truncate">{a.text}</p>
+                        <p className="text-xs text-hc-caption">{a.time}</p>
                       </div>
                       <ChevronRight size={14} className="shrink-0 text-gray-300" />
                     </motion.div>
@@ -286,10 +279,10 @@ export default function ClientProfilePage() {
           {/* Wallet */}
           <motion.div variants={itemAnim}>
             <SectionHeading icon={Wallet} title="Wallet" action="View" />
-            <Card className="!p-5">
+            <Card className="!p-5 !rounded-xl !border-black/[0.07]">
               <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-5 text-white shadow-lg">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Available Balance</p>
-                <p className="mt-1 font-display text-3xl font-extrabold tracking-tight">${balance.toFixed(2)}</p>
+                <p className="mt-1 text-3xl font-semibold tracking-tight">${balance.toFixed(2)}</p>
                 <p className="mt-1 text-[10px] text-gray-400">{wallet?.currency || 'USD'} · updates in real time</p>
               </div>
             </Card>
@@ -301,7 +294,7 @@ export default function ClientProfilePage() {
           {/* Quick Menu */}
           <motion.div variants={itemAnim}>
             <SectionHeading icon={Settings} title="Quick Settings" />
-            <Card className="divide-y divide-gray-50 !p-0 overflow-hidden">
+            <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
               {[
                 { label: 'My Jobs', icon: Briefcase, route: '/client/jobs' },
                 { label: 'Explore Professionals', icon: User, route: '/client/explore' },
@@ -316,10 +309,10 @@ export default function ClientProfilePage() {
                     onClick={() => navigate(item.route)}
                     className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-gray-50"
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-50 text-gray-500">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
                       <Icon size={15} />
                     </span>
-                    <span className="flex-1 text-sm font-semibold text-gray-900">{item.label}</span>
+                    <span className="flex-1 text-sm font-semibold text-hc-ink">{item.label}</span>
                     <ChevronRight size={14} className="text-gray-300" />
                   </button>
                 );
@@ -330,14 +323,14 @@ export default function ClientProfilePage() {
           {/* Trust */}
           <motion.div variants={itemAnim}>
             <SectionHeading icon={Shield} title="Trust & Safety" />
-            <Card className="!p-5">
+            <Card className="!p-5 !rounded-xl !border-black/[0.07]">
               <div className="flex items-start gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                   <Shield size={16} />
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-gray-900">Verified Client</p>
-                  <p className="mt-0.5 text-xs text-gray-500">Your account and activity are protected by HandyConnect.</p>
+                  <p className="text-sm font-semibold text-hc-ink">Verified Client</p>
+                  <p className="mt-0.5 text-xs text-hc-caption">Your account and activity are protected by HandyConnect.</p>
                 </div>
               </div>
             </Card>
@@ -351,7 +344,7 @@ export default function ClientProfilePage() {
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleLogout}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-100 bg-white px-5 py-4 text-sm font-bold text-red-500 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-100 bg-white px-5 py-4 text-sm font-semibold text-red-500 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50"
         >
           <LogOut size={16} /> Logout
         </motion.button>

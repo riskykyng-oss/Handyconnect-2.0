@@ -88,6 +88,12 @@ export const uploadFile = async (file, path = '') => {
       'x-upsert': 'false',
     },
     body: upload,
+  }).catch((err) => {
+    throw new Error(
+      err instanceof TypeError && /failed to fetch/i.test(err.message)
+        ? 'Could not reach the image service. Check your internet connection and try again.'
+        : err.message || 'Image upload failed.'
+    );
   });
 
   if (!response.ok) {

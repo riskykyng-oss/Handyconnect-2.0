@@ -35,10 +35,10 @@ export default function SecuritySettingsCard({ uid }) {
     <>
       <SectionCard title="Security" subtitle="Protect every payment with a PIN, password or biometrics">
         <div className="space-y-2">
-          <button onClick={() => setSetup('pin')} className="flex w-full items-center gap-3 rounded-xl border border-gray-100 p-3.5 text-left transition-colors hover:bg-gray-50">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-500"><KeyRound size={15} /></span>
+          <button onClick={() => setSetup('pin')} className="flex w-full items-center gap-3 rounded-xl border border-gray-200/80 p-3.5 text-left transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"><KeyRound size={15} /></span>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-900">Payment PIN</p>
+              <p className="text-sm font-semibold text-hc-ink dark:text-white">Payment PIN</p>
               <p className="text-xs text-gray-400">{security.pin ? 'Enabled · required for payments' : 'Disabled · not required'}</p>
             </div>
             <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${security.pin ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
@@ -47,10 +47,10 @@ export default function SecuritySettingsCard({ uid }) {
             <ChevronRight size={15} className="text-gray-300" />
           </button>
 
-          <button onClick={() => setSetup('password')} className="flex w-full items-center gap-3 rounded-xl border border-gray-100 p-3.5 text-left transition-colors hover:bg-gray-50">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><Lock size={15} /></span>
+          <button onClick={() => setSetup('password')} className="flex w-full items-center gap-3 rounded-xl border border-gray-200/80 p-3.5 text-left transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"><Lock size={15} /></span>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-900">Payment password</p>
+              <p className="text-sm font-semibold text-hc-ink dark:text-white">Payment password</p>
               <p className="text-xs text-gray-400">{security.password ? 'Enabled · required for payments' : 'Disabled · not required'}</p>
             </div>
             <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${security.password ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
@@ -59,16 +59,16 @@ export default function SecuritySettingsCard({ uid }) {
             <ChevronRight size={15} className="text-gray-300" />
           </button>
 
-          <button onClick={handleBiometric} disabled={busyBio} className="flex w-full items-center gap-3 rounded-xl border border-gray-100 p-3.5 text-left transition-colors hover:bg-gray-50 disabled:opacity-60">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600"><Fingerprint size={15} /></span>
+          <button onClick={handleBiometric} disabled={busyBio} className="flex w-full items-center gap-3 rounded-xl border border-gray-200/80 p-3.5 text-left transition-colors hover:bg-gray-50 disabled:opacity-60 dark:border-gray-700 dark:hover:bg-gray-800">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"><Fingerprint size={15} /></span>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-gray-900">Biometric / Face ID</p>
+              <p className="text-sm font-semibold text-hc-ink dark:text-white">Biometric / Face ID</p>
               <p className="text-xs text-gray-400">{security.biometric ? 'Registered · unlock with fingerprint' : 'Not registered'}</p>
             </div>
             {busyBio ? (
               <Loader2 size={15} className="animate-spin text-gray-400" />
             ) : (
-              <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${security.biometric ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-500'}`}>
+              <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${security.biometric ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300'}`}>
                 {security.biometric ? 'REMOVE' : 'SET UP'}
               </span>
             )}

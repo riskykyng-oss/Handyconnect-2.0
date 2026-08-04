@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip, useMap, useMapEvents } from 'react-leaflet';
+import { useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Tooltip, useMap, useMapEvents, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -19,7 +19,7 @@ const buildIcon = (marker) => {
   const label = marker.label || '•';
   const html = `
     <div style="position:relative;display:flex;flex-direction:column;align-items:center;">
-      <div style="min-width:30px;height:30px;padding:0 4px;border-radius:9999px;background:${color};color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.4);">${label}</div>
+      <div style="min-width:30px;height:30px;padding:0 5px;border-radius:9999px;background:${color};color:#fff;font-size:11px;font-weight:700;white-space:nowrap;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.4);">${label}</div>
       <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid ${color};margin-top:-2px;"></div>
     </div>`;
   return L.divIcon({ html, className: 'hc-marker-wrap', iconSize: [30, 38], iconAnchor: [15, 38], tooltipAnchor: [0, -36] });
@@ -44,6 +44,18 @@ function ClickHandler({ onClick }) {
   return null;
 }
 
+function FitBounds({ markers }) {
+  const map = useMap();
+  const fitted = useRef(false);
+  useEffect(() => {
+    if (fitted.current || markers.length === 0) return;
+    fitted.current = true;
+    const bounds = L.latLngBounds(markers.map((m) => [m.position.lat, m.position.lng]));
+    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 15 });
+  }, [markers, map]);
+  return null;
+}
+
 export default function MapView({
   center,
   markers = [],
@@ -51,6 +63,9 @@ export default function MapView({
   className = '',
   onLoad,
   onClick,
+  onMarkerClick,
+  fitBounds = false,
+  zoomPosition,
 }) {
   const mapCenter = center?.lat != null ? center : defaultCenter;
 
@@ -60,15 +75,23 @@ export default function MapView({
       zoom={zoom}
       className={className}
       style={{ width: '100%', height: '100%' }}
-      zoomControl
+      zoomControl={!zoomPosition}
       attributionControl
       whenReady={(e) => onLoad?.(e.target)}
     >
       <TileLayer url={TILE_URL} attribution={ATTRIBUTION} subdomains="abcd" maxZoom={20} />
+      {zoomPosition && <ZoomControl position={zoomPosition} />}
       <MapController center={center} zoom={zoom} />
+      {fitBounds && markers.length > 0 && <FitBounds markers={markers} />}
       {onClick && <ClickHandler onClick={onClick} />}
       {markers.map((m, i) => (
-        <Marker key={m.id || i} position={[m.position.lat, m.position.lng]} icon={buildIcon(m)} title={m.title}>
+        <Marker
+          key={m.id || i}
+          position={[m.position.lat, m.position.lng]}
+          icon={buildIcon(m)}
+          title={m.title}
+          eventHandlers={{ click: () => onMarkerClick?.(m) }}
+        >
           {m.title && (
             <Tooltip direction="top" offset={[0, -36]} opacity={1}>
               {m.title}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Briefcase } from 'lucide-react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { useAuth } from '@/features/auth/context/AuthContext';
@@ -15,6 +15,7 @@ export default function ChatPage() {
   const navigate = useNavigate();
   const messagesPath = `/${userRole === 'handyman' ? 'handyman' : 'client'}/messages`;
   const [conv, setConv] = useState(null);
+  const [notAssigned, setNotAssigned] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -33,6 +34,8 @@ export default function ChatPage() {
             bName: partner.name,
             bAvatar: partner.avatar,
             bTrade: partner.trade,
+            bVerified: partner.verified,
+            bAvailable: partner.available,
           });
           const snap = await getDoc(doc(db, 'conversations', cid));
           if (active && snap.exists()) setConv({ id: cid, ...snap.data() });
@@ -44,21 +47,39 @@ export default function ChatPage() {
           const jobData = await getJob(jobId);
           if (!jobData) { navigate(messagesPath); return; }
           const cid = await createConversation(jobId, jobData.clientId, jobData.assignedTo, jobData.title);
-          if (active) setConv({ id: cid, type: 'job', jobId });
+          if (!cid) { if (active) setNotAssigned(true); return; }
+          const snap = await getDoc(doc(db, 'conversations', cid));
+          if (active && snap.exists()) setConv({ id: cid, ...snap.data() });
+          else if (active) setNotAssigned(true);
         }
       } catch {
         if (active) setError(true);
       }
     })();
     return () => { active = false; };
-  }, [jobId, convId, otherId, currentUser, navigate]);
+  }, [jobId, convId, otherId, currentUser, messagesPath, navigate]);
+
+  if (notAssigned) {
+    return (
+      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center md:h-[calc(100dvh-5rem)]">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <Briefcase size={32} className="mx-auto mb-4 text-hc-ink-3" />
+          <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">Your job is still open</p>
+          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">This chat will open here once a professional accepts your job.</p>
+          <Link to={messagesPath} className="mt-4 inline-block rounded-xl bg-hc-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong">
+            Back to messages
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
-      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center sm:h-[calc(100dvh-5rem)]">
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-          <p className="font-display text-lg font-bold text-gray-900">Could not open this conversation</p>
-          <Link to={messagesPath} className="mt-3 inline-block rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center md:h-[calc(100dvh-5rem)]">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">Could not open this conversation</p>
+          <Link to={messagesPath} className="mt-3 inline-block rounded-xl bg-hc-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong">
             Back to messages
           </Link>
         </div>
@@ -68,8 +89,8 @@ export default function ChatPage() {
 
   if (!conv) {
     return (
-      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center sm:h-[calc(100dvh-5rem)]">
-        <Loader2 size={32} className="animate-spin text-orange-500" />
+      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center md:h-[calc(100dvh-5rem)]">
+        <Loader2 size={32} className="animate-spin text-hc-ink-3" />
       </div>
     );
   }

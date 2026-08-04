@@ -2,29 +2,26 @@ import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import {
-  Home, Search, Briefcase, MessageSquare, User, Plus, Bell,
-  Wallet, Users, Settings, LogOut, MapPin, ChevronDown,
-  Clock, Star, HelpCircle, Menu, X,
+  Home, Search, Briefcase, MessageSquare, User, Bell,
+  Users, Settings, LogOut, MapPin, ChevronDown, Map,
+  HelpCircle, Menu, X,
 } from 'lucide-react';
 import WalletCard from '@/features/client/components/WalletCard';
 import NotificationsPreview from '@/features/client/components/NotificationsPreview';
+import MobileBottomNav from '@/features/client/components/MobileBottomNav';
+import RailUpcomingJobs from '@/features/client/components/RailUpcomingJobs';
+import RailRecentMessages from '@/features/client/components/RailRecentMessages';
+import RailWeeklySummary from '@/features/client/components/RailWeeklySummary';
 import useUnreadCount from '@/hooks/useUnreadCount';
 import useNotifications from '@/hooks/useNotifications';
 import { markAllNotificationsRead, markNotificationRead } from '@/services/notificationService';
+import { timeAgo } from '@/utils/time';
 import { motion } from 'framer-motion';
-
-const timeAgo = (date) => {
-  if (!date) return '';
-  const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
-  if (minutes < 1) return 'now';
-  if (minutes < 60) return `${minutes}m ago`;
-  if (minutes < 1440) return `${Math.floor(minutes / 60)}h ago`;
-  return new Date(date).toLocaleDateString();
-};
 
 const sidebarItems = [
   { name: 'Home', path: '/client/home', icon: Home },
   { name: 'Explore', path: '/client/explore', icon: Search },
+  { name: 'Map', path: '/client/map', icon: Map },
   { name: 'Jobs', path: '/client/jobs', icon: Briefcase },
   { name: 'Community', path: '/community', icon: Users },
   { name: 'Messages', path: '/client/messages', icon: MessageSquare },
@@ -36,105 +33,14 @@ const sidebarSecondary = [
   { name: 'Help', path: '/client/help', icon: HelpCircle },
 ];
 
-const bottomNavItems = [
-  { name: 'Home', path: '/client/home', icon: Home },
-  { name: 'Explore', path: '/client/explore', icon: Search },
-  { name: 'Post Job', path: '/client/home?post=1', icon: Plus, primary: true },
-  { name: 'Messages', path: '/client/messages', icon: MessageSquare },
-  { name: 'Community', path: '/community', icon: Users },
-];
-
-function UpcomingJobs() {
-  const navigate = useNavigate();
-  const jobs = [
-    { title: 'Electrical wiring', pro: 'Kuda D.', time: 'Tomorrow, 10:00 AM', amount: '$120' },
-  ];
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="mb-3 flex items-center gap-2">
-        <Clock size={16} className="text-orange-500" />
-        <h3 className="font-display text-sm font-bold text-gray-900">Upcoming Jobs</h3>
-      </div>
-      <div className="space-y-3">
-        {jobs.map((job, i) => (
-          <div key={i} className="flex items-center justify-between rounded-xl bg-gray-100 p-3">
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-gray-900">{job.title}</p>
-              <p className="text-xs text-gray-500">{job.pro} &middot; {job.time}</p>
-            </div>
-            <span className="ml-3 whitespace-nowrap text-sm font-bold text-orange-600">{job.amount}</span>
-          </div>
-        ))}
-      </div>
-      <button onClick={() => navigate('/client/jobs')} className="mt-3 w-full rounded-xl bg-gray-100 py-2 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200">
-        View all jobs
-      </button>
-    </div>
-  );
-}
-
-function UnreadMessages() {
-  const msgs = [
-    { name: 'Kuda D.', preview: 'The estimate is ready', time: '1h ago', unread: false },
-  ];
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="mb-3 flex items-center gap-2">
-        <MessageSquare size={16} className="text-orange-500" />
-        <h3 className="font-display text-sm font-bold text-gray-900">Recent Messages</h3>
-      </div>
-      <div className="space-y-2">
-        {msgs.map((m, i) => (
-          <div key={i} className={`flex items-start gap-3 rounded-xl p-2.5 ${m.unread ? 'bg-orange-50' : ''}`}>
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-800 text-xs font-bold text-white">
-              {m.name[0]}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
-                {m.name}
-                {m.unread && <span className="h-2 w-2 rounded-full bg-orange-500" />}
-              </p>
-              <p className="truncate text-xs text-gray-500">{m.preview}</p>
-              <p className="text-[10px] text-gray-400">{m.time}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function WeeklySummary() {
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-      <h3 className="font-display mb-3 text-sm font-bold text-gray-900">This Week</h3>
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: 'Jobs Done', value: '3', icon: Briefcase, color: 'text-emerald-600', bg: 'bg-emerald-100' },
-          { label: 'Spent', value: '$215', icon: Wallet, color: 'text-orange-600', bg: 'bg-orange-100' },
-          { label: 'Rating', value: '4.8', icon: Star, color: 'text-amber-600', bg: 'bg-amber-100' },
-        ].map((s) => {
-          const Icon = s.icon;
-          return (
-            <div key={s.label} className="rounded-xl bg-gray-100 p-3 text-center">
-              <div className={`mx-auto mb-1.5 flex h-7 w-7 items-center justify-center rounded-full ${s.bg}`}>
-                <Icon size={14} className={s.color} />
-              </div>
-              <p className="text-sm font-bold text-gray-900">{s.value}</p>
-              <p className="text-[10px] text-gray-500">{s.label}</p>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 export default function ClientLayout() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isCommunity = location.pathname.startsWith('/community');
+  const isChatPage = location.pathname.startsWith('/client/chat') || location.pathname === '/client/messages';
+  const isChatThread = location.pathname.startsWith('/client/chat');
+  const isFullWidth = isCommunity || location.pathname === '/client/explore';
   const showRail = !isCommunity && ['/client/home', '/client/explore', '/client/jobs'].includes(location.pathname);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -185,24 +91,21 @@ export default function ClientLayout() {
               key={item.path}
               to={item.path}
               onClick={() => setDrawerOpen(false)}
-              className={`group relative flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
+              className={`group relative flex min-h-11 items-center gap-3 rounded-xl border-l-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                 active
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
+                  ? 'border-hc-brand bg-hc-tint text-hc-brand'
+                  : 'border-transparent text-gray-600 hover:bg-orange-50/70 hover:text-hc-brand'
               }`}
             >
               <item.icon
                 size={20}
-                className={active ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'}
+                className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'}
               />
               <span className="flex-1">{item.name}</span>
               {item.name === 'Messages' && unreadMessages > 0 && (
-                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-bold text-white">
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-hc-brand px-1.5 text-[10px] font-bold text-white">
                   {unreadMessages > 99 ? '99+' : unreadMessages}
                 </span>
-              )}
-              {active && (
-                <span className="absolute right-2 h-1.5 w-1.5 rounded-full bg-orange-500" />
               )}
             </Link>
           );
@@ -217,15 +120,15 @@ export default function ClientLayout() {
               key={item.path}
               to={item.path}
               onClick={() => setDrawerOpen(false)}
-              className={`group relative flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
+              className={`group flex min-h-11 items-center gap-3 rounded-xl border-l-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                 active
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
+                  ? 'border-hc-brand bg-hc-tint text-hc-brand'
+                  : 'border-transparent text-gray-600 hover:bg-orange-50/70 hover:text-hc-brand'
               }`}
             >
               <item.icon
                 size={20}
-                className={active ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'}
+                className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'}
               />
               {item.name}
             </Link>
@@ -240,7 +143,7 @@ export default function ClientLayout() {
             <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gray-400 text-sm font-bold text-white">
               {avatar}
             </div>
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#E5E7EB] bg-green-500" />
+            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#F3F4F6] bg-green-500" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-gray-900">{currentUser?.displayName || currentUser?.email}</p>
@@ -259,10 +162,10 @@ export default function ClientLayout() {
   );
 
   return (
-    <div className="flex min-h-screen justify-center bg-gray-50 font-sans text-gray-900">
+    <div className="flex min-h-screen justify-center bg-[#F2F0EB] font-sans text-hc-ink">
       <div className="flex w-full max-w-[1500px]">
         {/* Sidebar (Desktop >=1024px) — 280px */}
-        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col bg-[#E5E7EB] lg:flex">
+        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-black/[0.07] bg-[#F3F4F6] lg:flex">
           {renderSidebar()}
         </aside>
 
@@ -270,7 +173,7 @@ export default function ClientLayout() {
         {drawerOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-            <aside className="absolute left-0 top-0 h-full w-[280px] overflow-y-auto bg-[#E5E7EB] shadow-xl">
+            <aside className="absolute left-0 top-0 h-full w-[280px] overflow-y-auto border-r border-black/[0.07] bg-[#F3F4F6] shadow-xl">
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
@@ -284,7 +187,7 @@ export default function ClientLayout() {
         )}
 
         {/* Main Content */}
-        <main className="flex min-w-0 flex-1 flex-col pb-24 md:pb-0 lg:h-screen lg:overflow-y-auto">
+        <main className={`flex min-w-0 flex-1 flex-col bg-white md:pb-0 lg:h-screen lg:overflow-y-auto ${isChatPage ? 'pb-0' : 'pb-[calc(6rem+env(safe-area-inset-bottom))]'}`}>
           {/* Top Bar (Tablet 768-1023px) */}
           <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md md:flex lg:hidden">
             <button
@@ -319,12 +222,7 @@ export default function ClientLayout() {
 
           {/* Top Bar (Desktop >=1024px) */}
           <div className="sticky top-0 z-30 hidden border-b border-gray-200 bg-white/80 backdrop-blur-md lg:flex items-center justify-between gap-4 px-8 py-4">
-            <div className="relative flex-1 max-w-md">
-              <input
-                placeholder="Search services or pros..."
-                className="w-full rounded-xl border border-gray-200 bg-gray-100 py-2.5 pl-4 pr-4 text-sm outline-none transition-all focus:border-orange-400 focus:ring-2 focus:ring-orange-500/10"
-              />
-            </div>
+            <div className="flex-1" />
 
             <button className="flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-200">
               <MapPin size={16} className="text-orange-500" /> Harare, Zimbabwe
@@ -422,8 +320,8 @@ export default function ClientLayout() {
           </div>
 
           {/* Page Content + Right Sidebar */}
-          <div className="flex gap-6 px-4 py-6 lg:px-8 lg:py-8">
-            <div className={`min-w-0 flex-1 mx-auto lg:mx-0 ${isCommunity ? 'max-w-none' : 'max-w-[820px]'}`}>
+          <div className={`flex gap-6 px-4 lg:px-8 ${isChatPage ? 'py-0' : 'py-6 lg:py-8'}`}>
+            <div className={`min-w-0 flex-1 mx-auto lg:mx-0 ${isFullWidth ? 'max-w-none' : 'max-w-[820px]'}`}>
               <motion.div
                 key={location.pathname}
                 initial={{ opacity: 0, y: 8 }}
@@ -436,12 +334,12 @@ export default function ClientLayout() {
 
             {/* Right Sidebar (Desktop) — Home, Explore, Jobs only */}
             {showRail && (
-              <aside className="sticky top-24 hidden w-[320px] shrink-0 self-start lg:flex flex-col gap-5">
+              <aside className="sticky top-24 hidden w-[300px] shrink-0 self-start lg:flex flex-col divide-y divide-black/[0.06] rounded-2xl border border-black/[0.05] bg-[#FAFAFA] p-4">
                 <NotificationsPreview />
-                <UpcomingJobs />
+                <RailUpcomingJobs />
                 <WalletCard />
-                <UnreadMessages />
-                <WeeklySummary />
+                <RailRecentMessages />
+                <RailWeeklySummary />
               </aside>
             )}
           </div>
@@ -449,46 +347,7 @@ export default function ClientLayout() {
       </div>
 
       {/* Mobile Bottom Navigation (<768px) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-xl md:hidden">
-        <div className="flex h-16 items-center justify-around">
-          {bottomNavItems.map((item) => {
-            const active = location.pathname === item.path || (item.path.includes('?') && location.pathname + '?' + location.search.split('?')[1] === item.path);
-            if (item.primary) {
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="flex h-full w-full flex-col items-center justify-center gap-0.5"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-500 text-white shadow-lg shadow-orange-500/30 -mt-3 transition-transform hover:scale-105 active:scale-95">
-                    <Plus size={24} strokeWidth={3} />
-                  </div>
-                  <span className="text-[9px] font-bold text-orange-500 -mt-0.5">Post</span>
-                </Link>
-              );
-            }
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`relative flex h-full w-full flex-col items-center justify-center gap-0.5 transition-colors ${
-                  active ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
-                }`}
-              >
-                <item.icon size={22} strokeWidth={active ? 2.5 : 2} />
-                {item.name === 'Messages' && unreadMessages > 0 && (
-                  <span className="absolute right-[calc(50%-16px)] top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
-                    {unreadMessages > 99 ? '99+' : unreadMessages}
-                  </span>
-                )}
-                <span className={`text-[10px] font-semibold ${active ? 'text-orange-500' : ''}`}>{item.name}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* FAB - Mobile (hidden since bottom nav has +) */}
+      {!isChatThread && <MobileBottomNav />}
     </div>
   );
 }

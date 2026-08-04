@@ -37,10 +37,10 @@ function SidebarContent({ onNavigate, unread }) {
   return (
     <div className="flex h-full flex-col">
       <Link to="/handyman/dashboard" onClick={onNavigate} className="flex items-center gap-2.5 px-5 pt-7 pb-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-bold text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-extrabold text-white">
           HC
         </div>
-        <span className="text-base font-bold tracking-tight">
+        <span className="font-display text-base font-extrabold tracking-tight text-hc-ink">
           Handy<span className="text-orange-500">Connect</span>
         </span>
       </Link>
@@ -54,14 +54,16 @@ function SidebarContent({ onNavigate, unread }) {
               key={item.path}
               to={item.path}
               onClick={onNavigate}
-              className={`flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                active ? 'bg-orange-50 text-orange-600' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              className={`group relative flex min-h-11 items-center gap-3 rounded-lg border-l-2 pl-3 pr-3 py-2 text-sm font-semibold transition-all ${
+                active
+                  ? 'border-hc-brand bg-hc-tint text-hc-brand'
+                  : 'border-transparent text-gray-600 hover:bg-gray-100'
               }`}
             >
-              <Icon size={17} className={active ? 'text-orange-500' : 'text-gray-400'} />
+              <Icon size={17} className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'} />
               <span className="flex-1">{item.name}</span>
               {item.name === 'Messages' && unread > 0 && (
-                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-bold text-white">
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-hc-brand px-1.5 text-[10px] font-bold text-white">
                   {unread > 99 ? '99+' : unread}
                 </span>
               )}
@@ -70,14 +72,14 @@ function SidebarContent({ onNavigate, unread }) {
         })}
       </nav>
 
-      <div className="border-t border-gray-200 px-3 py-4">
+      <div className="border-t border-black/[0.08] px-3 py-4">
         <div className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
             {currentUser?.email?.[0]?.toUpperCase() || 'H'}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-gray-900">{currentUser?.displayName || 'Handyman'}</p>
-            <p className="text-xs text-gray-500">Professional</p>
+            <p className="truncate text-sm font-medium text-hc-ink">{currentUser?.displayName || 'Handyman'}</p>
+            <p className="text-xs text-hc-caption">Professional</p>
           </div>
         </div>
         <button
@@ -94,14 +96,16 @@ function SidebarContent({ onNavigate, unread }) {
 export default function HandymanLayout() {
   const { currentUser } = useAuth();
   const { pathname } = useLocation();
+  const isChatPage = pathname.startsWith('/handyman/chat') || pathname === '/handyman/messages';
+  const isChatThread = pathname.startsWith('/handyman/chat');
   const unread = useUnreadCount();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen justify-center bg-gray-50 font-sans text-gray-900">
+    <div className="flex min-h-screen justify-center bg-hc-page font-sans text-hc-ink">
       <div className="flex w-full max-w-[1500px]">
         {/* Desktop sidebar (>=1024px) — 280px */}
-        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-gray-200 bg-white lg:flex">
+        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-black/[0.08] bg-[#F3F4F6] lg:flex">
           <SidebarContent unread={unread} />
         </aside>
 
@@ -109,7 +113,7 @@ export default function HandymanLayout() {
         {drawerOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-            <aside className="absolute left-0 top-0 h-full w-[280px] bg-white shadow-xl">
+            <aside className="absolute left-0 top-0 h-full w-[280px] border-r border-black/[0.08] bg-[#F3F4F6] shadow-xl">
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
@@ -123,9 +127,9 @@ export default function HandymanLayout() {
         )}
 
         {/* Main */}
-        <main className="flex min-w-0 flex-1 flex-col pb-24 md:pb-0">
+        <main className={`flex min-w-0 flex-1 flex-col md:pb-0 ${isChatPage ? 'pb-0' : 'pb-[calc(6rem+env(safe-area-inset-bottom))]'}`}>
           {/* Top bar — tablet (hamburger + brand) + desktop (bell + profile) */}
-          <div className="sticky top-0 z-30 border-b border-gray-200 bg-white">
+          <div className={`sticky top-0 z-30 border-b border-black/[0.07] bg-white/80 backdrop-blur-md ${isChatPage ? 'hidden md:block' : 'block'}`}>
             <div className="flex items-center gap-3 px-4 py-3 lg:justify-end lg:px-7 lg:py-3">
               {/* Hamburger + brand: tablet only (<1024px, >=768px) */}
               <button
@@ -139,10 +143,10 @@ export default function HandymanLayout() {
                 to="/handyman/dashboard"
                 className="flex items-center gap-2 md:flex lg:hidden"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-bold text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-extrabold text-white">
                   HC
                 </div>
-                <span className="text-sm font-bold tracking-tight">
+                <span className="font-display text-sm font-extrabold tracking-tight text-hc-ink">
                   Handy<span className="text-orange-500">Connect</span>
                 </span>
               </Link>
@@ -152,7 +156,7 @@ export default function HandymanLayout() {
               <button className="relative flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100">
                 <Bell size={17} />
                 {unread > 0 && (
-                  <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
+                  <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
                     {unread > 99 ? '99+' : unread}
                   </span>
                 )}
@@ -161,7 +165,7 @@ export default function HandymanLayout() {
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-600">
                   {currentUser?.email?.[0]?.toUpperCase() || 'H'}
                 </div>
-                <span className="text-sm font-medium text-gray-700">{currentUser?.displayName || 'Handyman'}</span>
+                <span className="text-sm font-medium text-hc-ink-2">{currentUser?.displayName || 'Handyman'}</span>
               </div>
             </div>
           </div>
@@ -171,8 +175,8 @@ export default function HandymanLayout() {
       </div>
 
       {/* Mobile bottom nav (<768px) — Instagram style */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur-xl md:hidden">
-        <div className="flex h-16 items-center justify-around">
+      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-black/[0.07] bg-white/95 backdrop-blur-xl ${isChatThread ? 'hidden' : 'md:hidden'}`}>
+        <div className="flex h-[calc(4rem+env(safe-area-inset-bottom))] items-center justify-around pb-[env(safe-area-inset-bottom)]">
           {bottomNav.map((item) => {
             const active = pathname === item.path;
             const Icon = item.icon;
@@ -183,10 +187,10 @@ export default function HandymanLayout() {
                   to={item.path}
                   className="flex h-full w-full flex-col items-center justify-center gap-0.5"
                 >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-500 text-white shadow-lg shadow-orange-500/30 -mt-3 transition-transform hover:scale-105 active:scale-95">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-hc-brand text-white shadow-lg shadow-hc-brand/30 -mt-3 transition-transform hover:scale-105 active:scale-95">
                     <Icon size={22} />
                   </div>
-                  <span className="text-[9px] font-bold text-orange-500 -mt-0.5">{item.name}</span>
+                  <span className="text-[9px] font-bold text-hc-brand -mt-0.5">{item.name}</span>
                 </Link>
               );
             }
@@ -195,12 +199,12 @@ export default function HandymanLayout() {
                 key={item.path}
                 to={item.path}
                 className={`relative flex h-full w-full flex-col items-center justify-center gap-1 transition-colors ${
-                  active ? 'text-orange-500' : 'text-gray-400'
+                  active ? 'text-hc-brand' : 'text-gray-400'
                 }`}
               >
                 <Icon size={20} strokeWidth={active ? 2.5 : 1.5} />
                 {item.name === 'Messages' && unread > 0 && (
-                  <span className="absolute right-[calc(50%-18px)] top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
+                  <span className="absolute right-[calc(50%-18px)] top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
                     {unread > 99 ? '99+' : unread}
                   </span>
                 )}

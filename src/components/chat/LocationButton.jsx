@@ -5,7 +5,7 @@ export default function LocationButton({ active, onClick, className = '' }) {
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-xl p-2 transition-colors hover:bg-gray-100 ${active ? 'text-blue-500' : 'text-gray-400 hover:text-orange-500'} ${className}`}
+      className={`rounded-xl p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 ${active ? 'text-hc-ink' : 'text-gray-400 hover:text-hc-ink-2'} ${className}`}
     >
       <MapPin size={20} />
     </button>

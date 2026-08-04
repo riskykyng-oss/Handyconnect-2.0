@@ -68,15 +68,15 @@ export default function SecurityGate({ uid, onClose, onVerified }) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-gray-100 shadow-2xl dark:border-gray-700 dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-sm rounded-xl border border-black/[0.07] bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-gray-200/70 px-5 py-4 dark:border-gray-800">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
               <ShieldCheck size={18} />
             </div>
             <div>
-              <h2 className="font-display text-base font-extrabold text-gray-900 dark:text-white">Confirm your identity</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Secure this transaction</p>
+              <h2 className="text-base font-semibold tracking-tight text-hc-ink dark:text-white">Confirm your identity</h2>
+              <p className="text-xs text-hc-caption dark:text-gray-400">Secure this transaction</p>
             </div>
           </div>
           <button onClick={onClose} className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-gray-800" aria-label="Close">
@@ -98,7 +98,7 @@ export default function SecurityGate({ uid, onClose, onVerified }) {
                   disabled={busy}
                   className="flex w-full items-center gap-3 rounded-xl border-2 border-gray-200 bg-gray-900 p-4 text-white transition-colors hover:bg-gray-800 disabled:opacity-60 dark:border-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
                 >
-                  <Fingerprint size={20} className="shrink-0 text-orange-400 dark:text-orange-500" />
+                  <Fingerprint size={20} className="shrink-0 text-gray-400 dark:text-gray-500" />
                   <span className="flex-1 text-left text-sm font-bold">Use Face ID / Fingerprint</span>
                   {busy && <Loader2 size={15} className="animate-spin" />}
                 </button>
@@ -106,7 +106,7 @@ export default function SecurityGate({ uid, onClose, onVerified }) {
 
               {security.pin && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Payment PIN</label>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Payment PIN</label>
                   <div className="flex gap-2">
                     <input
                       type="password"
@@ -115,7 +115,7 @@ export default function SecurityGate({ uid, onClose, onVerified }) {
                       onChange={(e) => setPin(e.target.value)}
                       placeholder="Enter PIN"
                       maxLength={6}
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm tracking-widest outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm tracking-widest outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                     />
                     <button onClick={handlePin} disabled={busy || !pin} className="flex shrink-0 items-center gap-1.5 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-gray-900">
                       <KeyRound size={14} /> Unlock
@@ -126,14 +126,14 @@ export default function SecurityGate({ uid, onClose, onVerified }) {
 
               {security.password && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Payment password</label>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Payment password</label>
                   <div className="flex gap-2">
                     <input
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter password"
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                     />
                     <button onClick={handlePassword} disabled={busy || !password} className="flex shrink-0 items-center gap-1.5 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-gray-900">
                       <Lock size={14} /> Unlock

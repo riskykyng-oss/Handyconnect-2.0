@@ -13,32 +13,34 @@ export default function HeroSection() {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="relative mx-auto mt-6 mb-8 w-full max-w-[1200px] overflow-hidden rounded-[32px] shadow-[0_20px_45px_rgba(0,0,0,.15)] min-h-[280px] md:min-h-[320px] lg:min-h-[360px]"
+      className="relative mx-auto mt-6 mb-8 w-full max-w-[1200px] rounded-[32px] shadow-[0_20px_45px_rgba(0,0,0,.15)] min-h-[280px] md:min-h-[320px] lg:min-h-[360px]"
     >
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 h-full w-full"
-        style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=80)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
+      <div className="absolute inset-0 overflow-hidden rounded-[32px]">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 h-full w-full"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=80)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
 
-      {/* Dark Overlay - stronger for text contrast */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/45 to-black/20" />
+        {/* Dark Overlay - stronger for text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/45 to-black/20" />
 
-      {/* Orange Accent Blobs */}
-      <motion.div
-        animate={{ x: [0, 8, 0], y: [0, -8, 0] }}
-        transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
-        className="pointer-events-none absolute -right-20 -top-20 h-[280px] w-[280px] rounded-full bg-orange-500 opacity-[0.20] blur-[120px]"
-      />
-      <motion.div
-        animate={{ x: [0, -8, 0], y: [0, 8, 0] }}
-        transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
-        className="pointer-events-none absolute -bottom-16 -left-8 h-[160px] w-[160px] rounded-full bg-orange-400 opacity-[0.15] blur-[90px]"
-      />
+        {/* Orange Accent Blobs */}
+        <motion.div
+          animate={{ x: [0, 8, 0], y: [0, -8, 0] }}
+          transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
+          className="pointer-events-none absolute -right-20 -top-20 h-[280px] w-[280px] rounded-full bg-orange-500 opacity-[0.20] blur-[120px]"
+        />
+        <motion.div
+          animate={{ x: [0, -8, 0], y: [0, 8, 0] }}
+          transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
+          className="pointer-events-none absolute -bottom-16 -left-8 h-[160px] w-[160px] rounded-full bg-orange-400 opacity-[0.15] blur-[90px]"
+        />
+      </div>
 
       {/* Content */}
       <div className="relative z-10 flex h-full items-center px-6 md:px-8 lg:px-10">

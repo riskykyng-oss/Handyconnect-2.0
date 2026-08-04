@@ -1,23 +1,21 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Trash2, MessageSquare, Flame, Image as ImageIcon } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
 import PageHeader from '@/features/admin/components/PageHeader';
 import FilterTabs from '@/features/admin/components/FilterTabs';
 import StatusBadge from '@/features/admin/components/StatusBadge';
 import ConfirmDialog from '@/features/admin/components/ConfirmDialog';
 import { subscribeToPosts } from '@/services/postService';
 import { adminDeletePost } from '@/services/adminService';
+import { timeAgo } from '@/utils/time';
 
 const TYPE_BADGES = {
-  project: 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
-  beforeafter: 'bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400',
-  tip: 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
-  question: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
-  collaboration: 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400',
-  post: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
+  project: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
+  beforeafter: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
+  tip: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
+  question: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
+  collaboration: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
+  post: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300',
 };
-
-const toMillis = (v) => (v?.toMillis ? v.toMillis() : v instanceof Date ? v.getTime() : Number(v) || 0);
 
 export default function AdminCommunityPage() {
   const [posts, setPosts] = useState([]);
@@ -100,7 +98,7 @@ export default function AdminCommunityPage() {
         {filtered.map((post) => {
           const mediaCount = (post.media?.length || 0) + (post.beforeImage ? 1 : 0) + (post.afterImage ? 1 : 0) + (post.videoUrl ? 1 : 0);
           return (
-            <div key={post.id} className="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-colors hover:bg-gray-50/60 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800/50">
+            <div key={post.id} className="flex items-start gap-4 rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm transition-colors hover:bg-gray-50/60 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800/50">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-100 text-sm font-bold text-gray-500 dark:bg-gray-800 dark:text-gray-300">
                 {post.authorAvatar ? <img src={post.authorAvatar} alt="" className="h-full w-full object-cover" /> : (post.authorName || '?')[0]}
               </div>
@@ -109,13 +107,13 @@ export default function AdminCommunityPage() {
                   <p className="text-sm font-bold text-gray-900 dark:text-white">{post.authorName || 'Unknown'}</p>
                   <StatusBadge status={post.authorRole}>{post.authorRole}</StatusBadge>
                   <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${TYPE_BADGES[post.type] || TYPE_BADGES.post}`}>{post.type}</span>
-                  {post.authorVerified && <span className="rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">Verified</span>}
+                  {post.authorVerified && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">Verified</span>}
                 </div>
                 <p className="mt-1.5 line-clamp-2 text-sm text-gray-600 dark:text-gray-300">{post.text}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-gray-400">
-                  <span>{post.createdAt ? formatDistanceToNow(toMillis(post.createdAt), { addSuffix: true }) : '—'}</span>
+                  <span>{post.createdAt ? timeAgo(post.createdAt) : '—'}</span>
                   {post.location && <span>{post.location}</span>}
-                  <span className="flex items-center gap-1"><Flame size={12} className="text-orange-400" /> {engagement(post)}</span>
+                  <span className="flex items-center gap-1"><Flame size={12} className="text-gray-400" /> {engagement(post)}</span>
                   <span className="flex items-center gap-1"><MessageSquare size={12} /> {post.commentCount || 0}</span>
                   {mediaCount > 0 && <span className="flex items-center gap-1"><ImageIcon size={12} /> {mediaCount}</span>}
                 </div>
@@ -131,7 +129,7 @@ export default function AdminCommunityPage() {
         })}
 
         {filtered.length === 0 && (
-          <div className="rounded-2xl border border-gray-200 bg-white py-16 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <div className="rounded-xl border border-black/[0.07] bg-white py-16 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900">
             <MessageSquare className="mx-auto mb-3 h-10 w-10 text-gray-300 dark:text-gray-600" />
             <p className="text-sm text-gray-500 dark:text-gray-400">No posts match your filters.</p>
           </div>

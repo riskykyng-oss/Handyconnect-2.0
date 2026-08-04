@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { subscribeProfessionals } from '@/services/userService';
 import { categories } from '../data/landingData';
+import ServiceCard from './ServiceCard';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -10,44 +11,59 @@ const fadeUp = {
   transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
 };
 
-export default function ServicesSection() {
-  return (
-    <section id="services" className="relative mx-auto max-w-7xl px-5 py-24 lg:px-8">
-      <motion.div {...fadeUp} className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-[0.12em] text-orange-600">Explore services</p>
-          <h2 className="mt-3 max-w-lg font-display text-4xl font-extrabold tracking-[-0.03em] text-gray-900">
-            Everyday help. <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">Exceptionally</span> easy.
-          </h2>
-        </div>
-        <Link to="/auth/signup" className="group inline-flex items-center gap-2 text-sm font-bold text-orange-600 transition-colors hover:text-orange-500">
-          Browse all services <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
-        </Link>
-      </motion.div>
+const matchTrade = (pro, name) => {
+  const trade = `${pro.trade || ''} ${pro.skills || ''}`.toLowerCase();
+  return trade.includes(name.toLowerCase());
+};
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((cat, i) => {
-          const Icon = cat.icon;
-          return (
+export default function ServicesSection() {
+  const [pros, setPros] = useState([]);
+
+  useEffect(() => {
+    const unsub = subscribeProfessionals(setPros);
+    return unsub;
+  }, []);
+
+  const stats = useMemo(() => {
+    return categories.map((cat) => {
+      const matched = pros.filter((pro) => matchTrade(pro, cat.name));
+      const rates = matched.filter((p) => typeof p.hourlyRate === 'number').map((p) => p.hourlyRate);
+      const ratings = matched.filter((p) => typeof p.rating === 'number').map((p) => p.rating);
+      return {
+        name: cat.name,
+        count: matched.length,
+        fromPrice: rates.length ? Math.min(...rates) : null,
+        rating: ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : null,
+      };
+    });
+  }, [pros]);
+
+  return (
+    <section id="services" className="py-14 lg:py-24">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <motion.div {...fadeUp} className="max-w-2xl">
+          <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-hc-brand">Explore services</p>
+          <h2 className="mt-2 font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
+            Everyday help. Exceptionally easy.
+          </h2>
+          <p className="mt-3 text-base leading-7 text-hc-ink-2">
+            Browse by trade, compare verified professionals, and book the right person for the job.
+          </p>
+        </motion.div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((cat, i) => (
             <motion.div
               key={cat.name}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ delay: i * 0.05, duration: 0.45 }}
-              className="group cursor-pointer rounded-3xl border border-gray-200/80 bg-white/60 p-6 shadow-sm transition-all backdrop-blur-sm hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl hover:shadow-orange-500/5"
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05, duration: 0.4 }}
             >
-              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${cat.gradient} shadow-lg shadow-${cat.gradient.split(' ')[0].replace('from-', '')}/20`}>
-                <Icon size={24} className="text-white" />
-              </div>
-              <h3 className="mt-6 font-display text-xl font-bold text-gray-900">{cat.name}</h3>
-              <p className="mt-2 text-sm text-gray-500">{cat.desc}</p>
-              <div className="mt-5 flex items-center gap-1 text-sm font-medium text-orange-500 opacity-0 transition-all group-hover:opacity-100">
-                Find a pro <ArrowRight size={14} />
-              </div>
+              <ServiceCard service={cat} {...stats.find((s) => s.name === cat.name)} />
             </motion.div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </section>
   );

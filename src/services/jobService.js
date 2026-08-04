@@ -1,12 +1,14 @@
-import { collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, doc, updateDoc, setDoc, increment, getDoc, arrayUnion } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, doc, updateDoc, setDoc, increment, getDoc, arrayUnion, deleteField } from 'firebase/firestore';
 import { db } from '@/firebase/config';
+import { createNotification } from '@/services/notificationService';
 
-// Create a new job
-export const createJob = async (jobData, clientUid) => {
+// Create a new job. Pass handymanId to target one professional directly.
+export const createJob = async (jobData, clientUid, handymanId = null) => {
   const jobsCollectionRef = collection(db, 'jobs');
   const docRef = await addDoc(jobsCollectionRef, {
     ...jobData,
     clientId: clientUid,
+    handymanId: handymanId || null,
     status: 'open',
     timeline: [{ type: 'posted', label: 'Job posted', createdAt: new Date() }],
     milestones: [],
@@ -14,6 +16,9 @@ export const createJob = async (jobData, clientUid) => {
     attachments: jobData.attachments || [],
     createdAt: serverTimestamp()
   });
+  if (handymanId) {
+    createNotification(handymanId, clientUid, 'job', { text: `New job request: ${jobData.title || 'Untitled job'}` }).catch(() => {});
+  }
   return docRef.id;
 };
 
@@ -72,11 +77,16 @@ export const startJob = async (jobId) =>
 // Handyman accepts a job
 export const acceptJob = async (jobId, handymanId, handymanName) => {
   const jobRef = doc(db, 'jobs', jobId);
+  const jobSnap = await getDoc(jobRef);
+  const job = jobSnap.data() || {};
   await updateDoc(jobRef, {
     status: 'assigned',
     handymanId: handymanId,
     handymanName: handymanName
   });
+  if (job.clientId) {
+    createNotification(job.clientId, handymanId, 'job', { text: `${handymanName} accepted your job "${job.title || 'Job'}"` }).catch(() => {});
+  }
 };
 
 // Client marks a job as completed, crediting the handyman
@@ -100,4 +110,7 @@ export const addMilestone = async (jobId, milestone) => updateDoc(doc(db, 'jobs'
 export const updateJobProgress = async (jobId, progress, label = 'Progress updated') => updateDoc(doc(db, 'jobs', jobId), { progress, timeline: arrayUnion({ type: 'progress', label, createdAt: new Date() }) });
 export const openDispute = async (jobId, reason, openedBy) => updateDoc(doc(db, 'jobs', jobId), { status: 'disputed', dispute: { reason, openedBy, openedAt: new Date(), status: 'open' }, timeline: arrayUnion({ type: 'dispute', label: 'Dispute opened', createdAt: new Date() }) });
 export const getJob = async (jobId) => { const snap = await getDoc(doc(db, 'jobs', jobId)); return snap.exists() ? { id: snap.id, ...snap.data() } : null; };
+
+// Handyman declines a targeted request — job returns to the open pool.
+export const declineJob = async (jobId) => updateDoc(doc(db, 'jobs', jobId), { handymanId: deleteField() });
 export const estimatePrice = ({ category, urgency = 'standard' }) => { const base = { plumbing: 45, electrical: 55, cleaning: 25, carpentry: 40, painting: 35 }[category?.toLowerCase()] || 35; const multiplier = urgency === 'urgent' ? 1.4 : 1; return { low: Math.round(base * multiplier), high: Math.round(base * multiplier * 2.2), currency: 'USD' }; };

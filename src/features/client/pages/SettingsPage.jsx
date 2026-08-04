@@ -15,12 +15,12 @@ function SettingRow({ icon: Icon, label, description, right, divider }) {
           <Icon size={17} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-900">{label}</p>
-          {description && <p className="text-xs text-gray-500 truncate">{description}</p>}
+          <p className="text-sm font-semibold text-hc-ink">{label}</p>
+          {description && <p className="text-xs text-hc-caption truncate">{description}</p>}
         </div>
         {right}
       </div>
-      {divider !== false && <div className="mx-5 border-t border-gray-100" />}
+      {divider !== false && <div className="mx-5 border-t border-black/[0.07]" />}
     </>
   );
 }
@@ -29,7 +29,7 @@ function Toggle({ enabled, onChange }) {
   return (
     <button
       onClick={onChange}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? 'bg-orange-500' : 'bg-gray-300'}`}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? 'bg-hc-brand' : 'bg-gray-300'}`}
     >
       <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-5' : ''}`} />
     </button>
@@ -57,14 +57,14 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8 pb-10">
       <div>
-        <h1 className="font-display text-2xl font-extrabold text-gray-900">Settings</h1>
-        <p className="mt-1 text-sm text-gray-500">Manage your account and preferences.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-hc-ink">Settings</h1>
+        <p className="mt-1 text-sm text-hc-caption">Manage your account and preferences.</p>
       </div>
 
       {/* Account */}
       <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500 px-1">Account</h3>
-        <Card className="divide-y divide-gray-100 !p-0 overflow-hidden">
+        <h3 className="mb-3 px-1 text-xs font-semibold uppercase tracking-wider text-hc-caption">Account</h3>
+        <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
           <SettingRow icon={User} label="Personal Information" description="Dylan, dylan@email.com" />
           <SettingRow icon={Phone} label="Phone Number" description="+263 77 123 4567" />
           <SettingRow icon={Mail} label="Email" description="dylan@email.com" />
@@ -75,8 +75,8 @@ export default function SettingsPage() {
 
       {/* Notifications */}
       <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500 px-1">Notifications</h3>
-        <Card className="divide-y divide-gray-100 !p-0 overflow-hidden">
+        <h3 className="mb-3 px-1 text-xs font-semibold uppercase tracking-wider text-hc-caption">Notifications</h3>
+        <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
           <SettingRow icon={MessageSquare} label="Messages" right={<Toggle enabled={toggles.messages} onChange={() => toggle('messages')} />} />
           <SettingRow icon={Briefcase} label="Jobs" right={<Toggle enabled={toggles.jobs} onChange={() => toggle('jobs')} />} />
           <SettingRow icon={Heart} label="Community" right={<Toggle enabled={toggles.community} onChange={() => toggle('community')} />} />
@@ -88,18 +88,18 @@ export default function SettingsPage() {
 
       {/* Appearance */}
       <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500 px-1">Appearance</h3>
-        <Card className="divide-y divide-gray-100 !p-0 overflow-hidden">
+        <h3 className="mb-3 px-1 text-xs font-semibold uppercase tracking-wider text-hc-caption">Appearance</h3>
+        <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
           <SettingRow icon={Sun} label="Dark Mode" right={<Toggle enabled={toggles.darkMode} onChange={() => toggle('darkMode')} />} />
-          <SettingRow icon={Globe} label="Language" right={<span className="text-sm font-medium text-gray-700">English</span>} />
-          <SettingRow icon={Type} label="Font Size" right={<span className="text-sm font-medium text-gray-700">Medium</span>} divider={false} />
+          <SettingRow icon={Globe} label="Language" right={<span className="text-sm font-medium text-hc-ink-2">English</span>} />
+          <SettingRow icon={Type} label="Font Size" right={<span className="text-sm font-medium text-hc-ink-2">Medium</span>} divider={false} />
         </Card>
       </div>
 
       {/* Privacy */}
       <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500 px-1">Privacy</h3>
-        <Card className="divide-y divide-gray-100 !p-0 overflow-hidden">
+        <h3 className="mb-3 px-1 text-xs font-semibold uppercase tracking-wider text-hc-caption">Privacy</h3>
+        <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
           <SettingRow icon={Shield} label="Blocked Users" description="3 users blocked" />
           <SettingRow icon={Eye} label="Profile Visibility" description="Visible to everyone" />
           <SettingRow icon={MapPin} label="Location Sharing" right={<Toggle enabled={toggles.locationSharing} onChange={() => toggle('locationSharing')} />} divider={false} />
@@ -108,8 +108,8 @@ export default function SettingsPage() {
 
       {/* App */}
       <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500 px-1">App</h3>
-        <Card className="divide-y divide-gray-100 !p-0 overflow-hidden">
+        <h3 className="mb-3 px-1 text-xs font-semibold uppercase tracking-wider text-hc-caption">App</h3>
+        <Card className="divide-y divide-black/[0.07] !p-0 overflow-hidden !rounded-xl !border-black/[0.07]">
           <SettingRow icon={Download} label="Clear Cache" description="245 MB" />
           <SettingRow icon={HardDrive} label="Storage" description="Using 1.2 GB" />
           <SettingRow icon={Globe} label="Version" description="1.0.0" divider={false} />

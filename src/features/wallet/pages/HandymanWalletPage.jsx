@@ -111,7 +111,7 @@ export default function HandymanWalletPage() {
   if (loading || !wallet) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="animate-spin text-orange-500" size={40} />
+        <Loader2 className="animate-spin text-gray-400" size={40} />
       </div>
     );
   }
@@ -119,8 +119,8 @@ export default function HandymanWalletPage() {
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6 px-4 pb-24 pt-5 lg:pb-10">
       <div>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight text-gray-900">Wallet</h1>
-        <p className="mt-1 text-sm text-gray-500">Your earnings, withdrawals and income analytics.</p>
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-hc-ink dark:text-white">Wallet</h1>
+        <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Your earnings, withdrawals and income analytics.</p>
       </div>
 
       <WalletTabs tabs={TABS} activeTab={tab} onChange={setTab} />
@@ -128,31 +128,31 @@ export default function HandymanWalletPage() {
       {tab === 'overview' && (
         <>
           {/* Earnings card */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-medium text-gray-500">Available Balance</p>
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+              <p className="text-xs font-medium text-hc-caption dark:text-gray-400">Available Balance</p>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                 <Wallet size={18} />
               </span>
             </div>
-            <p className="mt-1 font-display text-4xl font-extrabold tracking-tight text-gray-900">${balance.toFixed(2)}</p>
+            <p className="mt-1 font-display text-4xl font-semibold tracking-tight text-hc-ink dark:text-white">${balance.toFixed(2)}</p>
             <p className="mt-1 text-xs text-gray-400">USD · updates in real time</p>
             <div className="mt-5 grid grid-cols-2 gap-3 border-t border-gray-200/70 pt-4">
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Pending</p>
-                <p className="mt-1 font-display text-lg font-extrabold text-amber-600">${pending.toFixed(2)}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Pending</p>
+                <p className="mt-1 font-display text-lg font-semibold text-amber-600 dark:text-amber-400">${pending.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Lifetime Earnings</p>
-                <p className="mt-1 font-display text-lg font-extrabold text-emerald-600">${lifetime.toFixed(2)}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Lifetime Earnings</p>
+                <p className="mt-1 font-display text-lg font-semibold text-emerald-600 dark:text-emerald-400">${lifetime.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Total Withdrawn</p>
-                <p className="mt-1 font-display text-lg font-extrabold text-gray-900">-${totalWithdrawn.toFixed(2)}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Total Withdrawn</p>
+                <p className="mt-1 font-display text-lg font-semibold text-hc-ink dark:text-white">-${totalWithdrawn.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Net After Withdrawals</p>
-                <p className="mt-1 font-display text-lg font-extrabold text-blue-600">${Math.max(0, lifetime - totalWithdrawn).toFixed(2)}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Net After Withdrawals</p>
+                <p className="mt-1 font-display text-lg font-semibold text-emerald-600 dark:text-emerald-400">${Math.max(0, lifetime - totalWithdrawn).toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -173,9 +173,9 @@ export default function HandymanWalletPage() {
           <SectionCard title="Earnings Breakdown" subtitle="Income for the current period">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {breakdown.map((b) => (
-                <div key={b.label} className="rounded-xl bg-gray-200/50 p-4">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">{b.label}</p>
-                  <p className="mt-1 font-display text-lg font-extrabold text-gray-900">${b.value.toFixed(0)}</p>
+                <div key={b.label} className="rounded-xl border border-gray-200/80 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/60">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">{b.label}</p>
+                  <p className="mt-1 font-display text-lg font-semibold text-hc-ink dark:text-white">${b.value.toFixed(0)}</p>
                 </div>
               ))}
             </div>
@@ -188,15 +188,15 @@ export default function HandymanWalletPage() {
             ) : (
               <div className="space-y-2">
                 {pendingPayments.map((p) => (
-                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-500">
+                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/60">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-500 dark:bg-amber-500/10 dark:text-amber-400">
                       <RefreshCcw size={15} />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-gray-900">{p.jobTitle}</p>
+                      <p className="truncate text-sm font-semibold text-hc-ink dark:text-white">{p.jobTitle}</p>
                       <p className="text-xs text-gray-400">Waiting · code {p.code}</p>
                     </div>
-                    <span className="shrink-0 font-display text-sm font-extrabold text-gray-900">${Number(p.amount).toFixed(2)}</span>
+                    <span className="shrink-0 font-display text-sm font-semibold text-hc-ink dark:text-white">${Number(p.amount).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -212,12 +212,12 @@ export default function HandymanWalletPage() {
                 </div>
               )}
               {linkedAccounts.map((a, i) => (
-                <div key={i} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
+                <div key={i} className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/60">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                     <Landmark size={15} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-gray-900">{a.name || 'Linked account'}</p>
+                    <p className="truncate text-sm font-semibold text-hc-ink dark:text-white">{a.name || 'Linked account'}</p>
                     <p className="text-xs text-gray-400">{a.detail || a.accountNumber || '—'}</p>
                   </div>
                   <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">LINKED</span>
@@ -252,11 +252,11 @@ export default function HandymanWalletPage() {
                 {serviceBreakdown.map(([cat, total]) => (
                   <div key={cat}>
                     <div className="mb-1 flex items-center justify-between text-sm">
-                      <span className="font-semibold text-gray-700">{cat}</span>
-                      <span className="font-display font-extrabold text-gray-900">${Number(total).toFixed(0)}</span>
+                      <span className="font-semibold text-gray-700 dark:text-gray-300">{cat}</span>
+                      <span className="font-display font-semibold text-hc-ink dark:text-white">${Number(total).toFixed(0)}</span>
                     </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-                      <div className="h-full rounded-full bg-orange-500" style={{ width: `${(Number(total) / maxService) * 100}%` }} />
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                      <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${(Number(total) / maxService) * 100}%` }} />
                     </div>
                   </div>
                 ))}
@@ -265,7 +265,7 @@ export default function HandymanWalletPage() {
           </SectionCard>
 
           <SectionCard title="Bonuses" subtitle="Rewards for quality work">
-            <div className="rounded-2xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-400">
+            <div className="rounded-xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-400 dark:border-gray-700">
               Bonuses are awarded for top-rated work — coming soon.
             </div>
           </SectionCard>
@@ -278,7 +278,7 @@ export default function HandymanWalletPage() {
             <button
               onClick={() => setWithdrawOpen(true)}
               disabled={balance < MIN_WITHDRAWAL}
-              className="flex h-11 items-center gap-1.5 rounded-xl bg-orange-500 px-4 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+              className="flex h-11 items-center gap-1.5 rounded-xl bg-hc-brand px-4 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
             >
               <Landmark size={15} /> Withdraw
             </button>
@@ -288,13 +288,13 @@ export default function HandymanWalletPage() {
                 <button
                   key={m}
                   onClick={() => setWithdrawOpen(true)}
-                  className="flex h-11 items-center justify-center rounded-xl border border-gray-200 px-2 text-xs font-bold text-gray-600 transition-colors hover:border-orange-200 hover:text-orange-600"
+                  className="flex h-11 items-center justify-center rounded-xl border border-gray-200 px-2 text-xs font-bold text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 hover:text-hc-ink dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
                 >
                   {m}
                 </button>
               ))}
             </div>
-            <p className="mt-4 rounded-xl bg-gray-200/50 p-3 text-[11px] leading-relaxed text-gray-500">
+            <p className="mt-4 rounded-xl border border-gray-200/80 bg-gray-50 p-3 text-[11px] leading-relaxed text-hc-caption dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400">
               No fees on your first withdrawal. Withdrawals are usually processed within 30 minutes, and the funds go to your linked account. Each payout is recorded in your transaction history.
             </p>
           </SectionCard>
@@ -305,15 +305,15 @@ export default function HandymanWalletPage() {
             ) : (
               <div className="space-y-2">
                 {payouts.slice(0, 8).map((p) => (
-                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-gray-100 p-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/60">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                       <Check size={15} />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-gray-900">Withdrawal · {p.method}</p>
+                      <p className="truncate text-sm font-semibold text-hc-ink dark:text-white">Withdrawal · {p.method}</p>
                       <p className="text-xs text-gray-400">{p.createdAt ? format(normalizeDate(p.createdAt), 'MMM d, yyyy · h:mm a') : '—'}</p>
                     </div>
-                    <span className="shrink-0 font-display text-sm font-extrabold text-gray-900">-${Number(p.amount).toFixed(2)}</span>
+                    <span className="shrink-0 font-display text-sm font-semibold text-hc-ink dark:text-white">-${Number(p.amount).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -343,16 +343,16 @@ export default function HandymanWalletPage() {
           ) : (
             <div className="space-y-2">
               {invoices.map((tx) => (
-                <div key={tx.id} className="flex items-center gap-3 rounded-xl border border-gray-100 p-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                <div key={tx.id} className="flex items-center gap-3 rounded-xl border border-gray-200/80 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/60">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                     <FileText size={15} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-gray-900">{tx.description || 'Payment'}</p>
+                    <p className="truncate text-sm font-semibold text-hc-ink dark:text-white">{tx.description || 'Payment'}</p>
                     <p className="text-xs text-gray-400">{format(normalizeDate(tx.createdAt), 'MMM d, yyyy')}</p>
                   </div>
-                  <span className="shrink-0 font-display text-sm font-extrabold text-emerald-600">+${Number(tx.amount || 0).toFixed(2)}</span>
-                  <button onClick={() => { setInvoiceOpen(false); setReceiptTx(tx); }} className="shrink-0 rounded-lg bg-gray-100 p-2 text-gray-500 transition-colors hover:bg-gray-200" aria-label="Download invoice">
+                  <span className="shrink-0 font-display text-sm font-semibold text-emerald-600 dark:text-emerald-400">+${Number(tx.amount || 0).toFixed(2)}</span>
+                  <button onClick={() => { setInvoiceOpen(false); setReceiptTx(tx); }} className="shrink-0 rounded-lg bg-gray-100 p-2 text-gray-500 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700" aria-label="Download invoice">
                     <Download size={14} />
                   </button>
                 </div>

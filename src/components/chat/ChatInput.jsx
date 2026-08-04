@@ -7,6 +7,7 @@ import LocationButton from './LocationButton';
 export default function ChatInput({ onSend, loading }) {
   const [text, setText] = useState('');
   const [file, setFile] = useState(null);
+  const [fileDuration, setFileDuration] = useState(0);
   const [recording, setRecording] = useState(false);
   const [locationMode, setLocationMode] = useState(false);
 
@@ -30,15 +31,16 @@ export default function ChatInput({ onSend, loading }) {
       return;
     }
 
-    onSend(text.trim(), file, {});
+    onSend(text.trim(), file, { duration: fileDuration });
     setText('');
     setFile(null);
+    setFileDuration(0);
   };
 
   return (
-    <form onSubmit={handleSend} className="border-t border-gray-200 bg-white px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <form onSubmit={handleSend} className="border-t border-gray-200 bg-white px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] dark:border-gray-700 dark:bg-gray-800">
       {file && (
-        <div className="mb-2 flex items-center gap-2 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-600">
+        <div className="mb-2 flex items-center gap-2 rounded-xl bg-gray-50 px-3 py-2 text-xs text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
           {file.type.startsWith('image/') ? '📷' : file.type.startsWith('audio/') ? '🎤' : '📎'}
           <span className="flex-1 truncate">{file.name}</span>
           <button type="button" onClick={() => setFile(null)} className="shrink-0 text-gray-400 hover:text-red-500">
@@ -47,7 +49,7 @@ export default function ChatInput({ onSend, loading }) {
         </div>
       )}
       {locationMode && (
-        <div className="mb-2 flex items-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-xs font-medium text-blue-600">
+        <div className="mb-2 flex items-center gap-2 rounded-xl bg-gray-100 px-3 py-2 text-xs font-medium text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
           <MapPin size={14} />
           Location sharing enabled — send to share your current location
         </div>
@@ -56,7 +58,7 @@ export default function ChatInput({ onSend, loading }) {
         <div className="flex items-center gap-1">
           <ImagePicker onPick={(f) => setFile(f)} />
           <VoiceRecorder
-            onRecorded={(f) => setFile(f)}
+            onRecorded={(f, duration) => { setFile(f); setFileDuration(duration || 0); }}
             recording={recording}
             onStart={() => setRecording(true)}
             onStop={() => setRecording(false)}
@@ -71,13 +73,13 @@ export default function ChatInput({ onSend, loading }) {
           placeholder={recording ? 'Recording...' : locationMode ? 'Add a note with your location...' : 'Type a message...'}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+          className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-[16px] outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 md:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
           disabled={recording}
         />
         <button
           type="submit"
           disabled={(!text.trim() && !file && !locationMode) || loading}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500 text-white shadow-sm transition-all hover:bg-orange-400 disabled:opacity-50"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-hc-brand text-white shadow-sm transition-all hover:bg-hc-brand-strong disabled:opacity-50"
         >
           {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
         </button>

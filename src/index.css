@@ -4,6 +4,30 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-hc-brand: #F97316;
+  --color-hc-brand-strong: #EA580C;
+  --color-hc-tint: #FFF3EA;
+  --color-hc-tint-text: #9A3D12;
+  --color-hc-page: #F7F6F3;
+  --color-hc-ink: #1A1A18;
+  --color-hc-ink-2: #5F5E5A;
+  --color-hc-ink-3: #8A8880;
+  --color-hc-hairline: rgba(0, 0, 0, 0.08);
+  --color-hc-caption: #6B6A66;
+  --color-hc-tile: #F1EFE8;
+  --color-avatar-teal-bg: #E1F5EE;
+  --color-avatar-teal-text: #0F6E56;
+  --color-avatar-blue-bg: #E6F1FB;
+  --color-avatar-blue-text: #185FA5;
+  --color-avatar-purple-bg: #EEEDFE;
+  --color-avatar-purple-text: #3C3489;
+  --color-avatar-amber-bg: #FAEEDA;
+  --color-avatar-amber-text: #854F0B;
+  --color-before-placeholder: #D3D1C7;
+  --color-after-placeholder: #9FE1CB;
+}
+
 :root {
   --hc-primary: #F97316;
   --hc-primary-strong: #ea580c;
@@ -85,4 +109,14 @@ img {
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Mobile-first: force 16px on form controls so iOS Safari doesn't auto-zoom
+   the whole page when an input/select/textarea gains focus. */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }

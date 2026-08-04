@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BarChart3, Camera, Images, Plus, Send, X } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import ColoredAvatar from '@/components/ui/ColoredAvatar';
 import { JOB_CATEGORIES } from '@/constants/categories';
 
 const clientPrompts = [
@@ -19,7 +20,7 @@ const handymanPrompts = [
   'New equipment',
 ];
 
-export default function CommunityComposer({ role, posting, onSubmit, group }) {
+export default function CommunityComposer({ role, posting, onSubmit, group, user }) {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
   const [baMode, setBaMode] = useState(false);
@@ -32,8 +33,10 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
   const [pollMode, setPollMode] = useState(false);
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
+  const [expanded, setExpanded] = useState(false);
 
   const isClient = role === 'client';
+  const showFull = expanded || !!text || !!image || pollMode || baMode || !!beforeImage || !!afterImage;
 
   const submit = async (e) => {
     e.preventDefault();
@@ -85,6 +88,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
       setBaMode(false);
       setTrade('');
       setLocation('');
+      setExpanded(false);
     } catch (err) {
       setError(err?.message || 'Could not post right now. Check your connection and try again — your draft is saved.');
     }
@@ -102,23 +106,20 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
   const prompts = isClient ? clientPrompts : handymanPrompts;
 
   return (
-    <Card>
+    <Card className="dark:border-gray-700 dark:bg-gray-800">
       <div className="mb-3 flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
-          {isClient ? '?' : 'HC'}
-        </span>
-        <div>
-          <h2 className="font-display text-base font-extrabold text-gray-900">
-            {isClient ? 'Ask the HandyConnect Community' : 'Share your work'}
-          </h2>
-          <p className="text-xs text-gray-500">
-            {isClient ? 'Recommendations · Advice · Quotes · Choosing a professional' : 'Projects · Tips · Before & After · Collaborations · Polls'}
-          </p>
-        </div>
+        {user?.photoURL ? (
+          <img src={user.photoURL} alt={user.displayName || 'You'} className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-gray-100 dark:ring-gray-700" />
+        ) : (
+          <ColoredAvatar id={user?.uid} name={user?.displayName || (isClient ? 'Client' : 'Handyman')} className="ring-2 ring-gray-100 dark:ring-gray-700" />
+        )}
+        <h2 className="text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">
+          {isClient ? 'Ask the Community' : 'Share your work'}
+        </h2>
       </div>
 
       {group && (
-        <div className="mb-3 flex items-center gap-2 rounded-xl bg-orange-50 px-3 py-2 text-xs font-bold text-orange-700">
+        <div className="mb-3 flex items-center gap-2 rounded-xl bg-gray-100 px-3 py-2 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
           Posting to the <span className="underline">"{group.name}"</span> group
         </div>
       )}
@@ -129,7 +130,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
             <input
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10"
+              className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
               placeholder="Ask a question… e.g. Which kitchen design do you prefer?"
             />
             {options.map((o, i) => (
@@ -137,7 +138,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
                 <input
                   value={o}
                   onChange={(e) => setOption(i, e.target.value)}
-                  className="min-w-0 flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10"
+                  className="min-w-0 flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                   placeholder={`Option ${i + 1}`}
                 />
                 {options.length > 2 && (
@@ -148,7 +149,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
               </div>
             ))}
             {options.length < 6 && (
-              <button type="button" onClick={() => setOptions((prev) => [...prev, ''])} className="flex items-center gap-1.5 text-xs font-bold text-orange-600 hover:text-orange-700">
+              <button type="button" onClick={() => setOptions((prev) => [...prev, ''])} className="flex items-center gap-1.5 text-xs font-semibold text-hc-ink-2 hover:text-hc-ink">
                 <Plus size={14} /> Add option
               </button>
             )}
@@ -156,7 +157,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows="2"
-              className="w-full resize-none bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+              className="w-full resize-none bg-transparent text-sm text-hc-ink outline-none placeholder:text-hc-ink-3 dark:text-gray-100"
               placeholder="Add some context (optional)…"
             />
           </div>
@@ -164,32 +165,33 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            rows="3"
-            className="w-full resize-none bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+            onFocus={() => setExpanded(true)}
+            rows={showFull ? 3 : 2}
+            className="w-full resize-none bg-transparent text-sm text-hc-ink outline-none placeholder:text-hc-ink-3 dark:text-gray-100"
             placeholder={isClient
-              ? 'e.g. Looking for a reliable electrician in Borrowdale. Has anyone worked with…?'
+              ? 'Ask anything… e.g. Can anyone recommend a reliable electrician in Borrowdale?'
               : 'Share your latest project… upload before & after photos, give maintenance tips, celebrate completed jobs…'}
           />
         )}
 
-        {!pollMode && prompts.map((p) => (
+        {!pollMode && showFull && prompts.map((p) => (
           <button
             key={p}
             type="button"
             onClick={() => setText(text ? `${text} ${p}` : p)}
-            className="mr-2 mt-2 inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600 transition-colors hover:bg-orange-50 hover:text-orange-600"
+            className="mr-2 mt-2 inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
           >
             {p}
           </button>
         ))}
 
         {/* Handyman-only details */}
-        {!isClient && (
+        {!isClient && showFull && (
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
             <select
               value={type}
               onChange={(e) => { setType(e.target.value); if (e.target.value === 'beforeafter') setBaMode(true); }}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none transition-colors focus:border-orange-500"
+              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
             >
               <option value="project">Project</option>
               <option value="beforeafter">Before & After</option>
@@ -199,7 +201,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
             <select
               value={trade}
               onChange={(e) => setTrade(e.target.value)}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none transition-colors focus:border-orange-500"
+              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
             >
               <option value="">Select trade</option>
               {JOB_CATEGORIES.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -208,7 +210,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
               <input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none transition-colors focus:border-orange-500"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 placeholder="Area e.g. Borrowdale"
               />
             </div>
@@ -220,18 +222,18 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
         )}
 
         {/* Media area */}
-        <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
-          <div className="flex items-center gap-2">
-            <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-bold text-gray-500 transition-colors hover:bg-gray-100 hover:text-orange-600">
+        <div className={`mt-5 flex flex-wrap items-center justify-between gap-2 ${showFull ? 'border-t border-gray-100 pt-4' : 'pt-1'}`}>
+          <div className="flex flex-wrap items-center gap-1">
+            <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100 hover:text-hc-ink">
               <Images size={17} /> Photo
               <input type="file" accept="image/*" onChange={(e) => attach(e.target.files?.[0])} className="hidden" />
             </label>
-            {!isClient && !pollMode && (
+            {!isClient && !pollMode && showFull && (
               <button
                 type="button"
                 onClick={() => setBaMode(!baMode)}
-                className={`flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-bold transition-colors ${
-                  baMode ? 'bg-orange-50 text-orange-600' : 'text-gray-500 hover:bg-gray-100 hover:text-orange-600'
+                className={`flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold transition-colors ${
+                  baMode ? 'bg-gray-100 text-hc-ink' : 'text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
                 }`}
               >
                 <Camera size={17} /> Before & After
@@ -240,8 +242,8 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
             <button
               type="button"
               onClick={() => { setPollMode(!pollMode); setBaMode(false); setImage(null); }}
-              className={`flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-bold transition-colors ${
-                pollMode ? 'bg-orange-50 text-orange-600' : 'text-gray-500 hover:bg-gray-100 hover:text-orange-600'
+              className={`flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold transition-colors ${
+                pollMode ? 'bg-gray-100 text-hc-ink' : 'text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
               }`}
             >
               <BarChart3 size={17} /> Poll
@@ -253,21 +255,21 @@ export default function CommunityComposer({ role, posting, onSubmit, group }) {
         </div>
 
         {image && (
-          <div className="mt-3 flex items-center gap-3 rounded-xl bg-gray-50 p-2">
+          <div className="mt-3 flex items-center gap-3 rounded-xl bg-gray-50 p-2 dark:bg-gray-700">
             <img src={URL.createObjectURL(image)} alt="Attachment preview" className="h-14 w-14 rounded-lg object-cover" />
-            <p className="min-w-0 flex-1 truncate text-xs text-gray-600">{image.name}</p>
-            <button type="button" onClick={() => setImage(null)} className="rounded-lg p-1 text-gray-400 hover:bg-gray-200"><X size={15} /></button>
+            <p className="min-w-0 flex-1 truncate text-xs text-hc-ink-2 dark:text-gray-300">{image.name}</p>
+            <button type="button" onClick={() => setImage(null)} className="rounded-lg p-1 text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"><X size={15} /></button>
           </div>
         )}
 
         {baMode && (
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <label className="cursor-pointer rounded-xl border border-dashed border-gray-300 p-3 text-center text-xs font-semibold text-gray-500 transition-colors hover:border-orange-400 hover:text-orange-600">
+            <label className="cursor-pointer rounded-xl border border-dashed border-gray-300 p-3 text-center text-xs font-semibold text-hc-ink-2 transition-colors hover:border-gray-400 hover:text-gray-600 dark:border-gray-600">
               {beforeImage ? <img src={URL.createObjectURL(beforeImage)} alt="Before" className="mx-auto mb-1 h-20 w-full rounded-lg object-cover" /> : <Camera size={18} className="mx-auto mb-1" />}
               {beforeImage ? 'Change before photo' : 'Upload BEFORE'}
               <input type="file" accept="image/*" onChange={(e) => setBeforeImage(e.target.files?.[0])} className="hidden" />
             </label>
-            <label className="cursor-pointer rounded-xl border border-dashed border-gray-300 p-3 text-center text-xs font-semibold text-gray-500 transition-colors hover:border-orange-400 hover:text-orange-600">
+            <label className="cursor-pointer rounded-xl border border-dashed border-gray-300 p-3 text-center text-xs font-semibold text-hc-ink-2 transition-colors hover:border-gray-400 hover:text-gray-600 dark:border-gray-600">
               {afterImage ? <img src={URL.createObjectURL(afterImage)} alt="After" className="mx-auto mb-1 h-20 w-full rounded-lg object-cover" /> : <Camera size={18} className="mx-auto mb-1" />}
               {afterImage ? 'Change after photo' : 'Upload AFTER'}
               <input type="file" accept="image/*" onChange={(e) => setAfterImage(e.target.files?.[0])} className="hidden" />

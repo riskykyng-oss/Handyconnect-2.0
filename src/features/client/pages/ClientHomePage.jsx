@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  Plus, Briefcase, ArrowRight, MapPin,
-  ChevronRight, Star, Clock, Shield, MessageCircle,
-} from 'lucide-react';
+import { Plus, Briefcase } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { subscribeProfessionals } from '@/services/userService';
 import { JobCardSkeleton } from '@/components/ui/Skeleton';
 import useClientJobs from '@/hooks/useClientJobs';
-import HeroSection from '../components/HeroSection';
-import QuickActionCard from '../components/QuickActionCard';
-import NearbyMapSection from '../components/NearbyMapSection';
+import { JOB_CATEGORIES } from '@/constants/categories';
+import DashboardHero from '../components/DashboardHero';
+import QuickActionTile from '../components/QuickActionTile';
+import ProCard from '../components/ProCard';
+import JobCard from '../components/JobCard';
 import CommunityPreview from '../components/CommunityPreview';
 import PostJobModal from '../components/PostJobModal';
+import { SectionHeader } from '../components/DashboardUI';
 import { quickActions } from '@/constants/quickActions';
 
 const prosFromUsers = (users) =>
@@ -21,37 +20,16 @@ const prosFromUsers = (users) =>
     id: u.id,
     name: u.displayName || u.email || 'Handyman',
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
-    rating: typeof u.rating === 'number' ? u.rating : 5,
+    rating: typeof u.rating === 'number' ? u.rating : null,
     jobs: u.jobs || 0,
-    image: u.photoURL || null,
+    rate: typeof u.hourlyRate === 'number' ? u.hourlyRate : null,
+    verified: !!u.verified,
   }));
-
-function timeAgo(date) {
-  if (!date) return '';
-  const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-  if (s < 60) return 'Just now';
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  return `${Math.floor(s / 86400)}d ago`;
-}
-
-function SectionHeader({ title, action, actionLabel }) {
-  return (
-    <div className="mb-4 flex items-center justify-between">
-      <h2 className="font-display text-lg font-extrabold text-gray-900">{title}</h2>
-      {action && (
-        <button onClick={action} className="flex items-center gap-1 text-xs font-bold text-orange-500 hover:text-orange-600 transition-colors">
-          {actionLabel || 'See all'} <ChevronRight size={14} />
-        </button>
-      )}
-    </div>
-  );
-}
 
 export default function ClientHomePage() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { jobs, loading: loadingJobs, postJob } = useClientJobs();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pros, setPros] = useState([]);
@@ -62,10 +40,13 @@ export default function ClientHomePage() {
 
   useEffect(() => {
     if (searchParams.get('post') === '1') {
-      const id = requestAnimationFrame(() => setIsModalOpen(true));
+      const id = requestAnimationFrame(() => {
+        setIsModalOpen(true);
+        setSearchParams({}, { replace: true });
+      });
       return () => cancelAnimationFrame(id);
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
@@ -75,173 +56,110 @@ export default function ClientHomePage() {
     await postJob(jobData);
   };
 
+  const openJob = (job) => navigate(job.status === 'assigned' ? `/client/chat/${job.id}` : '/client/jobs');
+
   return (
-    <div className="space-y-10 pb-24 lg:pb-0">
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between lg:hidden">
-        <div>
-          <p className="text-xs font-medium text-gray-500">{greeting}</p>
-          <h1 className="font-display text-xl font-extrabold tracking-tight text-gray-900">{name}</h1>
-        </div>
-        <button className="relative rounded-full bg-white p-2.5 shadow-sm border border-gray-200">
-          <Briefcase size={18} className="text-gray-700" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-500" />
-        </button>
-      </div>
+    <>
+      <div className="space-y-8 divide-y divide-black/[0.07] pb-20 lg:space-y-10 lg:pb-0">
+        <DashboardHero greeting={greeting} name={name} stats={{ pros: pros.length, nearby: jobs.length }} />
 
-      {/* 1. Hero Section */}
-      <HeroSection />
-
-      {/* 2. Quick Actions */}
-      <div>
-        <div className="mb-4">
-          <h2 className="font-display text-lg font-extrabold text-gray-900">Quick Actions</h2>
-          <p className="mt-0.5 text-sm text-gray-500">Everything you need is one tap away.</p>
-        </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {quickActions.map((action, i) => (
-            <QuickActionCard
-              key={action.id}
-              action={action}
-              index={i}
-              onClick={() => {
-                if (action.action === 'postJob') {
-                  setIsModalOpen(true);
-                } else {
-                  navigate(action.route);
-                }
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* 3. Map Section */}
-      <div>
-        <NearbyMapSection />
-      </div>
-
-      {/* 4. Professional Carousel */}
-      <div>
-        <SectionHeader title="Top Professionals" actionLabel="Find more" action={() => navigate('/client/explore')} />
-        {topPros.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-            <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-            <p className="text-sm font-semibold text-gray-500">No professionals yet</p>
-            <p className="mt-1 text-xs text-gray-400">Professionals who sign up will appear here.</p>
-          </div>
-        ) : (
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {topPros.map((pro) => (
-              <motion.div
-                key={pro.id}
-                whileHover={{ y: -2 }}
-                onClick={() => navigate('/client/explore')}
-                className="flex shrink-0 flex-col items-center gap-3 rounded-2xl bg-white p-5 shadow-sm border border-gray-200 w-[150px]"
-              >
-                <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-orange-200">
-                  {pro.image ? (
-                    <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
-                  ) : (
-                    <span className="flex h-full w-full items-center justify-center bg-orange-100 text-sm font-bold text-orange-700">
-                      {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?'}
-                    </span>
-                  )}
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold text-gray-900">{pro.name}</p>
-                  <p className="text-xs text-gray-500">{pro.role}</p>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs">
-                  <Star size={12} className="fill-amber-400 text-amber-400" />
-                  <span className="font-bold text-gray-900">{pro.rating}</span>
-                  <span className="text-gray-400">({pro.jobs})</span>
-                </div>
-                <button className="w-full rounded-xl bg-orange-500 py-2 text-xs font-bold text-white transition-colors hover:bg-orange-600">
-                  Hire
-                </button>
-              </motion.div>
+        {/* Quick Actions */}
+        <section aria-label="Quick actions">
+          <SectionHeader title="Quick Actions" />
+          <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+            {quickActions.map((action, i) => (
+              <QuickActionTile
+                key={action.id}
+                action={action}
+                index={i}
+                onPress={() => {
+                  if (action.action === 'postJob') {
+                    setIsModalOpen(true);
+                  } else {
+                    navigate(action.route);
+                  }
+                }}
+              />
             ))}
           </div>
-        )}
-      </div>
+        </section>
 
-      {/* 5. Job Feed */}
-      <div>
-        <SectionHeader title="Active Jobs" actionLabel={jobs.length > 0 ? 'View all' : undefined} action={jobs.length > 0 ? () => navigate('/client/jobs') : undefined} />
-        {loadingJobs ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <JobCardSkeleton /><JobCardSkeleton />
-          </div>
-        ) : jobs.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-            <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-            <p className="text-sm font-semibold text-gray-500">No active jobs</p>
-            <p className="mt-1 text-xs text-gray-400">Post your first job to get started.</p>
-            <button onClick={() => setIsModalOpen(true)} className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600">
-              <Plus size={14} /> Post a Job
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {jobs.slice(0, 4).map((job) => (
-              <motion.div
-                key={job.id}
-                whileHover={{ y: -2 }}
-                className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+        {/* Recommended Professionals */}
+        <section aria-label="Recommended professionals">
+          <SectionHeader title="Recommended Professionals" actionLabel="Find more" onAction={() => navigate('/client/explore')} />
+          {topPros.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-hc-hairline bg-white p-10 text-center shadow-sm">
+              <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-500">
+                <Briefcase size={26} />
+              </span>
+              <p className="text-[15px] font-medium text-hc-ink-2">No professionals yet</p>
+              <p className="mt-1 text-[13px] text-hc-caption">Professionals who sign up will appear here.</p>
+            </div>
+          ) : (
+            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+              {topPros.map((pro) => (
+                <ProCard key={pro.id} pro={pro} onHire={() => setIsModalOpen(true)} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Active Jobs */}
+        <section aria-label="Active jobs">
+          <SectionHeader
+            title="Active Jobs"
+            actionLabel={jobs.length > 0 ? 'View all' : undefined}
+            onAction={jobs.length > 0 ? () => navigate('/client/jobs') : undefined}
+          />
+          {loadingJobs ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <JobCardSkeleton />
+              <JobCardSkeleton />
+            </div>
+          ) : jobs.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-hc-hairline bg-white p-10 text-center shadow-sm">
+              <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-500">
+                <Briefcase size={26} />
+              </span>
+              <p className="text-[15px] font-medium text-hc-ink-2">No active jobs</p>
+              <p className="mt-1 text-[13px] text-hc-caption">Post your first job to get started.</p>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-hc-brand px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
               >
-                <div className="mb-3 flex items-start justify-between">
-                  <div>
-                    <h3 className="font-display text-base font-bold text-gray-900">{job.title}</h3>
-                    <p className="mt-1 text-xs text-gray-500 flex items-center gap-1">
-                      <MapPin size={11} className="text-gray-400" /> {job.location || 'Your area'}
-                    </p>
-                  </div>
-                  <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                    job.status === 'assigned' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                  }`}>
-                    {job.status === 'assigned' ? 'In Progress' : 'Open'}
-                  </span>
-                </div>
+                <Plus size={15} /> Post a Job
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {jobs.slice(0, 4).map((job) => (
+                <JobCard key={job.id} job={job} onOpen={() => openJob(job)} />
+              ))}
+            </div>
+          )}
+        </section>
 
-                <div className="mb-3 flex items-center gap-4 text-xs text-gray-500">
-                  <span className="flex items-center gap-1">
-                    <Clock size={12} className="text-gray-400" /> {timeAgo(job.createdAt?.toDate ? job.createdAt.toDate() : job.createdAt)}
-                  </span>
-                  <span className="font-semibold text-gray-900">${job.budget}</span>
-                </div>
-
-                {job.status === 'assigned' && (
-                  <div className="mb-3 flex items-center gap-2 rounded-xl bg-gray-100 px-3 py-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-white">
-                      {job.handymanName?.[0] || 'H'}
-                    </div>
-                    <p className="flex-1 text-xs font-semibold text-gray-900">{job.handymanName || 'Professional'}</p>
-                    <MessageCircle size={14} className="text-orange-500" />
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Shield size={12} className="text-emerald-500" />
-                    <span className="text-[11px] text-emerald-600 font-semibold">Verified</span>
-                  </div>
-                  <button className="flex items-center gap-1 text-xs font-bold text-orange-500 transition-colors hover:text-orange-600">
-                    View Progress <ArrowRight size={12} />
-                  </button>
-                </div>
-              </motion.div>
+        {/* Categories */}
+        <section aria-label="Categories">
+          <SectionHeader title="Categories" actionLabel="Browse all" onAction={() => navigate('/client/explore')} />
+          <div className="flex flex-wrap gap-2">
+            {JOB_CATEGORIES.slice(0, 8).map((category) => (
+              <button
+                key={category}
+                onClick={() => navigate(`/client/explore?q=${encodeURIComponent(category)}`)}
+                className="rounded-full border border-black/[0.07] bg-white px-4 py-2 text-sm font-medium text-hc-ink shadow-sm transition-colors hover:border-hc-brand hover:bg-hc-tint hover:text-hc-brand"
+              >
+                {category}
+              </button>
             ))}
           </div>
-        )}
-      </div>
+        </section>
 
-      {/* 6. Community Preview */}
-      <div>
-        <CommunityPreview compact />
+        {/* Community Highlights */}
+        <CommunityPreview />
       </div>
 
       <PostJobModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveJob} />
-    </div>
+    </>
   );
 }

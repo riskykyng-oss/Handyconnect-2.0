@@ -48,9 +48,9 @@ export default function ReviewPromptModal({ payment, initialRating = 0, onClose,
       {done ? (
         <div className="p-6 text-center">
           <CheckCircle2 size={44} className="mx-auto text-emerald-500" />
-          <p className="mt-3 font-display text-lg font-extrabold text-gray-900 dark:text-white">Thank you!</p>
-          <p className="mt-1 text-sm text-gray-500">Your review helps others find trusted professionals.</p>
-          <button onClick={onClose} className="mt-5 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+          <p className="mt-3 text-lg font-semibold tracking-tight text-hc-ink dark:text-white">Thank you!</p>
+          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Your review helps others find trusted professionals.</p>
+          <button onClick={onClose} className="mt-5 w-full rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong">
             Done
           </button>
         </div>
@@ -84,13 +84,13 @@ export default function ReviewPromptModal({ payment, initialRating = 0, onClose,
             placeholder="Tell others about your experience (optional)..."
             maxLength={500}
             rows={3}
-            className="mt-4 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            className="mt-4 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
           />
 
           <button
             onClick={submit}
             disabled={!rating || busy}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
           >
             {busy ? <Loader2 size={15} className="animate-spin" /> : <Star size={15} />}
             {busy ? 'Submitting...' : 'Submit review'}

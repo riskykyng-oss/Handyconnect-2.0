@@ -2,15 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthShell, {
-  Field,
-  AuthInput,
+  TextField,
   AuthButton,
   AuthCheckbox,
   SocialDivider,
   SocialButtons,
   FormAlert,
 } from '../components/AuthShell';
-import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -21,7 +19,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
 
   const validate = () => {
@@ -52,77 +49,62 @@ export default function LoginPage() {
 
   return (
     <AuthShell mode="login">
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {error && <FormAlert>{error}</FormAlert>}
 
-        <Field label="Email Address" htmlFor="email">
-          <AuthInput
-            id="email"
-            type="email"
-            placeholder="john@example.com"
-            value={email}
-            invalid={!!errors.email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrors((p) => ({ ...p, email: '' }));
-            }}
-            autoComplete="email"
-          />
-          {errors.email && <p className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
-        </Field>
+        <TextField
+          id="email"
+          label="Email address"
+          type="email"
+          placeholder="john@example.com"
+          value={email}
+          invalid={!!errors.email}
+          error={errors.email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setErrors((p) => ({ ...p, email: '' }));
+          }}
+          autoComplete="email"
+          inputMode="email"
+        />
 
-        <Field
+        <TextField
+          id="password"
           label="Password"
-          htmlFor="password"
-          right={
+          type="password"
+          placeholder="••••••••"
+          value={password}
+          invalid={!!errors.password}
+          error={errors.password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setErrors((p) => ({ ...p, password: '' }));
+          }}
+          autoComplete="current-password"
+          rightLink={
             <Link
               to="/auth/forgot-password"
-              className="rounded-full bg-[#F97316] px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:bg-[#EA580C] hover:shadow-md"
+              className="text-[13px] font-medium text-hc-brand transition-colors hover:text-hc-brand-strong"
             >
               Forgot password?
             </Link>
           }
-        >
-          <AuthInput
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••"
-            value={password}
-            invalid={!!errors.password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setErrors((p) => ({ ...p, password: '' }));
-            }}
-            autoComplete="current-password"
-            right={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
-                aria-label="Toggle password visibility"
-                className="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors hover:text-gray-900"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            }
-          />
-          {errors.password && <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>}
-        </Field>
+        />
 
         <AuthCheckbox checked={remember} onChange={() => setRemember(!remember)}>
           Remember me
         </AuthCheckbox>
 
-        <AuthButton loading={loading}>Sign In</AuthButton>
+        <AuthButton loading={loading}>Sign in</AuthButton>
       </form>
 
       <SocialDivider />
       <SocialButtons />
 
-      <p className="mt-8 text-center text-sm text-gray-500">
+      <p className="mt-6 text-center text-sm text-hc-ink-2">
         Don&apos;t have an account?{' '}
-        <Link to="/auth/signup" className="font-bold text-[#F97316] transition-colors hover:text-[#EA580C]">
-          Create Account
+        <Link to="/auth/signup" className="font-medium text-hc-brand transition-colors hover:text-hc-brand-strong">
+          Create account
         </Link>
       </p>
     </AuthShell>

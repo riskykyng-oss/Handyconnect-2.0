@@ -146,10 +146,10 @@ export default function PaymentReceiptModal({ payment, open, onClose }) {
       title="Payment receipt"
       subtitle={reference}
     >
-      <div className="max-h-[75vh] overflow-y-auto p-6">
-        <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Total paid</p>
-          <p className="mt-1 font-display text-4xl font-extrabold text-emerald-600">${total.toFixed(2)}</p>
+      <div className="max-h-[85vh] overflow-y-auto p-6">
+        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-800">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Total paid</p>
+          <p className="mt-1 font-display text-4xl font-semibold text-emerald-600 dark:text-emerald-400">${total.toFixed(2)}</p>
           <p className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-gray-500">
             <Wallet size={12} /> via {method}
           </p>
@@ -159,28 +159,28 @@ export default function PaymentReceiptModal({ payment, open, onClose }) {
           {rows.map(([label, value]) => (
             <div key={label} className="flex items-center justify-between gap-3">
               <dt className="shrink-0 text-gray-400">{label}</dt>
-              <dd className="truncate text-right font-semibold text-gray-900">{value}</dd>
+              <dd className="truncate text-right font-semibold text-hc-ink dark:text-white">{value}</dd>
             </div>
           ))}
         </dl>
 
-        <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm">
-          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-500">Payment breakdown</p>
+        <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm dark:bg-gray-800/60">
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Payment breakdown</p>
           <div className="space-y-1">
-            <div className="flex justify-between text-gray-600"><span>Service charge</span><span>${amount.toFixed(2)}</span></div>
-            <div className="flex justify-between text-gray-600"><span>Platform fee</span><span>${platformFee.toFixed(2)}</span></div>
-            <div className="flex justify-between text-gray-600"><span>Taxes</span><span>${taxes.toFixed(2)}</span></div>
-            <div className="mt-1 flex justify-between border-t border-dashed border-gray-300 pt-1 font-extrabold text-emerald-600">
+            <div className="flex justify-between text-gray-600 dark:text-gray-300"><span>Service charge</span><span>${amount.toFixed(2)}</span></div>
+            <div className="flex justify-between text-gray-600 dark:text-gray-300"><span>Platform fee</span><span>${platformFee.toFixed(2)}</span></div>
+            <div className="flex justify-between text-gray-600 dark:text-gray-300"><span>Taxes</span><span>${taxes.toFixed(2)}</span></div>
+            <div className="mt-1 flex justify-between border-t border-dashed border-gray-300 pt-1 font-semibold text-emerald-600 dark:border-gray-700 dark:text-emerald-400">
               <span>Total</span><span>${total.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-center">
-          <div className="mx-auto flex w-fit items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100">
+        <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-5 text-center dark:border-gray-700 dark:bg-gray-800">
+          <div className="mx-auto flex w-fit items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
             <QRCodeSVG value={encodePaymentToken(payment.id)} size={120} fgColor="#111827" bgColor="transparent" />
           </div>
-          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-bold text-gray-900">
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-bold text-hc-ink dark:text-white">
             <ShieldCheck size={14} className="text-emerald-500" /> Verified receipt
           </p>
           <p className="mt-0.5 text-xs text-gray-500">
@@ -198,7 +198,7 @@ export default function PaymentReceiptModal({ payment, open, onClose }) {
           <button onClick={email} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50">
             <Mail size={14} /> Email
           </button>
-          <button onClick={share} className="flex items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+          <button onClick={share} className="flex items-center justify-center gap-1.5 rounded-xl bg-hc-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong">
             {copied ? <Check size={14} /> : <Share2 size={14} />}
             {copied ? 'Copied' : 'Share'}
           </button>

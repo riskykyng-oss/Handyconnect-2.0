@@ -89,7 +89,7 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
-          <button className="md:hidden text-gray-900 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
+          <button className="md:hidden text-gray-900 dark:text-gray-100 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
             <Menu size={22} />
           </button>
 

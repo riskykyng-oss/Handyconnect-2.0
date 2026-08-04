@@ -74,22 +74,22 @@ export default function AdminReportsPage() {
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Total Revenue" value={`$${revenue.toLocaleString()}`} icon={CircleDollarSign} accent="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" />
-        <StatCard label="Completed Jobs" value={completed.length} icon={TrendingUp} accent="bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400" />
-        <StatCard label="Avg Job Value" value={`$${avgJobValue.toLocaleString()}`} icon={CalendarRange} accent="bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400" />
+        <StatCard label="Total Revenue" value={`$${revenue.toLocaleString()}`} icon={CircleDollarSign} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
+        <StatCard label="Completed Jobs" value={completed.length} icon={TrendingUp} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
+        <StatCard label="Avg Job Value" value={`$${avgJobValue.toLocaleString()}`} icon={CalendarRange} accent="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300" />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Revenue by trade */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-          <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Revenue by Trade</h2>
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Revenue by Trade</h2>
           <p className="mb-5 text-xs text-gray-500 dark:text-gray-400">From completed jobs</p>
           <div className="space-y-4">
             {revenueByTrade.map(([trade, amount]) => (
               <div key={trade} className="flex items-center gap-3">
                 <span className="w-28 shrink-0 truncate text-sm font-semibold text-gray-700 dark:text-gray-200">{trade}</span>
                 <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
-                  <div className="h-full rounded-full bg-orange-500" style={{ width: `${Math.round((amount / maxTrade) * 100)}%` }} />
+                  <div className="h-full rounded-full bg-gray-200 dark:bg-gray-700" style={{ width: `${Math.round((amount / maxTrade) * 100)}%` }} />
                 </div>
                 <span className="w-20 shrink-0 text-right text-sm font-bold text-gray-900 dark:text-white">${amount.toLocaleString()}</span>
               </div>
@@ -97,10 +97,11 @@ export default function AdminReportsPage() {
             {revenueByTrade.length === 0 && <p className="py-8 text-center text-sm text-gray-400">No completed jobs yet.</p>}
           </div>
 
-          <h2 className="font-display mt-8 text-lg font-bold text-gray-900 dark:text-white">Monthly Revenue</h2>
+          <h2 className="font-display mt-8 text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Monthly Revenue</h2>
           <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">Last 6 months of completed work</p>
           <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-800/60">
                 <tr>
                   <th className="px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Month</th>
@@ -113,22 +114,23 @@ export default function AdminReportsPage() {
                   <tr key={month} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
                     <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">{month}</td>
                     <td className="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">{data.count}</td>
-                    <td className="px-4 py-3 text-right text-sm font-bold text-orange-500">${data.revenue.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right text-sm font-bold text-gray-900 dark:text-white">${data.revenue.toLocaleString()}</td>
                   </tr>
                 ))}
                 {monthly.length === 0 && (
                   <tr><td colSpan={3} className="px-4 py-8 text-center text-sm text-gray-400">No revenue data yet.</td></tr>
                 )}
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
         </div>
 
         {/* Disputes queue */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
           <div className="mb-5 flex items-center gap-2">
             <Scale size={17} className="text-red-500" />
-            <h2 className="font-display text-lg font-bold text-gray-900 dark:text-white">Open Disputes</h2>
+            <h2 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Open Disputes</h2>
             <span className="ml-auto rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-600 dark:bg-red-500/10 dark:text-red-400">{disputed.length}</span>
           </div>
           <div className="space-y-3">

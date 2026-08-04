@@ -71,17 +71,17 @@ export default function RoleSelectionPage() {
       >
         {/* Logo */}
         <div className="mb-8 flex items-center justify-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-[#F97316] text-sm font-extrabold text-white shadow-md">HC</span>
+          <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-hc-brand text-sm font-extrabold text-white shadow-md">HC</span>
           <span className="font-display text-xl font-extrabold tracking-tight text-gray-900">
-            Handy<span className="text-[#F97316]">Connect</span>
+            Handy<span className="text-hc-brand">Connect</span>
           </span>
         </div>
 
         <div className="text-center">
-          <h1 className="font-display text-3xl font-extrabold tracking-[-0.03em] text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-hc-ink sm:text-4xl">
             Choose how you&apos;ll use HandyConnect
           </h1>
-          <p className="mt-2 text-[15px] text-gray-500">Don&apos;t worry — you can update your profile details later.</p>
+          <p className="mt-2 text-[15px] text-hc-ink-2">Don&apos;t worry — you can update your profile details later.</p>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -117,13 +117,13 @@ export default function RoleSelectionPage() {
                   <div className={`flex h-12 w-12 items-center justify-center rounded-[14px] ${role.iconBg}`}>
                     <role.Icon size={24} />
                   </div>
-                  <h3 className="mt-5 font-display text-xl font-bold text-gray-900">{role.name}</h3>
-                  <p className="mt-1 text-sm text-gray-500">{role.tagline}</p>
+                  <h3 className="mt-5 text-xl font-semibold tracking-tight text-hc-ink">{role.name}</h3>
+                  <p className="mt-1 text-sm text-hc-ink-2">{role.tagline}</p>
 
                   <div className="mt-5 space-y-2.5">
                     {role.features.map((f) => (
-                      <div key={f} className="flex items-center gap-2.5 text-sm text-gray-700">
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F97316]" />
+                      <div key={f} className="flex items-center gap-2.5 text-sm text-hc-ink-2">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-hc-ink-3" />
                         {f}
                       </div>
                     ))}
@@ -155,13 +155,13 @@ export default function RoleSelectionPage() {
             className="mt-8 flex justify-center"
           >
             <div className="flex items-center gap-3 rounded-[16px] bg-white px-6 py-3 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
-              <Loader2 size={18} className="animate-spin text-[#F97316]" />
-              <span className="text-sm font-medium text-gray-500">{loadingMessages[msgIndex]}</span>
+              <Loader2 size={18} className="animate-spin text-hc-brand" />
+              <span className="text-sm font-medium text-hc-ink-2">{loadingMessages[msgIndex]}</span>
             </div>
           </motion.div>
         )}
 
-        <p className="mx-auto mt-8 max-w-lg text-center text-xs leading-relaxed text-gray-400">
+        <p className="mx-auto mt-8 max-w-lg text-center text-xs leading-relaxed text-hc-caption">
           Your dashboard will be customized based on your selection. You can complete your professional profile after
           registration.
         </p>

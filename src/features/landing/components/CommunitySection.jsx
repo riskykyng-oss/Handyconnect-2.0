@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share2, ChevronRight } from 'lucide-react';
 import { subscribeToPosts } from '@/services/postService';
+import { timeAgo } from '@/utils/time';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -9,16 +10,6 @@ const fadeUp = {
   viewport: { once: true, margin: '-60px' },
   transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
 };
-
-const toDate = (v) => (v?.toDate ? v.toDate() : v instanceof Date ? v : new Date(v || 0));
-
-function timeAgo(date) {
-  const s = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (s < 60) return 'Just now';
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  return `${Math.floor(s / 86400)}d ago`;
-}
 
 function Avatar({ post }) {
   if (post.avatar) {
@@ -69,7 +60,7 @@ export default function CommunitySection() {
     author: p.authorName || 'Community member',
     avatar: p.authorAvatar || null,
     role: p.authorTrade || p.authorRole || '',
-    time: timeAgo(toDate(p.createdAt)),
+    time: timeAgo(p.createdAt),
     content: p.text || '',
     image: p.imageUrl || (Array.isArray(p.media) && p.media[0]) || null,
     likes: Array.isArray(p.likes) ? p.likes.length : p.likes || 0,

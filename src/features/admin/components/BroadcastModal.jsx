@@ -45,14 +45,14 @@ export default function BroadcastModal({ open, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={handleClose}>
-      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-md rounded-xl border border-black/[0.07] bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-gray-800">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">
               <Megaphone size={18} />
             </div>
             <div>
-              <h2 className="font-display text-base font-extrabold text-gray-900 dark:text-white">Broadcast Announcement</h2>
+              <h2 className="font-display text-base font-semibold tracking-tight text-gray-900 dark:text-white">Broadcast Announcement</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">Sent to every user on HandyConnect</p>
             </div>
           </div>
@@ -64,7 +64,7 @@ export default function BroadcastModal({ open, onClose }) {
         {result ? (
           <div className="px-6 py-10 text-center">
             <CheckCircle2 size={40} className="mx-auto mb-3 text-emerald-500" />
-            <h3 className="font-display text-lg font-bold text-gray-900 dark:text-white">Announcement sent</h3>
+            <h3 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Announcement sent</h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Delivered to <span className="font-bold text-gray-900 dark:text-white">{result.delivered}</span> of {result.total} users.
             </p>
@@ -98,7 +98,7 @@ export default function BroadcastModal({ open, onClose }) {
             <button
               onClick={handleSend}
               disabled={!message.trim() || sending}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
             >
               <Send size={15} />
               {sending ? 'Broadcasting...' : 'Send to all users'}

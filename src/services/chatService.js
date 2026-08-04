@@ -1,34 +1,25 @@
 import {
   collection, addDoc, query, orderBy, onSnapshot, serverTimestamp,
-  where, getDocs, updateDoc, doc, arrayUnion, setDoc, getDoc, limit,
+  where, getDocs, updateDoc, doc, arrayUnion, getDoc, limit,
   arrayRemove, deleteField,
 } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 
 /* ─── CONVERSATIONS ─── */
 
+// Job chats reuse the pair's single direct conversation, so every client–professional
+// pair has exactly ONE thread (all jobs + direct messages grouped together).
 export const createConversation = async (jobId, clientId, handymanId, jobTitle) => {
   const participants = [clientId, handymanId].filter(Boolean);
   if (participants.length < 2) return null;
 
-  const q = query(
-    collection(db, 'conversations'),
-    where('jobId', '==', jobId),
-    limit(1)
-  );
-  const snap = await getDocs(q);
-  if (!snap.empty) return snap.docs[0].id;
+  const cid = await createDirectConversation(clientId, handymanId, { bName: jobTitle || 'Untitled job' });
+  if (!cid) return null;
 
-  const ref = await addDoc(collection(db, 'conversations'), {
-    participants,
-    jobId,
-    jobTitle: jobTitle || 'Untitled job',
-    lastMessage: null,
-    unreadCount: Object.fromEntries(participants.map((u) => [u, 0])),
-    lastActivity: serverTimestamp(),
-    createdAt: serverTimestamp(),
-  });
-  return ref.id;
+  const patch = { jobId, jobTitle: jobTitle || 'Untitled job', jobIds: arrayUnion(jobId) };
+  if (jobTitle) patch.jobTitles = arrayUnion(jobTitle);
+  await updateDoc(doc(db, 'conversations', cid), patch);
+  return cid;
 };
 
 export const subscribeToConversations = (uid, callback) => {
@@ -46,8 +37,23 @@ export const subscribeToConversations = (uid, callback) => {
   });
 };
 
-// Direct (person-to-person) conversations. One per user pair, found by directKey.
-export const createDirectConversation = async (aId, bId, { aName, aAvatar, bName, bAvatar, bTrade } = {}) => {
+// Find an existing direct conversation between two users.
+export const findConversation = async (aId, bId) => {
+  const q = query(collection(db, 'conversations'), where('participants', 'array-contains', aId), limit(50));
+  const snap = await getDocs(q);
+  const found = snap.docs.find((d) => {
+    const data = d.data();
+    const p = data.participants || [];
+    return data.type === 'direct' && p.length === 2 && p.includes(bId);
+  });
+  return found ? { id: found.id, ...found.data() } : null;
+};
+
+// Direct (person-to-person) conversations. One per user pair, guaranteed by directKey.
+export const createDirectConversation = async (
+  aId, bId,
+  { aName, aAvatar, aVerified, aAvailable, bName, bAvatar, bTrade, bVerified, bAvailable } = {},
+) => {
   const participants = [aId, bId].filter(Boolean);
   if (participants.length < 2) return null;
   const directKey = [...participants].sort().join('_');
@@ -56,9 +62,13 @@ export const createDirectConversation = async (aId, bId, { aName, aAvatar, bName
   const snap = await getDocs(q);
   if (!snap.empty) return snap.docs[0].id;
 
+  // Legacy direct conversations (created before directKey) — reuse instead of duplicating.
+  const legacy = await findConversation(aId, bId);
+  if (legacy) return legacy.id;
+
   const participantInfo = {
-    [aId]: { name: aName || null, avatar: aAvatar || null, trade: null },
-    [bId]: { name: bName || null, avatar: bAvatar || null, trade: bTrade || null },
+    [aId]: { name: aName || null, avatar: aAvatar || null, trade: null, verified: !!aVerified, available: aAvailable ?? null },
+    [bId]: { name: bName || null, avatar: bAvatar || null, trade: bTrade || null, verified: !!bVerified, available: bAvailable ?? null },
   };
 
   const ref = await addDoc(collection(db, 'conversations'), {
@@ -127,7 +137,7 @@ export const sendMessage = async (conv, senderId, senderName, text, options = {}
         newCounts[uid] = uid === senderId ? 0 : (data.unreadCount[uid] || 0) + 1;
       });
       await updateDoc(convRef, {
-        lastMessage: { text: text || (options.type || 'media'), senderId, senderName, createdAt: serverTimestamp() },
+        lastMessage: { text: text || (options.type === 'image' ? 'Photo' : options.type === 'voice' ? 'Voice message' : (options.type || 'media')), senderId, senderName, createdAt: serverTimestamp() },
         lastActivity: serverTimestamp(),
         unreadCount: newCounts,
       });
@@ -165,32 +175,3 @@ export const markMessagesAsRead = async (conv, currentUserId) => {
 export const reactToMessage = async (jobId, messageId, emoji) =>
   updateDoc(doc(db, 'jobs', jobId, 'messages', messageId), { reactions: arrayUnion(emoji) });
 
-/* ─── CALL SIGNALING (Firestore-based for MVP) ─── */
-
-export const initiateCall = async (fromId, fromName, toId, convId) => {
-  const ref = await addDoc(collection(db, 'calls'), {
-    fromId, fromName, toId, convId,
-    status: 'ringing',
-    createdAt: serverTimestamp(),
-  });
-  return ref.id;
-};
-
-export const subscribeToCalls = (uid, callback) => {
-  const q = query(
-    collection(db, 'calls'),
-    where('toId', '==', uid),
-    where('status', '==', 'ringing')
-  );
-  return onSnapshot(q, (snap) => {
-    snap.docChanges().forEach((change) => {
-      if (change.type === 'added') callback({ id: change.doc.id, ...change.doc.data() });
-    });
-  });
-};
-
-export const answerCall = async (callId) =>
-  updateDoc(doc(db, 'calls', callId), { status: 'answered' });
-
-export const endCall = async (callId) =>
-  updateDoc(doc(db, 'calls', callId), { status: 'ended' });

@@ -22,7 +22,7 @@ export default function QuickActionCard({ action, index, onClick }) {
         <div className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-200 group-hover:scale-110">
           <Icon size={22} className="text-orange-500" />
         </div>
-        <span className="text-sm font-extrabold text-white">{action.label}</span>
+        <span className="text-sm font-semibold text-white">{action.label}</span>
       </motion.button>
     );
   }
@@ -36,7 +36,7 @@ export default function QuickActionCard({ action, index, onClick }) {
       whileTap={{ scale: 0.96 }}
       onClick={onClick}
       aria-label={action.label}
-      className={`group relative flex h-24 w-full flex-col items-center justify-center gap-3 rounded-2xl border border-gray-300 bg-[#E5E7EB] shadow-[0_8px_20px_rgba(0,0,0,.06)] transition-shadow duration-200 hover:shadow-[0_18px_35px_rgba(0,0,0,.12)] focus:outline-none focus:ring-2 ${accent.ring} cursor-pointer`}
+      className={`group relative flex h-24 w-full flex-col items-center justify-center gap-3 rounded-2xl border border-black/[0.07] bg-hc-tile shadow-[0_8px_20px_rgba(0,0,0,.06)] transition-shadow duration-200 hover:shadow-[0_18px_35px_rgba(0,0,0,.12)] focus:outline-none focus:ring-2 ${accent.ring} cursor-pointer`}
     >
       {hasBadge && (
         <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-bold text-white shadow-sm">
@@ -48,7 +48,7 @@ export default function QuickActionCard({ action, index, onClick }) {
         <Icon size={22} className={accent.text} />
       </div>
 
-      <span className="text-sm font-semibold text-[#111827]">{action.label}</span>
+      <span className="text-sm font-semibold text-hc-ink">{action.label}</span>
     </motion.button>
   );
 }

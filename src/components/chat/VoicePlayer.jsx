@@ -49,18 +49,18 @@ export default function VoicePlayer({ src, duration: initialDuration }) {
   const pct = duration > 0 ? (progress / duration) * 100 : 0;
 
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-gray-100 px-3 py-2">
+    <div className="flex items-center gap-2.5 rounded-xl bg-gray-100 px-3 py-2.5 dark:bg-gray-700">
       <button
         onClick={toggle}
         disabled={loading}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white transition-colors hover:bg-orange-400 disabled:opacity-50"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-hc-brand text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
       >
-        {loading ? <Loader2 size={14} className="animate-spin" /> : playing ? <Pause size={14} /> : <Play size={14} />}
+        {loading ? <Loader2 size={16} className="animate-spin" /> : playing ? <Pause size={16} /> : <Play size={16} />}
       </button>
-      <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-gray-300">
-        <div className="h-full rounded-full bg-orange-500 transition-all duration-200" style={{ width: `${pct}%` }} />
+      <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-600">
+        <div className="h-full rounded-full bg-hc-brand transition-all duration-200" style={{ width: `${pct}%` }} />
       </div>
-      <span className="shrink-0 text-[11px] font-medium text-gray-500">{fmt(playing ? progress : duration)}</span>
+      <span className="shrink-0 text-[11px] font-medium text-hc-ink-2">{fmt(playing ? progress : duration)}</span>
     </div>
   );
 }

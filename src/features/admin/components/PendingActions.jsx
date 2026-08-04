@@ -25,22 +25,22 @@ export default function PendingActions({ users, jobs }) {
 
     return [
       { key: 'disputes', icon: Scale, accent: 'bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-400', title: 'Open disputes', desc: 'Need a decision from you', count: jobs.filter((j) => j.status === 'disputed').length, to: '/admin/reports', danger: true },
-      { key: 'verifications', icon: BadgeCheck, accent: 'bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400', title: 'Verification requests', desc: 'Approve or reject pro badges', count: verifications.length, to: '/admin/verifications' },
-      { key: 'payouts', icon: Wallet, accent: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400', title: 'Payouts due', desc: 'Wallet balances awaiting withdrawal', count: payoutsDue.length, to: '/admin/payouts' },
-      { key: 'aging', icon: Timer, accent: 'bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400', title: 'Aging open jobs', desc: 'No handyman assigned in 48h+', count: aging.length, to: '/admin/jobs' },
-      { key: 'suspended', icon: ShieldOff, accent: 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300', title: 'Suspended users', desc: 'Accounts currently disabled', count: suspended.length, to: '/admin/users' },
-      { key: 'lowBudget', icon: DollarSign, accent: 'bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400', title: 'Low-budget flags', desc: 'Open jobs under $20', count: lowBudget.length, to: '/admin/jobs' },
+      { key: 'verifications', icon: BadgeCheck, accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300', title: 'Verification requests', desc: 'Approve or reject pro badges', count: verifications.length, to: '/admin/verifications' },
+      { key: 'payouts', icon: Wallet, accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300', title: 'Payouts due', desc: 'Wallet balances awaiting withdrawal', count: payoutsDue.length, to: '/admin/payouts' },
+      { key: 'aging', icon: Timer, accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300', title: 'Aging open jobs', desc: 'No handyman assigned in 48h+', count: aging.length, to: '/admin/jobs' },
+      { key: 'suspended', icon: ShieldOff, accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300', title: 'Suspended users', desc: 'Accounts currently disabled', count: suspended.length, to: '/admin/users' },
+      { key: 'lowBudget', icon: DollarSign, accent: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300', title: 'Low-budget flags', desc: 'Open jobs under $20', count: lowBudget.length, to: '/admin/jobs' },
     ];
   }, [users, jobs, wallets, now]);
 
   const total = items.reduce((s, i) => s + i.count, 0);
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+    <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
       <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="flex items-center gap-2 font-display text-lg font-bold text-gray-900 dark:text-white">
-            <Inbox size={18} className="text-orange-500" />
+          <h2 className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
+            <Inbox size={18} className="text-gray-500 dark:text-gray-400" />
             Needs Attention
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400">Things that could use your review</p>

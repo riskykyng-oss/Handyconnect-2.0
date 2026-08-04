@@ -3,15 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import AuthShell, {
-  Field,
-  AuthInput,
+  TextField,
   AuthButton,
   AuthCheckbox,
   SocialDivider,
   SocialButtons,
   FormAlert,
 } from '../components/AuthShell';
-import { Eye, EyeOff, Check, Shield } from 'lucide-react';
+import { Check, Shield } from 'lucide-react';
 
 const requirements = [
   { label: 'At least 8 characters', test: (p) => p.length >= 8 },
@@ -21,6 +20,8 @@ const requirements = [
 ];
 
 const strengthColor = { Weak: '#DC2626', Medium: '#F97316', Good: '#16A34A', Strong: '#16A34A' };
+
+const PH = { first: 'xxx', last: 'xxx', email: 'you@example.com', phone: '+263 71 234 5678' };
 
 export default function SignupPage() {
   const { register } = useAuth();
@@ -36,8 +37,6 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
 
   const strength = useMemo(() => {
     const passed = requirements.filter((r) => r.test(password)).length;
@@ -87,173 +86,148 @@ export default function SignupPage() {
         {error && <FormAlert>{error}</FormAlert>}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Field label="First Name" htmlFor="firstName">
-            <AuthInput
-              id="firstName"
-              type="text"
-              placeholder="John"
-              value={firstName}
-              invalid={!!errors.firstName}
-              onChange={(e) => {
-                setFirstName(e.target.value);
-                setErrors((p) => ({ ...p, firstName: '' }));
-              }}
-              autoComplete="given-name"
-            />
-            {errors.firstName && <p className="mt-1.5 text-xs text-red-600">{errors.firstName}</p>}
-          </Field>
-          <Field label="Last Name" htmlFor="lastName">
-            <AuthInput
-              id="lastName"
-              type="text"
-              placeholder="Doe"
-              value={lastName}
-              invalid={!!errors.lastName}
-              onChange={(e) => {
-                setLastName(e.target.value);
-                setErrors((p) => ({ ...p, lastName: '' }));
-              }}
-              autoComplete="family-name"
-            />
-            {errors.lastName && <p className="mt-1.5 text-xs text-red-600">{errors.lastName}</p>}
-          </Field>
+          <TextField
+            id="firstName"
+            label="First name"
+            type="text"
+            placeholder={PH.first}
+            value={firstName}
+            invalid={!!errors.firstName}
+            error={errors.firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+              setErrors((p) => ({ ...p, firstName: '' }));
+            }}
+            autoComplete="given-name"
+          />
+          <TextField
+            id="lastName"
+            label="Last name"
+            type="text"
+            placeholder={PH.last}
+            value={lastName}
+            invalid={!!errors.lastName}
+            error={errors.lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              setErrors((p) => ({ ...p, lastName: '' }));
+            }}
+            autoComplete="family-name"
+          />
         </div>
 
-        <Field label="Email Address" htmlFor="email">
-          <AuthInput
-            id="email"
-            type="email"
-            placeholder="john@example.com"
-            value={email}
-            invalid={!!errors.email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrors((p) => ({ ...p, email: '' }));
-            }}
-            autoComplete="email"
-          />
-          {errors.email && <p className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
-        </Field>
+        <TextField
+          id="email"
+          label="Email address"
+          type="email"
+          placeholder={PH.email}
+          value={email}
+          invalid={!!errors.email}
+          error={errors.email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setErrors((p) => ({ ...p, email: '' }));
+          }}
+          autoComplete="email"
+          inputMode="email"
+        />
 
-        <Field label="Phone Number" htmlFor="phone">
-          <AuthInput
-            id="phone"
-            type="tel"
-            placeholder="+263 71 234 5678"
-            value={phone}
-            invalid={!!errors.phone}
-            onChange={(e) => {
-              setPhone(e.target.value);
-              setErrors((p) => ({ ...p, phone: '' }));
-            }}
-            autoComplete="tel"
-          />
-          {errors.phone && <p className="mt-1.5 text-xs text-red-600">{errors.phone}</p>}
-        </Field>
+        <TextField
+          id="phone"
+          label="Phone number"
+          type="tel"
+          placeholder={PH.phone}
+          value={phone}
+          invalid={!!errors.phone}
+          error={errors.phone}
+          onChange={(e) => {
+            setPhone(e.target.value);
+            setErrors((p) => ({ ...p, phone: '' }));
+          }}
+          autoComplete="tel"
+          inputMode="tel"
+        />
 
-        <Field label="Password" htmlFor="password">
-          <AuthInput
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Create a secure password"
-            value={password}
-            invalid={!!errors.password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setErrors((p) => ({ ...p, password: '' }));
-            }}
-            autoComplete="new-password"
-            right={
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
-                aria-label="Toggle password visibility"
-                className="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors hover:text-gray-900"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            }
-          />
-          {errors.password && <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>}
+        <TextField
+          id="password"
+          label="Password"
+          type="password"
+          placeholder="Create a secure password"
+          value={password}
+          invalid={!!errors.password}
+          error={errors.password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setErrors((p) => ({ ...p, password: '' }));
+          }}
+          autoComplete="new-password"
+        />
 
-          {password.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="overflow-hidden"
-            >
-              <div className="mt-3 flex items-center gap-2">
-                <Shield size={16} style={{ color }} className={strength.pct >= 75 ? 'fill-current' : ''} />
-                <span className="text-xs font-bold" style={{ color }}>
-                  Password Strength: {strength.label}
-                </span>
-              </div>
-              <div className="mt-2 flex gap-1.5">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="h-1.5 flex-1 rounded-full transition-all duration-300"
-                    style={{ backgroundColor: strength.pct >= i * 25 ? color : '#E5E7EB' }}
-                  />
-                ))}
-              </div>
-              <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2">
-                {requirements.map((req) => {
-                  const passed = req.test(password);
-                  return (
-                    <div key={req.label} className="flex items-center gap-2 text-xs">
-                      <div
-                        className={`flex h-4 w-4 items-center justify-center rounded-full transition-all duration-300 ${
-                          passed ? 'bg-green-600' : 'bg-gray-200'
-                        }`}
-                      >
-                        {passed && <Check size={10} className="text-white" strokeWidth={3} />}
-                      </div>
-                      <span className={passed ? 'text-green-600' : 'text-gray-500'}>{req.label}</span>
+        {password.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 flex items-center gap-2">
+              <Shield size={16} style={{ color }} className={strength.pct >= 75 ? 'fill-current' : ''} />
+              <span className="text-xs font-medium" style={{ color }}>
+                Password strength: {strength.label}
+              </span>
+            </div>
+            <div className="mt-2 flex gap-1.5">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="h-1.5 flex-1 rounded-full transition-colors duration-300"
+                  style={{ backgroundColor: strength.pct >= i * 25 ? color : '#E5E7EB' }}
+                />
+              ))}
+            </div>
+            <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2">
+              {requirements.map((req) => {
+                const passed = req.test(password);
+                return (
+                  <div key={req.label} className="flex items-center gap-2 text-xs">
+                    <div
+                      className={`flex h-4 w-4 items-center justify-center rounded-full transition-colors duration-300 ${
+                        passed ? 'bg-emerald-600' : 'bg-hc-ink-3/40'
+                      }`}
+                    >
+                      {passed && <Check size={10} className="text-white" strokeWidth={3} />}
                     </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
-        </Field>
+                    <span className={passed ? 'text-emerald-600' : 'text-hc-ink-3'}>{req.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
 
-        <Field label="Confirm Password" htmlFor="confirmPassword">
-          <AuthInput
-            id="confirmPassword"
-            type={showConfirm ? 'text' : 'password'}
-            placeholder="Re-enter your password"
-            value={confirmPassword}
-            invalid={!!errors.confirm}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              setErrors((p) => ({ ...p, confirm: '' }));
-            }}
-            autoComplete="new-password"
-            right={
-              <button
-                type="button"
-                onClick={() => setShowConfirm(!showConfirm)}
-                tabIndex={-1}
-                aria-label="Toggle password visibility"
-                className="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors hover:text-gray-900"
-              >
-                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            }
-          />
-          {errors.confirm && <p className="mt-1.5 text-xs text-red-600">{errors.confirm}</p>}
-          {confirmPassword && password === confirmPassword && (
-            <motion.p
-              initial={{ opacity: 0, y: -3 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-1.5 flex items-center gap-1 text-xs text-green-600"
-            >
-              <Check size={11} strokeWidth={3} /> Passwords match
-            </motion.p>
-          )}
-        </Field>
+        <TextField
+          id="confirmPassword"
+          label="Confirm password"
+          type="password"
+          placeholder="Re-enter your password"
+          value={confirmPassword}
+          invalid={!!errors.confirm}
+          error={errors.confirm}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            setErrors((p) => ({ ...p, confirm: '' }));
+          }}
+          autoComplete="new-password"
+        />
+
+        {confirmPassword && password === confirmPassword && (
+          <motion.p
+            initial={{ opacity: 0, y: -3 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="-mt-1 flex items-center gap-1 text-xs text-emerald-600"
+          >
+            <Check size={11} strokeWidth={3} /> Passwords match
+          </motion.p>
+        )}
 
         <div>
           <AuthCheckbox
@@ -264,27 +238,27 @@ export default function SignupPage() {
             }}
           >
             I agree to the{' '}
-            <a href="/terms" className="font-semibold text-gray-900 underline underline-offset-2 transition-colors hover:text-[#F97316]">
+            <a href="/terms" className="font-medium text-hc-ink underline underline-offset-2 transition-colors hover:text-hc-brand">
               Terms of Service
             </a>{' '}
             and{' '}
-            <a href="/privacy" className="font-semibold text-gray-900 underline underline-offset-2 transition-colors hover:text-[#F97316]">
+            <a href="/privacy" className="font-medium text-hc-ink underline underline-offset-2 transition-colors hover:text-hc-brand">
               Privacy Policy
             </a>
           </AuthCheckbox>
           {errors.agreed && <p className="mt-1 text-xs text-red-600">{errors.agreed}</p>}
         </div>
 
-        <AuthButton loading={loading}>Create Account</AuthButton>
+        <AuthButton loading={loading}>Create account</AuthButton>
       </form>
 
       <SocialDivider />
       <SocialButtons />
 
-      <p className="mt-8 text-center text-sm text-gray-500">
+      <p className="mt-6 text-center text-sm text-hc-ink-2">
         Already have an account?{' '}
-        <Link to="/auth/login" className="font-bold text-[#F97316] transition-colors hover:text-[#EA580C]">
-          Sign In
+        <Link to="/auth/login" className="font-medium text-hc-brand transition-colors hover:text-hc-brand-strong">
+          Sign in
         </Link>
       </p>
     </AuthShell>

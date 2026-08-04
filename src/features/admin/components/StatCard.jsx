@@ -1,8 +1,8 @@
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
-export default function StatCard({ label, value, icon: Icon, accent = 'bg-orange-100 text-orange-600', trend, trendLabel }) {
+export default function StatCard({ label, value, icon: Icon, accent = 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-300', trend, trendLabel }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900">
+    <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900">
       <div className="mb-4 flex items-start justify-between">
         <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent}`}>
           <Icon size={22} />
@@ -14,7 +14,7 @@ export default function StatCard({ label, value, icon: Icon, accent = 'bg-orange
           </span>
         )}
       </div>
-      <p className="font-display text-3xl font-extrabold text-gray-900 dark:text-white">{value}</p>
+      <p className="font-display text-3xl font-semibold text-gray-900 dark:text-white">{value}</p>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{label}</p>
       {trendLabel && <p className="mt-0.5 text-[11px] text-gray-400 dark:text-gray-500">{trendLabel}</p>}
     </div>

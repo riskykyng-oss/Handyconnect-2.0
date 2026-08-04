@@ -58,11 +58,11 @@ export default function WithdrawModal({ open, onClose, balance }) {
     >
       {done ? (
         <div className="px-6 py-10 text-center">
-          <p className="font-display text-3xl font-extrabold text-gray-900">-${value.toFixed(2)}</p>
-          <p className="mt-1 text-sm text-gray-500">sent to {method} · arrives in ~30 min (demo)</p>
+          <p className="font-display text-3xl font-semibold text-hc-ink dark:text-white">-${value.toFixed(2)}</p>
+          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">sent to {method} · arrives in ~30 min (demo)</p>
           <button
             onClick={onClose}
-            className="mt-6 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600"
+            className="mt-6 w-full rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong"
           >
             Done
           </button>
@@ -78,27 +78,27 @@ export default function WithdrawModal({ open, onClose, balance }) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-8 pr-3.5 text-lg font-bold text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-8 pr-3.5 text-lg font-bold text-hc-ink outline-none transition-all placeholder:text-gray-400 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             />
           </div>
           <div className="mt-3 flex items-center justify-between">
-            <button onClick={() => setAmount(String(Math.min(available, available)))} className="rounded-lg bg-gray-100 px-3.5 py-1.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200">
+            <button onClick={() => setAmount(String(Math.min(available, available)))} className="rounded-lg bg-gray-100 px-3.5 py-1.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
               Max
             </button>
             <p className="text-xs text-gray-400">Minimum ${MIN_WITHDRAWAL}</p>
           </div>
-          <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-gray-500">Send to</label>
+          <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Send to</label>
           <MethodSelect methods={METHODS} value={method} onChange={setMethod} />
           <div className="mt-4 flex items-start gap-2 rounded-xl bg-gray-50 p-3">
             <Info size={14} className="mt-0.5 shrink-0 text-gray-400" />
-            <p className="text-[11px] leading-relaxed text-gray-500">
+            <p className="text-[11px] leading-relaxed text-hc-caption dark:text-gray-400">
               No fees on your first withdrawal. Processing time ~30 minutes (demo instant).
             </p>
           </div>
           <button
             onClick={handleWithdrawClick}
             disabled={busy || value < MIN_WITHDRAWAL || value > available}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
           >
             {busy ? <Loader2 size={15} className="animate-spin" /> : <ArrowDownToLine size={15} />}
             {busy ? 'Processing...' : `Withdraw $${value || 0}`}

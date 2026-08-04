@@ -72,13 +72,13 @@ export default function PayByCodeModal({ open, onClose }) {
             placeholder="AB12CD"
             maxLength={8}
             autoFocus
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-center font-mono text-lg uppercase tracking-[0.3em] text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/10"
+            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-center font-mono text-lg uppercase tracking-[0.3em] text-hc-ink outline-none transition-all placeholder:text-gray-400 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
           />
           {error && <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-red-500"><AlertCircle size={13} /> {error}</p>}
           <button
             onClick={handleLookup}
             disabled={!code.trim() || busy}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
           >
             {busy ? <Loader2 size={15} className="animate-spin" /> : <KeyRound size={15} />}
             {busy ? 'Checking...' : 'Continue'}
@@ -86,23 +86,23 @@ export default function PayByCodeModal({ open, onClose }) {
         </div>
       ) : (
         <div className="p-5">
-          <div className="rounded-xl bg-gray-50 p-4 text-center">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Amount</p>
-            <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${Number(payment.amount).toFixed(2)}</p>
+          <div className="rounded-xl border border-gray-200/80 bg-gray-50 p-4 text-center dark:border-gray-700 dark:bg-gray-800/60">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount</p>
+            <p className="mt-1 font-display text-3xl font-semibold text-hc-ink dark:text-white">${Number(payment.amount).toFixed(2)}</p>
           </div>
           <dl className="mt-4 space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-gray-400">Pay to</dt><dd className="font-bold text-gray-900">{payment.recipientName}</dd></div>
-            <div className="flex justify-between"><dt className="text-gray-400">Job</dt><dd className="truncate font-bold text-gray-900">{payment.jobTitle}</dd></div>
+            <div className="flex justify-between"><dt className="text-gray-400">Pay to</dt><dd className="font-bold text-hc-ink dark:text-white">{payment.recipientName}</dd></div>
+            <div className="flex justify-between"><dt className="text-gray-400">Job</dt><dd className="truncate font-bold text-hc-ink dark:text-white">{payment.jobTitle}</dd></div>
           </dl>
           <button
             onClick={handleConfirmClick}
             disabled={busy}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600 disabled:opacity-50"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
           >
             {busy ? <Loader2 size={15} className="animate-spin" /> : <ShieldCheck size={15} />}
             {busy ? 'Processing...' : `Pay $${Number(payment.amount).toFixed(2)}`}
           </button>
-          <button onClick={() => setStep('enter')} className="mt-2 w-full rounded-xl px-4 py-2 text-sm font-bold text-gray-500 transition-colors hover:bg-gray-50">
+          <button onClick={() => setStep('enter')} className="mt-2 w-full rounded-xl px-4 py-2 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
             Enter another code
           </button>
         </div>

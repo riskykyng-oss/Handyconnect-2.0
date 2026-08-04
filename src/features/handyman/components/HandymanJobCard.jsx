@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { formatDistanceToNow } from 'date-fns';
 import {
   ChevronDown,
   MapPin,
@@ -19,23 +18,19 @@ import {
 } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import { STATUS_META, deriveJobStatus } from '@/features/handyman/constants/jobStatus';
+import { timeAgo } from '@/utils/time';
 
 const PLATFORM_FEE_RATE = 0.1;
 
 const toDate = (value) => (value?.toDate ? value.toDate() : value instanceof Date ? value : value ? new Date(value) : null);
 
-const timeAgo = (value) => {
-  const d = toDate(value);
-  return d ? formatDistanceToNow(d, { addSuffix: true }) : '';
-};
-
 const money = (value) => (value != null && !Number.isNaN(Number(value)) ? `$${Number(value)}` : '—');
 
 const TIMELINE_META = {
-  posted: { icon: FileText, cls: 'text-gray-500' },
-  quote: { icon: CircleDollarSign, cls: 'text-blue-500' },
-  progress: { icon: Play, cls: 'text-orange-500' },
-  milestone: { icon: CheckCircle2, cls: 'text-purple-500' },
+  posted: { icon: FileText, cls: 'text-hc-caption' },
+  quote: { icon: CircleDollarSign, cls: 'text-hc-ink-3' },
+  progress: { icon: Play, cls: 'text-hc-ink-3' },
+  milestone: { icon: CheckCircle2, cls: 'text-hc-ink-3' },
   dispute: { icon: Clock, cls: 'text-red-500' },
 };
 
@@ -98,10 +93,10 @@ const ActionButton = ({ onClick, disabled, icon: Icon, label, tone = 'neutral', 
     disabled={disabled}
     className={clsx(
       'flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl px-4 text-xs font-bold transition-colors disabled:opacity-50',
-      tone === 'primary' && 'bg-orange-500 text-white shadow-sm shadow-orange-500/20 hover:bg-orange-600',
+      tone === 'primary' && 'bg-hc-brand text-white shadow-sm shadow-hc-brand/20 hover:bg-hc-brand-strong',
       tone === 'success' && 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 hover:bg-emerald-600',
       tone === 'purple' && 'bg-purple-500 text-white shadow-sm shadow-purple-500/20 hover:bg-purple-600',
-      tone === 'ghost' && 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300',
+      tone === 'ghost' && 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100',
       className
     )}
   >
@@ -142,20 +137,20 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
+    <div className="flex flex-col rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       {/* Header: client + status badge */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar src={client?.photoURL} name={clientName} size="md" />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="truncate text-sm font-bold text-gray-900">{clientName}</p>
-              {client?.verified && <BadgeCheck size={15} className="shrink-0 text-blue-500" />}
+              <p className="truncate text-sm font-bold text-hc-ink">{clientName}</p>
+              {client?.verified && <BadgeCheck size={15} className="shrink-0 text-emerald-500" />}
             </div>
             <div className="mt-1 flex items-center">
-              {rating ? <Stars rating={rating} /> : <span className="text-[11px] font-medium text-gray-400">New client</span>}
+              {rating ? <Stars rating={rating} /> : <span className="text-[11px] font-medium text-hc-caption">New client</span>}
             </div>
-            <p className="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-hc-caption">
               <MapPin size={11} className="text-gray-400" />
               {distance ? `${distance} away` : area}
             </p>
@@ -166,57 +161,57 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
         </span>
       </div>
 
-      <div className="my-4 border-t border-gray-100" />
+      <div className="my-4 border-t border-black/[0.07]" />
 
       {/* Trade + title + description */}
       {job.category && (
-        <p className="text-[10px] font-extrabold uppercase tracking-widest text-orange-600">{job.category}</p>
+        <p className="text-[10px] font-extrabold uppercase tracking-widest text-hc-ink-2">{job.category}</p>
       )}
-      <h3 className="mt-1 font-display text-base font-extrabold text-gray-900">{job.title || 'Untitled job'}</h3>
+      <h3 className="mt-1 text-base font-semibold tracking-tight text-hc-ink">{job.title || 'Untitled job'}</h3>
       {job.description && (
-        <p className={clsx('mt-1.5 text-xs leading-relaxed text-gray-500', !expanded && 'line-clamp-2')}>{job.description}</p>
+        <p className={clsx('mt-1.5 text-xs leading-relaxed text-hc-caption', !expanded && 'line-clamp-2')}>{job.description}</p>
       )}
 
-      <div className="my-4 border-t border-gray-100" />
+      <div className="my-4 border-t border-black/[0.07]" />
 
       {/* Budget + posted / elapsed */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Budget</p>
-          <p className="mt-0.5 font-display text-lg font-extrabold text-gray-900">{money(job.budget)}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-hc-caption">Budget</p>
+          <p className="mt-0.5 font-display text-lg font-semibold text-hc-ink">{money(job.budget)}</p>
           {showNet && (
-            <p className="mt-0.5 text-[10px] text-gray-400">
-              You'll receive <span className="font-bold text-gray-600">{money(net)}</span>
+            <p className="mt-0.5 text-[10px] text-hc-caption">
+              You'll receive <span className="font-bold text-hc-ink-2">{money(net)}</span>
             </p>
           )}
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{startedAt ? 'Started' : 'Posted'}</p>
-          <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-gray-700">
-            {startedAt ? <Timer size={12} className="text-orange-500" /> : <CalendarClock size={12} className="text-gray-400" />}
+          <p className="text-[10px] font-bold uppercase tracking-wider text-hc-caption">{startedAt ? 'Started' : 'Posted'}</p>
+          <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-hc-ink-2">
+            {startedAt ? <Timer size={12} className="text-gray-400" /> : <CalendarClock size={12} className="text-gray-400" />}
             {startedAt ? <Elapsed since={startedAt} /> : timeAgo(job.createdAt)}
           </p>
-          {startedAt && <p className="mt-0.5 text-[10px] text-gray-400">elapsed</p>}
+          {startedAt && <p className="mt-0.5 text-[10px] text-hc-caption">elapsed</p>}
         </div>
       </div>
 
       {/* Progress bar */}
       {status === 'in_progress' && (
         <div className="mt-4">
-          <div className="flex items-center justify-between text-[11px] font-semibold text-gray-500">
+          <div className="flex items-center justify-between text-[11px] font-semibold text-hc-caption">
             <span>Progress</span>
             <span>{progress}%</span>
           </div>
           <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
-            <div className="h-full rounded-full bg-orange-500 transition-all" style={{ width: `${Math.min(100, progress)}%` }} />
+            <div className="h-full rounded-full bg-hc-brand transition-all" style={{ width: `${Math.min(100, progress)}%` }} />
           </div>
         </div>
       )}
 
-      <div className="mt-4 border-t border-gray-100" />
+      <div className="mt-4 border-t border-black/[0.07]" />
 
       {/* Actions */}
-      <div className="mt-4 flex items-stretch gap-2">
+      <div className="mt-4 flex flex-wrap items-stretch gap-2">
         {status === 'accepted' && (
           <ActionButton tone="primary" icon={Play} label="Start Work" onClick={() => onStart(job)} className="flex-1" />
         )}
@@ -231,7 +226,7 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
         <button
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-black/[0.08] bg-white text-gray-500 transition-colors hover:bg-gray-100"
         >
           <ChevronDown size={16} className={clsx('transition-transform', expanded && 'rotate-180')} />
         </button>
@@ -239,10 +234,10 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
 
       {/* Expanded details */}
       {expanded && (
-        <div className="mt-4 space-y-4 border-t border-gray-100 pt-4">
+        <div className="mt-4 space-y-4 border-t border-black/[0.07] pt-4">
           {/* Milestones */}
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400">Job timeline</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-hc-caption">Job timeline</p>
             <div className="mt-2.5 flex items-center">
               {MILESTONES.map((step, i) => {
                 const reached = i < milestoneIndex(job);
@@ -252,15 +247,15 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
                       <span
                         className={clsx(
                           'flex h-6 w-6 items-center justify-center rounded-full border-2 text-[9px] font-bold',
-                          reached ? 'border-orange-500 bg-orange-500 text-white' : 'border-gray-200 bg-white text-gray-400'
+                          reached ? 'border-hc-brand bg-hc-brand text-white' : 'border-gray-200 bg-white text-hc-caption'
                         )}
                       >
                         {reached ? '✓' : i + 1}
                       </span>
-                      <span className={clsx('mt-1 text-[9px] font-semibold', reached ? 'text-gray-700' : 'text-gray-400')}>{step}</span>
+                      <span className={clsx('mt-1 text-[9px] font-semibold', reached ? 'text-hc-ink-2' : 'text-hc-caption')}>{step}</span>
                     </div>
                     {i < MILESTONES.length - 1 && (
-                      <div className={clsx('mx-1 mb-4 h-0.5 flex-1 rounded-full', i < milestoneIndex(job) - 1 ? 'bg-orange-500' : 'bg-gray-200')} />
+                      <div className={clsx('mx-1 mb-4 h-0.5 flex-1 rounded-full', i < milestoneIndex(job) - 1 ? 'bg-hc-brand' : 'bg-gray-200')} />
                     )}
                   </div>
                 );
@@ -270,19 +265,19 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
 
           {/* Earnings breakdown */}
           {showNet && (
-            <div className="rounded-xl bg-gray-50 p-3">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400">Estimated earnings</p>
+            <div className="rounded-xl bg-[#ECEDEF] p-3">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-hc-caption">Estimated earnings</p>
               <div className="mt-2 space-y-1.5 text-xs">
-                <div className="flex items-center justify-between text-gray-600">
+                <div className="flex items-center justify-between text-hc-ink-2">
                   <span>Job budget</span>
-                  <span className="font-semibold text-gray-900">{money(budget)}</span>
+                  <span className="font-semibold text-hc-ink">{money(budget)}</span>
                 </div>
-                <div className="flex items-center justify-between text-gray-500">
+                <div className="flex items-center justify-between text-hc-caption">
                   <span>Platform fee (10%)</span>
                   <span className="font-semibold text-red-500">−{money(fee)}</span>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-1.5">
-                  <span className="font-bold text-gray-700">You'll receive</span>
+                <div className="flex items-center justify-between border-t border-black/[0.07] pt-1.5">
+                  <span className="font-bold text-hc-ink-2">You'll receive</span>
                   <span className="font-extrabold text-emerald-600">{money(net)}</span>
                 </div>
               </div>
@@ -292,7 +287,7 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
           {/* Timeline events */}
           {job.timeline?.length > 0 && (
             <div className="space-y-2.5">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-gray-400">Updates</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-hc-caption">Updates</p>
               {job.timeline.map((t, i) => {
                 const tMeta = TIMELINE_META[t.type] || TIMELINE_META.posted;
                 const Icon = tMeta.icon;
@@ -300,8 +295,8 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
                   <div key={i} className="flex items-start gap-2.5">
                     <Icon size={15} className={clsx('mt-0.5 shrink-0', tMeta.cls)} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold text-gray-700">{t.label}</p>
-                      <p className="text-[10px] text-gray-400">{timeAgo(t.createdAt)}</p>
+                      <p className="text-xs font-semibold text-hc-ink-2">{t.label}</p>
+                      <p className="text-[10px] text-hc-caption">{timeAgo(t.createdAt)}</p>
                     </div>
                   </div>
                 );
@@ -310,11 +305,11 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
           )}
 
           {/* Client contact */}
-          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-gray-50 p-3">
-            <FileText size={14} className="text-gray-400" />
-            <span className="text-xs text-gray-600">{area}</span>
+          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#ECEDEF] p-3">
+            <FileText size={14} className="text-hc-caption" />
+            <span className="text-xs text-hc-ink-2">{area}</span>
             {client?.phone && (
-              <a href={`tel:${client.phone}`} className="ml-auto flex h-11 items-center gap-1.5 rounded-xl bg-white px-3.5 text-xs font-bold text-gray-700 shadow-sm ring-1 ring-gray-200 transition-colors hover:bg-gray-50">
+              <a href={`tel:${client.phone}`} className="ml-auto flex h-11 items-center gap-1.5 rounded-xl bg-white px-3.5 text-xs font-bold text-hc-ink-2 shadow-sm ring-1 ring-black/[0.08] transition-colors hover:bg-gray-100">
                 <Phone size={12} className="text-emerald-500" /> {client.phone}
               </a>
             )}
@@ -322,10 +317,10 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
 
           {/* Progress control */}
           {status === 'in_progress' && (
-            <div className="rounded-xl bg-gray-50 p-3">
+            <div className="rounded-xl bg-[#ECEDEF] p-3">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-bold text-gray-700">Update progress</p>
-                <span className="text-xs font-bold text-orange-600">{progressValue}%</span>
+                <p className="text-xs font-bold text-hc-ink-2">Update progress</p>
+                <span className="text-xs font-bold text-hc-brand">{progressValue}%</span>
               </div>
               <input
                 type="range"
@@ -334,16 +329,16 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
                 step="5"
                 value={progressValue}
                 onChange={(e) => setProgressValue(Number(e.target.value))}
-                className="mt-2 w-full accent-orange-500"
+                className="mt-2 w-full accent-hc-brand"
               />
               <div className="mt-2 flex justify-end gap-2">
-                <button onClick={() => setProgressValue(progress)} className="flex h-11 items-center justify-center rounded-xl border border-gray-200 bg-white px-4 text-xs font-semibold text-gray-500 shadow-sm transition-colors hover:bg-gray-100">
+                <button onClick={() => setProgressValue(progress)} className="flex h-11 items-center justify-center rounded-xl border border-black/[0.08] bg-white px-4 text-xs font-semibold text-hc-caption shadow-sm transition-colors hover:bg-gray-100">
                   Reset
                 </button>
                 <button
                   onClick={() => updateProgress(progressValue)}
                   disabled={savingProgress || progressValue === progress}
-                  className="flex h-11 items-center justify-center rounded-xl bg-orange-500 px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600 disabled:opacity-50"
+                  className="flex h-11 items-center justify-center rounded-xl bg-hc-brand px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
                 >
                   {savingProgress ? 'Saving...' : 'Save'}
                 </button>

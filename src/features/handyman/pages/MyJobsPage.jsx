@@ -29,9 +29,9 @@ const QUICK_ACTIONS = [
 ];
 
 const StatCard = ({ icon: Icon, label, value, sub, delta }) => (
-  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
+  <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
     <div className="flex items-start justify-between">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/[0.06] text-hc-ink-2">
         <Icon size={18} />
       </span>
       {delta != null && delta !== 0 && (
@@ -44,14 +44,14 @@ const StatCard = ({ icon: Icon, label, value, sub, delta }) => (
         </span>
       )}
     </div>
-    <p className="mt-3 font-display text-2xl font-extrabold text-gray-900">{value}</p>
-    <p className="mt-0.5 text-xs font-bold text-gray-700">{label}</p>
-    {sub && <p className="mt-0.5 text-[11px] text-gray-400">{sub}</p>}
+    <p className="mt-3 font-display text-2xl font-semibold text-hc-ink">{value}</p>
+    <p className="mt-0.5 text-xs font-bold text-hc-ink-2">{label}</p>
+    {sub && <p className="mt-0.5 text-[11px] text-hc-caption">{sub}</p>}
   </div>
 );
 
 const StatSkeleton = () => (
-  <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" />
+  <div className="animate-pulse rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm" />
 );
 
 export default function MyJobsPage() {
@@ -224,10 +224,10 @@ export default function MyJobsPage() {
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-24 pt-5 lg:pb-10">
       {/* Greeting */}
       <div>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight text-gray-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-hc-ink">
           {greeting}, {firstName}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">Here's an overview of today's work.</p>
+        <p className="mt-1 text-sm text-hc-caption">Here's an overview of today's work.</p>
       </div>
 
       {/* Stats + Earnings */}
@@ -237,8 +237,8 @@ export default function MyJobsPage() {
             <StatSkeleton /><StatSkeleton /><StatSkeleton /><StatSkeleton />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" style={{ height: 180 }} />
-            <div className="animate-pulse rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" style={{ height: 180 }} />
+            <div className="animate-pulse rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm" style={{ height: 180 }} />
+            <div className="animate-pulse rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm" style={{ height: 180 }} />
           </div>
         </>
       ) : (
@@ -252,12 +252,12 @@ export default function MyJobsPage() {
 
           <div className="grid gap-5 sm:grid-cols-2">
             {/* Daily change + month tally */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
+            <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-gray-500">Daily Earnings</p>
-                <span className="text-[10px] font-semibold text-gray-400">Change vs prior day</span>
+                <p className="text-xs font-medium text-hc-caption">Daily Earnings</p>
+                <span className="text-[10px] font-semibold text-hc-caption">Change vs prior day</span>
               </div>
-              <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${earnings.week.toFixed(2)}</p>
+              <p className="mt-1 font-display text-3xl font-semibold text-hc-ink">${earnings.week.toFixed(2)}</p>
               <div className="mt-5 flex items-end gap-1.5">
                 {dailyDeltas.map((d) => {
                   const up = d.delta > 0;
@@ -265,7 +265,7 @@ export default function MyJobsPage() {
                   const h = d.delta !== 0 ? Math.max(8, Math.round((Math.abs(d.delta) / maxDelta) * 48)) : 4;
                   return (
                     <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5">
-                      <span className={`text-[9px] font-bold ${up ? 'text-emerald-600' : down ? 'text-red-500' : 'text-gray-300'}`}>
+                      <span className={`text-[9px] font-bold ${up ? 'text-emerald-600' : down ? 'text-red-500' : 'text-hc-ink-3'}`}>
                         {d.delta !== 0 ? `${up ? '+' : ''}$${d.delta.toFixed(0)}` : ''}
                       </span>
                       <div
@@ -273,28 +273,28 @@ export default function MyJobsPage() {
                         style={{ height: h }}
                         title={`${d.label}: ${up ? '+' : ''}$${d.delta.toFixed(2)} ($${d.value.toFixed(2)} total)`}
                       />
-                      <span className="text-[10px] font-medium text-gray-400">{d.label}</span>
+                      <span className="text-[10px] font-medium text-hc-caption">{d.label}</span>
                     </div>
                   );
                 })}
               </div>
-              <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Month Tally</p>
-                <p className="font-display text-sm font-extrabold text-gray-900">${earnings.month.toFixed(2)}</p>
+              <div className="mt-4 flex items-center justify-between border-t border-black/[0.07] pt-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-hc-caption">Month Tally</p>
+                <p className="font-display text-sm font-semibold text-hc-ink">${earnings.month.toFixed(2)}</p>
               </div>
             </div>
 
             {/* Available balance */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-md">
-              <p className="text-xs font-medium text-gray-500">Available Balance</p>
-              <p className="mt-1 font-display text-3xl font-extrabold text-gray-900">${Number(wallet.balance || 0).toFixed(2)}</p>
+            <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+              <p className="text-xs font-medium text-hc-caption">Available Balance</p>
+              <p className="mt-1 font-display text-3xl font-semibold text-hc-ink">${Number(wallet.balance || 0).toFixed(2)}</p>
               <button
                 onClick={() => navigate('/handyman/wallet')}
-                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
+                className="mt-4 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-hc-brand px-4 text-xs font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
               >
                 <ArrowDownToLine size={14} /> Withdraw
               </button>
-              <p className="mt-2 text-center text-[10px] text-gray-400">This month · ${earnings.month.toFixed(2)}</p>
+              <p className="mt-2 text-center text-[10px] text-hc-caption">This month · ${earnings.month.toFixed(2)}</p>
             </div>
           </div>
         </>
@@ -306,12 +306,12 @@ export default function MyJobsPage() {
           <Link
             key={a.label}
             to={a.to}
-            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-colors hover:bg-gray-50"
+            className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-colors hover:bg-gray-50"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-hc-tint text-hc-brand">
               <a.icon size={18} />
             </span>
-            <p className="mt-3 text-sm font-bold text-gray-900">{a.label}</p>
+            <p className="mt-3 text-sm font-semibold text-hc-ink">{a.label}</p>
           </Link>
         ))}
       </div>
@@ -320,8 +320,8 @@ export default function MyJobsPage() {
       <div>
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-display text-lg font-extrabold tracking-tight text-gray-900">My Jobs</h2>
-            <p className="mt-0.5 text-xs text-gray-500">Track your work, payments and client updates.</p>
+            <h2 className="text-lg font-semibold tracking-tight text-hc-ink">My Jobs</h2>
+            <p className="mt-0.5 text-xs text-hc-caption">Track your work, payments and client updates.</p>
           </div>
         </div>
 
@@ -335,23 +335,23 @@ export default function MyJobsPage() {
                   key={f.id}
                   onClick={() => setFilter(f.id)}
                   className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold transition-colors ${
-                    active ? 'bg-orange-500 text-white shadow-sm' : 'bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50'
+                    active ? 'bg-hc-brand text-white shadow-sm' : 'bg-white text-hc-ink-2 ring-1 ring-black/[0.08] hover:bg-gray-50'
                   }`}
                 >
                   {f.label}
-                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${active ? 'bg-white/20' : 'bg-gray-100 text-gray-500'}`}>{count}</span>
+                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${active ? 'bg-white/20' : 'bg-gray-100 text-hc-caption'}`}>{count}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="flex h-[52px] items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 shadow-sm">
+          <div className="flex h-[52px] items-center gap-2.5 rounded-xl border border-black/[0.07] bg-white px-4 shadow-sm">
             <Search size={15} className="shrink-0 text-gray-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search jobs, clients or locations..."
-              className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+              className="w-full bg-transparent text-sm text-hc-ink outline-none placeholder:text-hc-caption"
             />
             {search && (
               <button onClick={() => setSearch('')} className="shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-100" aria-label="Clear search">
@@ -368,27 +368,27 @@ export default function MyJobsPage() {
               <JobCardSkeleton /><JobCardSkeleton /><JobCardSkeleton />
             </div>
           ) : jobs.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-              <Briefcase className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-semibold text-gray-500">No active jobs</p>
-              <p className="mt-1 text-xs text-gray-400">
+            <div className="rounded-xl border border-dashed border-black/[0.12] bg-white p-8 text-center">
+              <Briefcase className="mx-auto mb-3 h-10 w-10 text-hc-ink-3" />
+              <p className="text-sm font-semibold text-hc-caption">No active jobs</p>
+              <p className="mt-1 text-xs text-hc-caption">
                 Browse nearby work and start earning. Everything you take on will show up here.
               </p>
               <Link
                 to="/handyman/jobs"
-                className="mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-orange-600"
+                className="mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl bg-hc-brand px-5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
               >
                 <Briefcase size={14} /> Find Work
               </Link>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center">
-              <Search className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-semibold text-gray-500">No matches found</p>
-              <p className="mt-1 text-xs text-gray-400">Try a different filter or search term.</p>
+            <div className="rounded-xl border border-dashed border-black/[0.12] bg-white p-8 text-center">
+              <Search className="mx-auto mb-3 h-10 w-10 text-hc-ink-3" />
+              <p className="text-sm font-semibold text-hc-caption">No matches found</p>
+              <p className="mt-1 text-xs text-hc-caption">Try a different filter or search term.</p>
               <button
                 onClick={() => { setFilter('all'); setSearch(''); }}
-                className="mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50"
+                className="mt-4 inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] bg-white px-4 text-xs font-bold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-100"
               >
                 <RotateCcw size={13} /> Reset filters
               </button>

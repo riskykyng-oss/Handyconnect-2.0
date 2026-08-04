@@ -1,56 +1,29 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Star, ArrowRight, Loader2, Check, Wrench, Zap, Home, Droplet, PaintBucket, Hammer } from 'lucide-react';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-};
-const childVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] } },
-};
+import { motion, useReducedMotion } from 'framer-motion';
+import { Star, ArrowRight, Loader2, Check, Eye, EyeOff, ChevronDown } from 'lucide-react';
+import { subscribeProfessionals } from '@/services/userService';
 
 const headers = {
   login: {
-    title: 'Welcome Back',
-    desc: 'Continue managing projects, hiring professionals and growing your business.',
+    title: 'Welcome back',
+    desc: 'Sign in to manage projects, jobs and your community.',
   },
   signup: {
     title: 'Create your account',
-    desc: 'Join thousands of clients and professionals using HandyConnect every day.',
+    desc: 'Join local clients and professionals on HandyConnect.',
   },
   reset: {
     title: 'Reset your password',
-    desc: "We'll help you securely return to the work that matters.",
+    desc: "Enter your email and we'll send you a secure reset link.",
   },
 };
 
-const slides = [
-  {
-    image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80',
-    title: 'Find trusted professionals in minutes.',
-    subtitle:
-      'From plumbing and electrical work to painting and home renovations, HandyConnect connects you with verified experts across Zimbabwe.',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80',
-    title: 'Grow your business with new opportunities every day.',
-    subtitle: 'Get discovered by clients, build your portfolio and get paid securely.',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=1200&q=80',
-    title: "Join Zimbabwe's growing network of skilled professionals.",
-    subtitle: 'Collaborate, share completed work and earn a reputation that travels.',
-  },
-];
-
-const heroStats = [
-  { value: 18000, suffix: '+', label: 'Professionals' },
-  { value: 45000, suffix: '+', label: 'Jobs Completed' },
-  { value: 98, suffix: '%', label: 'Customer Rating' },
-];
+// Bright construction-site shot (residential build under way) — portrait crop, not a cluttered scene.
+const heroImage = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&h=1200&q=85';
+const heroHeadline = 'Find trusted professionals in minutes.';
+const heroSubtitle =
+  'From plumbing and electrical work to painting and renovations, HandyConnect connects you with verified experts across Zimbabwe.';
 
 const whyItems = [
   'Hire verified professionals',
@@ -59,319 +32,279 @@ const whyItems = [
   'Message directly in the app',
 ];
 
-const floatingIcons = [
-  { Icon: Wrench, left: '8%', top: '18%', size: 56, delay: 0 },
-  { Icon: Zap, left: '80%', top: '12%', size: 64, delay: 0.6 },
-  { Icon: Home, left: '10%', top: '60%', size: 60, delay: 1.1 },
-  { Icon: Droplet, left: '84%', top: '64%', size: 52, delay: 0.3 },
-  { Icon: PaintBucket, left: '48%', top: '7%', size: 58, delay: 0.9 },
-  { Icon: Hammer, left: '64%', top: '82%', size: 56, delay: 1.4 },
-];
-
-function StatValue({ value, suffix }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  const [display, setDisplay] = useState(0);
+// Live, real numbers from the platform — no seed placeholders.
+function useMarketStats() {
+  const [pros, setPros] = useState([]);
 
   useEffect(() => {
-    if (!inView) return;
-    let raf;
-    let start;
-    const tick = (t) => {
-      if (start === undefined) start = t;
-      const p = Math.min((t - start) / 1500, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(Math.round(eased * value));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, value]);
+    const unsub = subscribeProfessionals(setPros);
+    return unsub;
+  }, []);
 
-  return (
-    <span ref={ref}>
-      {display.toLocaleString()}
-      {suffix}
-    </span>
-  );
+  const jobs = pros.reduce((sum, p) => sum + (typeof p.jobs === 'number' ? p.jobs : 0), 0);
+  const ratings = pros.map((p) => p.rating).filter((r) => typeof r === 'number');
+  const avgRating = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : null;
+
+  return { professionals: pros.length, jobs, avgRating };
 }
 
 function BrandMark({ light }) {
   return (
     <span className="flex items-center gap-2.5">
-      <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-[#F97316] text-[13px] font-extrabold text-white shadow-md">
+      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-hc-brand text-[13px] font-medium text-white shadow-sm">
         HC
       </span>
-      <span className={`font-display text-lg font-extrabold tracking-tight ${light ? 'text-white' : 'text-gray-900'}`}>
-        Handy<span className="text-[#F97316]">Connect</span>
+      <span className={`font-display text-lg font-medium tracking-tight ${light ? 'text-white' : 'text-hc-ink'}`}>
+        Handy<span className="text-hc-brand">Connect</span>
       </span>
     </span>
   );
 }
 
-function HeroCarousel() {
-  const [index, setIndex] = useState(0);
+function BrandPanel() {
+  const { professionals, jobs, avgRating } = useMarketStats();
+  const [imgFailed, setImgFailed] = useState(false);
 
-  useEffect(() => {
-    const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), 8000);
-    return () => clearInterval(t);
-  }, []);
+  const stats = [];
+  if (professionals > 0) {
+    stats.push({
+      value: professionals.toLocaleString(),
+      label: professionals === 1 ? 'Local professional' : 'Local professionals',
+    });
+  }
+  if (jobs > 0) {
+    stats.push({ value: `${jobs.toLocaleString()}+`, label: 'Jobs completed' });
+  }
+  if (avgRating != null) {
+    stats.push({ value: `${avgRating.toFixed(1)}/5`, label: 'Customer rating' });
+  }
 
   return (
-    <>
-      {/* Crossfading backgrounds */}
-      <div className="absolute inset-0">
-        {slides.map((s, i) => (
-          <motion.img
-            key={s.image}
-            src={s.image}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover"
-            animate={{ opacity: i === index ? 1 : 0, scale: [1, 1.06, 1] }}
-            transition={{ opacity: { duration: 1.1 }, scale: { duration: 24, repeat: Infinity, ease: 'easeInOut' } }}
-          />
-        ))}
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/35 to-black/25" />
+    <div className="relative h-full w-full overflow-hidden">
+      {/* Solid fallback so the panel never renders a broken image */}
+      <div className="absolute inset-0 bg-hc-page" aria-hidden="true" />
+      {!imgFailed && (
+        <img
+          src={heroImage}
+          alt="A verified HandyConnect professional at work"
+          width={900}
+          height={1200}
+          onError={() => setImgFailed(true)}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/25 to-black/0" />
 
-      {/* Faint floating tool icons */}
-      {floatingIcons.map(({ Icon, left, top, size, delay }) => (
-        <motion.div
-          key={delay}
-          className="absolute z-10 text-white"
-          style={{ left, top }}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 0.11, y: [0, -12, 0] }}
-          transition={{ opacity: { duration: 0.8, delay }, y: { duration: 5 + delay, repeat: Infinity, ease: 'easeInOut' } }}
-        >
-          <Icon size={size} strokeWidth={1.5} />
-        </motion.div>
-      ))}
+      <div className="absolute inset-x-0 bottom-0 max-h-full space-y-4 overflow-y-auto p-10 text-white xl:p-14">
+        <h2 className="font-display text-[28px] font-medium leading-[1.12] tracking-tight text-white xl:text-[34px]">
+          {heroHeadline}
+        </h2>
+        <p className="max-w-md text-[15px] leading-relaxed text-white/80">{heroSubtitle}</p>
 
-      <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <Link to="/">
-            <BrandMark light />
-          </Link>
-        </motion.div>
-
-        <div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <h2 className="font-display text-[32px] font-extrabold leading-[1.08] tracking-[-0.03em] text-white xl:text-[40px]">
-                {slides[index].title}
-              </h2>
-              <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/80">{slides[index].subtitle}</p>
-            </motion.div>
-          </AnimatePresence>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5 }}
-            className="mt-6 flex items-center gap-2"
-          >
+        {avgRating != null && (
+          <div className="flex items-center gap-2 pt-1">
             <div className="flex gap-0.5">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} size={14} className="fill-amber-400 text-amber-400" />
+                <Star
+                  key={i}
+                  size={14}
+                  className={i <= Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'fill-white/25 text-white/25'}
+                />
               ))}
             </div>
-            <span className="text-sm font-semibold text-white">4.9/5</span>
+            <span className="text-sm font-medium text-white">{avgRating.toFixed(1)}/5</span>
             <span className="text-sm text-white/70">· Trusted across Zimbabwe</span>
-          </motion.div>
+          </div>
+        )}
 
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.32, duration: 0.5 }}
-            className="mt-5 grid grid-cols-3 gap-3"
-          >
-            {heroStats.map((s) => (
-              <div key={s.label} className="rounded-[20px] border border-white/15 bg-white/15 px-4 py-3.5 backdrop-blur-[15px]">
-                <div className="font-display text-xl font-extrabold text-white xl:text-2xl">
-                  <StatValue value={s.value} suffix={s.suffix} />
-                </div>
-                <div className="mt-1 text-xs leading-snug text-white/70">{s.label}</div>
+        {stats.length > 0 && (
+          <div className="flex flex-wrap gap-2.5 pt-1">
+            {stats.map((s) => (
+              <div key={s.label} className="min-w-[120px] flex-1 rounded-lg border border-white/15 bg-white/10 px-4 py-3.5 backdrop-blur-sm">
+                <div className="font-display text-xl font-medium text-white">{s.value}</div>
+                <div className="mt-1 text-[13px] leading-snug text-white/70">{s.label}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
+        )}
 
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="mt-6 border-t border-white/15 pt-5"
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">Why HandyConnect?</p>
-            <div className="mt-3 grid grid-cols-2 gap-x-5 gap-y-2">
-              {whyItems.map((item) => (
-                <span key={item} className="flex items-center gap-2 text-[13px] text-white/75">
-                  <Check size={13} strokeWidth={3} className="shrink-0 text-[#F97316]" />
-                  {item}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+        <div className="border-t border-white/15 pt-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/50">Why HandyConnect?</p>
+          <div className="mt-3 grid grid-cols-2 gap-x-5 gap-y-2">
+            {whyItems.map((item) => (
+              <span key={item} className="flex items-center gap-2 text-[13px] text-white/75">
+                <Check size={13} strokeWidth={3} className="shrink-0 text-hc-brand" />
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 export default function AuthShell({ children, mode = 'login', noHeader = false }) {
+  const reducedMotion = useReducedMotion();
   const header = headers[mode];
 
   return (
-    <div className="min-h-screen bg-[#F5F6F8] lg:flex" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* ── LEFT PANEL: dynamic hero (45%) ── */}
-      <section className="relative hidden overflow-hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:w-[45%]">
-        <HeroCarousel />
-      </section>
+    <div className="flex min-h-screen bg-hc-page">
+      {/* ── LEFT: brand panel (desktop only) ── */}
+      <aside className="hidden w-1/2 lg:block">
+        <BrandPanel />
+      </aside>
 
-      {/* ── RIGHT PANEL: auth card (55%) ── */}
-      <section className="flex min-h-screen flex-1 justify-center bg-[#F5F6F8] px-4 pb-16 pt-20 sm:px-8 lg:w-[55%]">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="relative z-10 w-full max-w-[480px]"
-        >
-          {/* Mobile brand */}
-          <div className="mb-6 flex justify-center lg:hidden">
-            <Link to="/">
-              <BrandMark />
-            </Link>
-          </div>
+      {/* ── RIGHT: full-height white form column ── */}
+      <main className="flex w-full flex-col bg-white lg:w-1/2">
+        <header className="px-5 pb-3 pt-5 sm:px-8 lg:px-10">
+          <Link to="/" className="inline-flex">
+            <BrandMark />
+          </Link>
+          <p className="mt-1.5 text-sm text-hc-ink-2 lg:hidden">Local pros, trusted work, one community.</p>
+        </header>
 
-          {/* Card */}
+        <div className="flex flex-1 items-center justify-center px-5 pb-10 sm:px-8 lg:px-10">
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="rounded-[32px] border border-white/70 bg-white/[0.94] p-7 shadow-[0_30px_80px_rgba(15,23,42,0.10)] backdrop-blur-[20px] sm:p-10"
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="w-full max-w-[420px]"
           >
             {!noHeader && (
-              <motion.div variants={childVariants}>
-                <h1 className="font-display text-[36px] font-extrabold leading-[1.1] tracking-[-0.03em] text-gray-900 sm:text-[40px]">
-                  {header.title}
-                </h1>
-                <p className="mt-8 text-[15px] leading-relaxed text-gray-500">{header.desc}</p>
-              </motion.div>
+              <div className="mb-6">
+                <h1 className="font-display text-[30px] font-medium tracking-tight text-hc-ink">{header.title}</h1>
+                <p className="mt-2 text-[15px] leading-6 text-hc-ink-2">{header.desc}</p>
+              </div>
             )}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className={noHeader ? '' : 'mt-8'}
-            >
-              {children}
-            </motion.div>
+            {children}
+            {mode !== 'signup' && (
+              <p className="mt-6 text-center text-[12px] leading-relaxed text-hc-ink-3">
+                Protected by Firebase Authentication · Encrypted connection
+              </p>
+            )}
           </motion.div>
-
-          <p className="mt-6 text-center text-xs leading-relaxed text-gray-400">
-            Protected by Firebase Authentication · Encrypted Connection · Privacy First
-          </p>
-        </motion.div>
-      </section>
+        </div>
+      </main>
     </div>
   );
 }
 
 /* ─────────────────────────── Shared form primitives ─────────────────────────── */
 
-export function Field({ label, htmlFor, right, children }) {
+export function TextField({ id, label, type = 'text', rightLink, error, invalid, className = '', ...props }) {
+  const [show, setShow] = useState(false);
+  const isPw = type === 'password';
+  const resolvedType = isPw && show ? 'text' : type;
+
   return (
-    <div>
-      <div className="mb-2 flex items-center justify-between">
-        <label htmlFor={htmlFor} className="text-sm font-semibold text-gray-900">
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between gap-3">
+        <label htmlFor={id} className="text-[13px] font-medium text-hc-ink">
           {label}
         </label>
-        {right}
+        {rightLink}
       </div>
-      {children}
+      <div className="relative">
+        <input
+          id={id}
+          type={resolvedType}
+          aria-invalid={!!invalid}
+          className={`h-11 w-full rounded-lg border-[0.5px] bg-white px-3.5 text-[15px] text-hc-ink outline-none transition-colors placeholder:text-hc-ink-3 ${
+            invalid
+              ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
+              : 'border-hc-hairline focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/30'
+          } ${isPw ? 'pr-11' : ''} ${className}`}
+          {...props}
+        />
+        {isPw && (
+          <button
+            type="button"
+            onClick={() => setShow((s) => !s)}
+            aria-label={show ? 'Hide password' : 'Show password'}
+            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-hc-ink-3 transition-colors hover:text-hc-ink"
+          >
+            {show ? <EyeOff size={17} /> : <Eye size={17} />}
+          </button>
+        )}
+      </div>
+      {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   );
 }
 
-export function AuthInput({ right, invalid, className = '', id, ...props }) {
+export function AuthButton({ loading, loadingText = 'Please wait…', type = 'submit', children, ...props }) {
   return (
-    <div className="group relative">
-      <input
-        id={id}
-        {...props}
-        className={`h-[60px] w-full rounded-[16px] border text-[15px] text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 ${
-          'pl-5'
-        } ${right ? 'pr-12' : 'pr-4'} ${
-          invalid
-            ? 'border-red-300 bg-[#FAFAFA] focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(239,68,68,0.12)]'
-            : 'border-[#E5E7EB] bg-[#FAFAFA] hover:border-[#F97316]/40 focus:border-[#F97316] focus:bg-white focus:shadow-[0_0_0_4px_rgba(249,115,22,0.12)]'
-        } ${className}`}
-      />
-      {right && <div className="absolute right-4 top-1/2 -translate-y-1/2">{right}</div>}
-    </div>
-  );
-}
-
-export function AuthButton({ loading, loadingText, type = 'submit', children, ...props }) {
-  return (
-    <motion.button
+    <button
       type={type}
+      disabled={loading}
       {...props}
-      whileHover={loading ? undefined : { y: -2 }}
-      whileTap={loading ? undefined : { scale: 0.98 }}
-      className="group flex h-[60px] w-full items-center justify-center gap-2 rounded-[16px] bg-[#F97316] px-6 text-[15px] font-bold text-white shadow-[0_10px_24px_rgba(249,115,22,0.3)] transition-all duration-200 hover:bg-[#EA580C] hover:shadow-[0_16px_32px_rgba(234,88,12,0.4)] disabled:cursor-not-allowed disabled:opacity-60"
+      className="group flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-hc-brand px-5 text-[15px] font-medium text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loading ? (
         <span className="flex items-center gap-2">
-          <Loader2 size={18} className="animate-spin" />
-          {loadingText && <span>{loadingText}</span>}
+          <Loader2 size={17} className="animate-spin" />
+          {loadingText}
         </span>
       ) : (
         <span className="flex items-center gap-2">
           {children}
-          <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
+          <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5" />
         </span>
       )}
-    </motion.button>
+    </button>
   );
 }
 
 export function SocialDivider() {
   return (
     <div className="my-6 flex items-center gap-4">
-      <div className="h-px flex-1 bg-[#E5E7EB]" />
-      <span className="text-xs font-medium tracking-[0.16em] text-gray-400">Continue with</span>
-      <div className="h-px flex-1 bg-[#E5E7EB]" />
+      <div className="h-px flex-1 bg-hc-hairline" />
+      <span className="text-[12px] font-medium uppercase tracking-[0.12em] text-hc-ink-3">Continue with</span>
+      <div className="h-px flex-1 bg-hc-hairline" />
     </div>
   );
 }
 
+const socialBtnClass =
+  'flex h-11 w-full items-center justify-center gap-3 rounded-lg border-[0.5px] border-hc-hairline bg-white text-sm font-medium text-hc-ink transition-colors hover:border-hc-ink-3 hover:bg-hc-page';
+
 export function SocialButtons() {
+  const [more, setMore] = useState(false);
   const buttons = [
     { icon: <GoogleIcon />, label: 'Continue with Google' },
     { icon: <AppleIcon />, label: 'Continue with Apple' },
     { icon: <MicrosoftIcon />, label: 'Continue with Microsoft' },
   ];
+  const [primary, ...rest] = buttons;
+
   return (
-    <div className="space-y-3">
-      {buttons.map((b) => (
-        <motion.button
+    <div className="space-y-2.5">
+      <button type="button" className={socialBtnClass}>
+        {primary.icon}
+        {primary.label}
+      </button>
+
+      {rest.map((b) => (
+        <button
           key={b.label}
           type="button"
-          whileHover={{ y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex h-[60px] w-full items-center justify-center gap-3 rounded-[16px] border border-[#ECECEC] bg-white text-[15px] font-semibold text-gray-900 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-[#F8F8F8] hover:shadow-[0_12px_30px_rgba(15,23,42,0.08)]"
+          className={`${socialBtnClass} ${more ? 'flex' : 'hidden'} sm:flex`}
         >
           {b.icon}
           {b.label}
-        </motion.button>
+        </button>
       ))}
+
+      <button
+        type="button"
+        onClick={() => setMore((v) => !v)}
+        aria-expanded={more}
+        className="flex h-9 w-full items-center justify-center gap-1 text-[13px] font-medium text-hc-ink-2 transition-colors hover:text-hc-brand sm:hidden"
+      >
+        <ChevronDown size={14} className={`transition-transform duration-200 ${more ? 'rotate-180' : ''}`} />
+        {more ? 'Less options' : 'More options'}
+      </button>
     </div>
   );
 }
@@ -384,23 +317,13 @@ export function AuthCheckbox({ checked, onChange, children }) {
         role="checkbox"
         aria-checked={checked}
         onClick={onChange}
-        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 ${
-          checked
-            ? 'border-[#F97316] bg-[#F97316] text-white shadow-sm'
-            : 'border-[#D1D5DB] bg-white hover:border-[#F97316]'
+        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
+          checked ? 'border-hc-brand bg-hc-brand text-white' : 'border-hc-ink-3 bg-white hover:border-hc-brand'
         }`}
       >
-        {checked && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 12 }}
-          >
-            <Check size={13} strokeWidth={3} />
-          </motion.div>
-        )}
+        {checked && <Check size={13} strokeWidth={3} />}
       </button>
-      <span className="text-sm leading-relaxed text-gray-500">{children}</span>
+      <span className="text-sm leading-relaxed text-hc-ink-2">{children}</span>
     </label>
   );
 }
@@ -410,10 +333,13 @@ export function FormAlert({ children }) {
     <motion.div
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -6 }}
-      className="mb-5 flex gap-2.5 rounded-[16px] border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600"
+      transition={{ duration: 0.25 }}
+      className="mb-5 flex gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm font-medium text-red-600"
     >
-      <svg className="mt-0.5 h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M16 16s-1.5-2-4-2-4 2-4 2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>
+      <svg className="mt-0.5 h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4M12 16h.01" />
+      </svg>
       {children}
     </motion.div>
   );
@@ -426,7 +352,7 @@ export function GoogleIcon() {
     <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" aria-hidden="true">
       <path fill="#4285F4" d="M21.8 12.2c0-.7-.1-1.3-.2-1.9H12v3.6h5.5a4.7 4.7 0 0 1-2 3.1v2.4h3.2c1.9-1.8 3.1-4.3 3.1-7.2Z" />
       <path fill="#34A853" d="M12 22c2.7 0 5-.9 6.7-2.5l-3.2-2.4c-.9.6-2 .9-3.5.9-2.6 0-4.8-1.7-5.6-4.1H3.1v2.5A10 10 0 0 0 12 22Z" />
-      <path fill="#FBBC05" d="M6.4 13.9A6 6 0 0 1 6.1 12c0-.7.1-1.3.3-1.9V7.6H3.1A10 10 0 0 0 3.1 16l3.3-2.1Z" />
+      <path fill="#FBBC05" d="M6.4 13.9A6 6 0 0 1 6.1 12c0-.7.1-1.3.3-1.9V7.6H3.1a10 10 0 0 0 3.3 8.4l3.3-2.1Z" />
       <path fill="#EA4335" d="M12 6c1.5 0 2.9.5 3.9 1.5l2.9-2.8A10 10 0 0 0 3.1 7.6l3.3 2.5C7.2 7.7 9.4 6 12 6Z" />
     </svg>
   );
