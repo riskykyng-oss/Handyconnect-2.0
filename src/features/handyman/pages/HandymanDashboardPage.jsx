@@ -104,10 +104,10 @@ export default function HandymanDashboardPage() {
       <div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: CircleDollarSign, label: 'Earnings', value: '$0', to: '/handyman/wallet' },
-            { icon: Wrench, label: 'Active Jobs', value: String(jobs.length), to: '/handyman/my-jobs' },
-            { icon: Star, label: 'Rating', value: 'New', to: '/handyman/profile' },
-            { icon: Users, label: 'Profile Views', value: '0', to: '/handyman/profile' },
+            { icon: CircleDollarSign, label: 'Earnings', value: '$0', to: '/handyman/wallet', iconColor: 'text-emerald-600', iconBg: 'bg-emerald-50' },
+            { icon: Wrench, label: 'Active Jobs', value: String(jobs.length), to: '/handyman/my-jobs', iconColor: 'text-hc-brand', iconBg: 'bg-hc-tint' },
+            { icon: Star, label: 'Rating', value: 'New', to: '/handyman/profile', iconColor: 'text-amber-600', iconBg: 'bg-amber-50' },
+            { icon: Users, label: 'Profile Views', value: '0', to: '/handyman/profile', iconColor: 'text-blue-600', iconBg: 'bg-blue-50' },
           ].map((s) => {
             const Icon = s.icon;
             return (
@@ -117,7 +117,7 @@ export default function HandymanDashboardPage() {
                 onClick={() => navigate(s.to)}
                 className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md text-left"
               >
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-black/[0.06] text-hc-ink-2">
+                <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl ${s.iconBg} ${s.iconColor}`}>
                   <Icon size={18} />
                 </div>
                 <p className="font-display text-2xl font-semibold text-hc-ink">{s.value}</p>
@@ -253,7 +253,7 @@ export default function HandymanDashboardPage() {
                 <p className="text-xs text-hc-caption">Available balance</p>
                 <p className="mt-0.5 font-display text-3xl font-semibold text-hc-ink">$0.00</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/[0.06] text-hc-ink-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                 <Wallet size={22} />
               </div>
             </div>
@@ -281,9 +281,9 @@ export default function HandymanDashboardPage() {
         <SectionHeader title="Get Started" subtitle="Set up your profile to win more jobs" />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {[
-            { label: 'Verify ID', icon: CheckCircle2, color: 'text-hc-ink-2', bg: 'bg-black/[0.06]' },
-            { label: 'Add Photos', icon: Star, color: 'text-hc-ink-2', bg: 'bg-black/[0.06]' },
-            { label: 'Join Community', icon: Users, color: 'text-hc-ink-2', bg: 'bg-black/[0.06]' },
+            { label: 'Verify ID', icon: CheckCircle2, to: '/handyman/profile', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+            { label: 'Add Photos', icon: Star, to: '/handyman/profile', color: 'text-hc-brand', bg: 'bg-hc-tint' },
+            { label: 'Join Community', icon: Users, to: '/community', color: 'text-blue-600', bg: 'bg-blue-50' },
           ].map((item) => {
             const Icon = item.icon;
             return (
@@ -291,6 +291,7 @@ export default function HandymanDashboardPage() {
                 key={item.label}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
+                onClick={() => navigate(item.to)}
                 className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm transition-shadow hover:shadow-md flex flex-col items-center gap-3"
               >
                 <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.bg} ${item.color}`}>
@@ -305,7 +306,7 @@ export default function HandymanDashboardPage() {
 
       {/* Tip */}
       <div className="flex items-start gap-3 rounded-xl border border-black/[0.07] bg-hc-tile p-5">
-        <Sparkles size={18} className="mt-0.5 shrink-0 text-hc-ink-3" />
+        <Sparkles size={18} className="mt-0.5 shrink-0 text-hc-brand" />
         <div>
           <p className="text-sm font-bold text-hc-ink">Keep your availability on</p>
           <p className="mt-0.5 text-xs text-hc-ink-2 leading-relaxed">This helps you receive job matches in real-time and grow your earnings faster.</p>
