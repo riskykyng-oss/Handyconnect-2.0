@@ -22,7 +22,6 @@ const prosFromUsers = (users) =>
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
     rating: typeof u.rating === 'number' ? u.rating : null,
     jobs: u.jobs || 0,
-    rate: typeof u.hourlyRate === 'number' ? u.hourlyRate : null,
     verified: !!u.verified,
   }));
 

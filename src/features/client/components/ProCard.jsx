@@ -41,10 +41,6 @@ export default function ProCard({ pro, onHire }) {
 
       <Rating rating={pro.rating} jobs={pro.jobs} />
 
-      {pro.rate != null && (
-        <span className="text-sm font-semibold text-hc-ink">${pro.rate}/hr</span>
-      )}
-
       <div className="mt-1 flex w-full gap-2">
         <button
           onClick={() => navigate(`/pro/${pro.id}`)}

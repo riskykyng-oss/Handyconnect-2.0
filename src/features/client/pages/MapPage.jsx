@@ -19,7 +19,6 @@ const cardFromUser = (u, loc) => {
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
     rating: typeof u.rating === 'number' ? u.rating : null,
     jobs: u.jobs || 0,
-    price: typeof u.hourlyRate === 'number' ? u.hourlyRate : null,
     image: u.photoURL || null,
     available: u.available !== false,
     verified: !!u.verified,
@@ -205,9 +204,6 @@ export default function MapPage() {
                         </span>
                       )}
                       {selected.jobs > 0 && <span className="text-hc-caption">{selected.jobs} jobs</span>}
-                      {selected.price != null && (
-                        <span className="font-semibold text-hc-ink">${selected.price}/hr</span>
-                      )}
                       {selected.distanceLabel && (
                         <span className="flex items-center gap-0.5">
                           <MapPin size={10} className="text-gray-400" /> {selected.distanceLabel}
@@ -317,11 +313,6 @@ export default function MapPage() {
                     )}
                   </div>
                 </div>
-                {pro.price != null && (
-                  <span className="shrink-0 rounded-lg bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-700">
-                    ${pro.price}/hr
-                  </span>
-                )}
               </motion.button>
             ))}
           </div>

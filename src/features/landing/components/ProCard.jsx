@@ -5,7 +5,6 @@ import ColoredAvatar from '@/components/ui/ColoredAvatar';
 export default function ProCard({ pro }) {
   const name = pro.displayName || pro.email || 'Handyman';
   const trade = pro.trade || (pro.skills && pro.skills.split(',')[0]) || 'Professional';
-  const rate = typeof pro.hourlyRate === 'number' ? pro.hourlyRate : 20;
 
   return (
     <Link
@@ -39,7 +38,6 @@ export default function ProCard({ pro }) {
           <Star size={13} className="fill-hc-brand text-hc-brand" />
           {typeof pro.rating === 'number' ? pro.rating.toFixed(1) : 'New'}
         </span>
-        <span className="font-medium text-hc-ink">From ${rate}/hr</span>
       </div>
 
       <span className="mt-4 rounded-lg bg-hc-brand py-2.5 text-center text-[13px] font-medium text-white transition-colors group-hover:bg-hc-brand-strong">

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft, BadgeCheck, MapPin, Star, Loader2, Briefcase, Images,
-  MessageCircle, Zap, Phone, Clock, ShieldCheck, DollarSign,
+  MessageCircle, Zap, Phone, Clock, ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { getPublicPro, subscribePortfolio } from '@/services/portfolioService';
@@ -67,7 +67,6 @@ export default function ProPortfolioPage() {
   const avgRating = reviews.length
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
     : pro?.rating != null ? Number(pro.rating).toFixed(1) : null;
-  const startingAt = pro?.hourlyRate ? pro.hourlyRate : 20;
 
   const openHire = (mode) => {
     if (userRole !== 'client') return;
@@ -180,11 +179,6 @@ export default function ProPortfolioPage() {
                   {pro.available ? 'Available Today' : 'Currently Busy'}
                 </span>
               </span>
-              {pro.hourlyRate != null && (
-                <span className="flex items-center gap-1.5 font-semibold text-hc-ink-2">
-                  <DollarSign size={14} className="text-gray-400" /> ${pro.hourlyRate}/hr
-                </span>
-              )}
             </div>
           </div>
         </div>
@@ -211,30 +205,6 @@ export default function ProPortfolioPage() {
           </div>
         </div>
       )}
-
-      {/* Pricing */}
-      <div className="mb-6">
-        <SectionTitle title="Pricing" />
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {pro.hourlyRate != null && (
-            <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm">
-              <p className="text-xs font-semibold text-hc-caption">Hourly Rate</p>
-              <p className="mt-1 font-display text-2xl font-semibold text-hc-ink">${pro.hourlyRate}<span className="text-sm font-bold text-hc-caption">/hr</span></p>
-            </div>
-          )}
-          <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm">
-            <p className="text-xs font-semibold text-hc-caption">Starting From</p>
-            <p className="mt-1 font-display text-2xl font-semibold text-hc-ink">${startingAt}</p>
-          </div>
-          <div className="rounded-xl border border-black/[0.07] bg-hc-tile p-5 shadow-sm">
-            <p className="text-xs font-semibold text-hc-ink-2">Emergency Callout</p>
-            <p className="mt-1 font-display text-2xl font-semibold text-hc-ink">
-              {pro.hourlyRate ? `$${Math.round(pro.hourlyRate * 1.4)}` : '$20'}
-            </p>
-            <p className="mt-1 text-[11px] text-hc-caption">Urgent jobs may cost more</p>
-          </div>
-        </div>
-      </div>
 
       {/* Availability */}
       <div className="mb-6">

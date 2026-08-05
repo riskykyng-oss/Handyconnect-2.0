@@ -63,8 +63,8 @@ export default function StoryComposer({ open, onClose, uid, displayName, photoUR
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={handleClose}>
-      <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl border border-black/[0.07] bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-800" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between gap-3 border-b border-black/[0.06] px-6 py-5 dark:border-gray-700">
+      <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl border border-hc-hairline bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-800" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between gap-3 border-b border-hc-hairline px-6 py-5 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-hc-tile p-[2.5px]">
               <img
@@ -85,7 +85,7 @@ export default function StoryComposer({ open, onClose, uid, displayName, photoUR
 
         <div className="p-6">
           {preview ? (
-            <div className="relative overflow-hidden rounded-xl border border-black/[0.07]">
+            <div className="relative overflow-hidden rounded-xl border border-hc-hairline">
               <img src={preview} alt="Story preview" className="h-64 w-full object-cover" />
               <button
                 onClick={() => { setFile(null); setPreview(null); }}

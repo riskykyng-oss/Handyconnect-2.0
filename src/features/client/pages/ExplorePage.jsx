@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, MapPin, Star, Wrench, Paintbrush, Sparkles, Hammer, Droplet,
-  Navigation, Zap, BadgeCheck, X, Plus, Users, QrCode, AlertTriangle,
+  Search, MapPin, Star, Wrench, Sparkles, BadgeCheck, X, Plus, Users, QrCode, AlertTriangle,
 } from 'lucide-react';
+import { categoryIcons } from '@/constants/categories';
 import HireProModal from '../components/HireProModal';
 import PostJobModal from '../components/PostJobModal';
 import { subscribeProfessionals, getUserProfile } from '@/services/userService';
@@ -15,19 +15,7 @@ import { cardClass } from '../components/dashboardUtils';
 
 const PAGE_SIZE = 12;
 
-const categoryIcons = {
-  Plumbing: Wrench,
-  Electrical: Zap,
-  Painting: Paintbrush,
-  Cleaning: Sparkles,
-  Carpentry: Hammer,
-  Gardening: Droplet,
-  Moving: Navigation,
-  Construction: Hammer,
-  Mechanic: Wrench,
-};
-
-const filterOptions = ['All', 'Nearby', 'Verified', 'Top Rated', 'Available', 'Lowest Price'];
+const filterOptions = ['All', 'Nearby', 'Verified', 'Top Rated', 'Available'];
 
 const cardFromUser = (u, clientLoc) => {
   const km = haversineKm(clientLoc, u.location);
@@ -37,7 +25,6 @@ const cardFromUser = (u, clientLoc) => {
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
     rating: typeof u.rating === 'number' ? u.rating : null,
     jobs: u.jobs || 0,
-    price: typeof u.hourlyRate === 'number' ? u.hourlyRate : null,
     image: u.photoURL || null,
     available: u.available !== false,
     verified: !!u.verified,
@@ -78,11 +65,6 @@ function ProCard({ pro, index, onView, onHire }) {
           </p>
           <p className="mt-0.5 truncate text-xs text-hc-caption">{pro.role}</p>
         </div>
-        {pro.price != null && (
-          <span className="shrink-0 rounded-lg bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-700">
-            ${pro.price}/hr
-          </span>
-        )}
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-hc-ink-2">
@@ -143,7 +125,6 @@ function ServiceCard({ service, onClick }) {
         <p className="truncate text-sm font-semibold text-hc-ink">{service.name}</p>
         <p className="mt-0.5 text-xs text-hc-caption">
           {service.count} {service.count === 1 ? 'professional' : 'professionals'}
-          {service.minPrice != null && <> · from ${service.minPrice}/hr</>}
         </p>
       </div>
     </motion.button>
@@ -215,8 +196,6 @@ export default function ExplorePage() {
       list.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
     } else if (activeFilter === 'Top Rated' || activeFilter === 'Recommended') {
       list.sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1));
-    } else if (activeFilter === 'Lowest Price') {
-      list.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
     }
     return list;
   }, [cards, query, activeFilter]);
@@ -226,9 +205,8 @@ export default function ExplorePage() {
     for (const c of cards) {
       const name = c.role;
       if (!name || name === 'Handyman') continue;
-      const entry = map.get(name) || { name, count: 0, minPrice: null };
+      const entry = map.get(name) || { name, count: 0 };
       entry.count += 1;
-      if (c.price != null) entry.minPrice = entry.minPrice == null ? c.price : Math.min(entry.minPrice, c.price);
       map.set(name, entry);
     }
     return [...map.values()].sort((a, b) => b.count - a.count);

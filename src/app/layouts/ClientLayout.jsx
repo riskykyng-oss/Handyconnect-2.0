@@ -41,7 +41,7 @@ export default function ClientLayout() {
   const isChatPage = location.pathname.startsWith('/client/chat') || location.pathname === '/client/messages';
   const isChatThread = location.pathname.startsWith('/client/chat');
   const isFullWidth = isCommunity || location.pathname === '/client/explore';
-  const showRail = !isCommunity && ['/client/home', '/client/explore', '/client/jobs'].includes(location.pathname);
+  const showRail = !isCommunity && ['/client/home', '/client/explore'].includes(location.pathname);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);

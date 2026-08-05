@@ -8,7 +8,7 @@ import { Loader2, Camera, MapPin, User, Star, BadgeCheck, Clock, Trash2 } from '
 export default function ProfilePage() {
   const { currentUser } = useAuth();
   const fileRef = useRef(null);
-  const [profile, setProfile] = useState({ displayName: '', bio: '', skills: '', hourlyRate: '', photoURL: '' });
+  const [profile, setProfile] = useState({ displayName: '', bio: '', skills: '', photoURL: '' });
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -27,7 +27,6 @@ export default function ProfilePage() {
           displayName: data.displayName || '',
           bio: data.bio || '',
           skills: data.skills || '',
-          hourlyRate: data.hourlyRate || '',
           photoURL: data.photoURL || '',
         });
         setVerified(!!data.verified);
@@ -172,18 +171,11 @@ export default function ProfilePage() {
             <textarea value={profile.bio} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} rows={3} placeholder="Tell clients about your experience..."
               className="w-full resize-none rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Trade / Job type</label>
-              <input value={profile.skills} onChange={(e) => setProfile({ ...profile, skills: e.target.value })} placeholder="Type your trade, e.g. Electrician, Plumber..."
-                className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
-              <p className="mt-1 text-[11px] text-hc-caption">Free text. Separate multiple trades with commas — the first one is shown as your primary job type.</p>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Hourly Rate ($)</label>
-              <input type="number" value={profile.hourlyRate} onChange={(e) => setProfile({ ...profile, hourlyRate: e.target.value })} placeholder="25"
-                className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
-            </div>
+          <div>
+            <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Trade / Job type</label>
+            <input value={profile.skills} onChange={(e) => setProfile({ ...profile, skills: e.target.value })} placeholder="Type your trade, e.g. Electrician, Plumber..."
+              className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
+            <p className="mt-1 text-[11px] text-hc-caption">Free text. Separate multiple trades with commas — the first one is shown as your primary job type.</p>
           </div>
           <div>
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-hc-ink-2"><MapPin size={13} className="text-gray-400" /> Service Location</label>

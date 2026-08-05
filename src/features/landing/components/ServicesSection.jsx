@@ -27,12 +27,10 @@ export default function ServicesSection() {
   const stats = useMemo(() => {
     return categories.map((cat) => {
       const matched = pros.filter((pro) => matchTrade(pro, cat.name));
-      const rates = matched.filter((p) => typeof p.hourlyRate === 'number').map((p) => p.hourlyRate);
       const ratings = matched.filter((p) => typeof p.rating === 'number').map((p) => p.rating);
       return {
         name: cat.name,
         count: matched.length,
-        fromPrice: rates.length ? Math.min(...rates) : null,
         rating: ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : null,
       };
     });

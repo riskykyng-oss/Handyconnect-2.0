@@ -21,7 +21,7 @@ export default function CommunityPreview() {
   return (
     <section aria-label="Community">
       <SectionHeader title="Community Highlights" actionLabel="See all" onAction={() => navigate('/community')} />
-      <div className={`rounded-xl border border-black/[0.07] bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.06)] sm:p-5`}>
+      <div className={`rounded-xl border border-hc-hairline bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.06)] sm:p-5`}>
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 size={20} className="animate-spin text-hc-caption" />

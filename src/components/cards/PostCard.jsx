@@ -4,7 +4,6 @@ import { BadgeCheck, BarChart3, Bookmark, Check, Heart, Link2, MapPin, MessageCi
 import Card from '@/components/ui/Card';
 import Avatar from '@/components/ui/Avatar';
 import ColoredAvatar from '@/components/ui/ColoredAvatar';
-import BeforeAfterSlider from '@/features/community/components/BeforeAfterSlider';
 import MediaCarousel from '@/features/community/components/MediaCarousel';
 import { addComment, subscribeToComments } from '@/services/postService';
 import { timeAgo } from '@/utils/time';
@@ -44,7 +43,7 @@ function PollBlock({ post, currentUserId, onVote }) {
   const myChoice = poll?.voters?.[currentUserId];
 
   return (
-    <div className="border-t border-gray-100 px-5 pt-4 pb-5">
+    <div className="border-t border-hc-hairline px-5 pt-4 pb-5">
       <p className="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-hc-ink dark:text-gray-100">
         <BarChart3 size={15} className="text-hc-ink-3" /> {poll.question}
       </p>
@@ -59,7 +58,7 @@ function PollBlock({ post, currentUserId, onVote }) {
               key={opt.id}
               onClick={() => onVote?.(post.id, opt.id)}
               className={`w-full rounded-lg border px-3 py-2.5 text-left transition-colors ${
-                isMine ? 'border-gray-900 bg-gray-100 dark:border-gray-200 dark:bg-gray-700/60' : isLeading ? 'border-hc-accent/40 bg-hc-accent-tint dark:border-hc-accent/60 dark:bg-hc-accent/10' : 'border-black/[0.12] bg-white hover:border-hc-accent/40 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
+                isMine ? 'border-hc-ink bg-hc-tile dark:border-gray-200 dark:bg-gray-700/60' : isLeading ? 'border-hc-brand/40 bg-hc-tint dark:border-hc-brand/60 dark:bg-hc-brand/10' : 'border-black/[0.12] bg-white hover:border-hc-brand/40 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
               }`}
             >
               <div className="flex items-center justify-between gap-3">
@@ -69,7 +68,7 @@ function PollBlock({ post, currentUserId, onVote }) {
                 <span className="shrink-0 text-xs font-semibold text-hc-caption dark:text-gray-400">{pct}%</span>
               </div>
               <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
-                <div className={`h-full rounded-full transition-all duration-500 ${isMine ? 'bg-hc-ink dark:bg-gray-200' : 'bg-hc-accent'}`} style={{ width: `${pct}%` }} />
+                <div className={`h-full rounded-full transition-all duration-500 ${isMine ? 'bg-hc-ink dark:bg-gray-200' : 'bg-hc-brand'}`} style={{ width: `${pct}%` }} />
               </div>
               {isMine && <p className="mt-1 text-[10px] font-semibold text-hc-ink">Your vote</p>}
             </button>
@@ -176,8 +175,15 @@ export default function PostCard({
   const media = () => {
     if (post.beforeImage && post.afterImage) {
       return (
-        <div className="overflow-hidden rounded-lg">
-          <BeforeAfterSlider before={post.beforeImage} after={post.afterImage} />
+        <div className="grid h-40 grid-cols-2 gap-1.5 overflow-hidden rounded-lg">
+          <div className="relative bg-hc-tile">
+            <img src={post.beforeImage} alt="Before" loading="lazy" className="h-full w-full object-cover" />
+            <span className="absolute bottom-1.5 left-1.5 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">Before</span>
+          </div>
+          <div className="relative bg-hc-tile">
+            <img src={post.afterImage} alt="After" loading="lazy" className="h-full w-full object-cover" />
+            <span className="absolute bottom-1.5 left-1.5 rounded bg-emerald-700 px-1.5 py-0.5 text-[10px] font-semibold text-white">After</span>
+          </div>
         </div>
       );
     }
@@ -232,7 +238,7 @@ export default function PostCard({
               ) : (
                 <span className="truncate">{post.authorName}</span>
               )}
-              {post.authorVerified && <BadgeCheck size={15} className="shrink-0 fill-hc-accent text-white" />}
+              {post.authorVerified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
             </p>
             <p className="mt-0.5 flex items-center gap-1 text-xs text-hc-ink-3 dark:text-gray-400">
               <span className="truncate">{post.authorTrade || <span className="capitalize">{post.authorRole}</span>}</span>
@@ -268,7 +274,7 @@ export default function PostCard({
               {menuOpen && (
                 <>
                   <button className="fixed inset-0 z-30 cursor-default" onClick={() => setMenuOpen(false)} aria-label="Close" />
-                  <div className="absolute right-0 z-40 mt-1 w-40 rounded-xl border border-black/[0.07] bg-white py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                  <div className="absolute right-0 z-40 mt-1 w-40 rounded-xl border border-hc-hairline bg-white py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
                     <button
                       onClick={() => { setMenuOpen(false); setEditing(true); setEditText(post.text); setEditTrade(post.trade || ''); setEditLocation(post.location || ''); }}
                       className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-hc-ink-2 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -343,7 +349,7 @@ export default function PostCard({
         )}
 
         {/* Action bar */}
-        <div className="flex items-center gap-1 border-t border-black/[0.06] px-2.5 py-2 sm:gap-1.5 sm:px-4 sm:py-2.5 dark:border-gray-700">
+        <div className="flex items-center gap-1 border-t border-hc-hairline px-2.5 py-2 sm:gap-1.5 sm:px-4 sm:py-2.5 dark:border-gray-700">
           {/* Reaction (tap to open picker) */}
           <div className="relative">
             <button
@@ -360,7 +366,7 @@ export default function PostCard({
             {reactOpen && (
               <>
                 <button className="fixed inset-0 z-30 cursor-default" onClick={() => setReactOpen(false)} aria-label="Close" />
-                <div className="absolute -top-11 left-0 z-40 flex gap-1 rounded-2xl border border-black/[0.07] bg-white px-2 py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                <div className="absolute -top-11 left-0 z-40 flex gap-1 rounded-2xl border border-hc-hairline bg-white px-2 py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
                   {REACTIONS.map((r) => (
                     <button
                       key={r}
@@ -403,7 +409,7 @@ export default function PostCard({
             {saveOpen && (
               <>
                 <button className="fixed inset-0 z-30 cursor-default" onClick={() => setSaveOpen(false)} aria-label="Close" />
-                <div className="absolute right-0 z-40 mt-1 w-56 rounded-xl border border-black/[0.07] bg-white py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                <div className="absolute right-0 z-40 mt-1 w-56 rounded-xl border border-hc-hairline bg-white py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
                   <p className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-hc-ink-3">Save to</p>
                   {SAVE_COLLECTIONS.map((c) => {
                     const saved = savedIn.includes(c);
@@ -428,7 +434,7 @@ export default function PostCard({
 
         {/* Role-aware CTA row */}
         {showCTA && (
-          <div className="flex items-stretch gap-2 border-t border-black/[0.06] bg-hc-page/60 px-5 py-3.5 dark:border-gray-700 dark:bg-gray-700/40">
+          <div className="flex items-stretch gap-2 border-t border-hc-hairline bg-hc-page/60 px-5 py-3.5 dark:border-gray-700 dark:bg-gray-700/40">
             {viewerRole === 'client' && (
               <button
                 onClick={() => navigate('/client/home?post=1')}
@@ -439,13 +445,13 @@ export default function PostCard({
             )}
             <button
               onClick={() => navigate(`/${viewerRole === 'client' ? 'client' : 'handyman'}/chat/direct/${post.authorId}`)}
-              className="h-10 shrink-0 rounded-lg border border-hc-accent/25 bg-transparent px-3.5 text-sm font-medium text-hc-accent transition-colors hover:bg-hc-accent-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="h-10 shrink-0 rounded-lg border border-hc-brand/25 bg-transparent px-3.5 text-sm font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Message
             </button>
             <button
               onClick={() => navigate(`/pro/${post.authorId}`)}
-              className="h-10 shrink-0 rounded-lg border border-hc-accent/25 bg-transparent px-3.5 text-sm font-medium text-hc-accent transition-colors hover:bg-hc-accent-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="h-10 shrink-0 rounded-lg border border-hc-brand/25 bg-transparent px-3.5 text-sm font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {viewerRole === 'client' ? 'View Profile' : 'View Portfolio'}
             </button>
@@ -454,14 +460,14 @@ export default function PostCard({
 
         {/* Comments */}
         {open && (
-          <div className="border-t border-black/[0.06] px-5 py-5 dark:border-gray-700">
+          <div className="border-t border-hc-hairline px-5 py-5 dark:border-gray-700">
             <div className="max-h-56 space-y-4 overflow-y-auto">
               {topComments.map((item) => (
                 <div key={item.id} className="rounded-xl bg-hc-page p-3 text-sm dark:bg-gray-700">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-hc-ink dark:text-gray-100">{item.authorName}</span>
                     <span className="text-xs text-hc-ink-3">{timeAgo(item.createdAt)}</span>
-                    <button onClick={() => setReplyTo(replyTo?.id === item.id ? null : { id: item.id, name: item.authorName })} className="ml-auto text-xs font-semibold text-hc-accent hover:text-hc-accent-strong">
+                    <button onClick={() => setReplyTo(replyTo?.id === item.id ? null : { id: item.id, name: item.authorName })} className="ml-auto text-xs font-semibold text-hc-brand hover:text-hc-brand-strong">
                       Reply
                     </button>
                     {item.authorId === currentUserId && (

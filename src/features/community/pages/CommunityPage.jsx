@@ -238,7 +238,7 @@ export default function CommunityPage() {
                       )}
                       <p className="mt-2 flex max-w-full items-center justify-center gap-1 text-center text-sm font-semibold text-hc-ink dark:text-gray-100">
                         <span className="min-w-0 break-words">{p.name}</span>
-                        {p.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
+                        {p.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
                       </p>
                       <p className="mt-0.5 w-full truncate text-xs font-medium text-hc-ink-2">{p.trade}</p>
                       <div className="mt-1 flex items-center gap-1.5">
@@ -300,7 +300,7 @@ export default function CommunityPage() {
             {/* Filters */}
             <div ref={feedRef} className="mb-5 scroll-mt-24">
               {query && (
-                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-black/[0.07] bg-hc-tile px-3 py-1.5 text-xs font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
+                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-hc-hairline bg-hc-tile px-3 py-1.5 text-xs font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
                   <Hash size={12} /> {query}
                   <button onClick={() => setQuery('')} aria-label="Clear tag filter" className="rounded-full hover:bg-gray-200">
                     <X size={12} />
@@ -355,7 +355,7 @@ export default function CommunityPage() {
               {filtered.length > limit && (
                 <button
                   onClick={() => setLimit(limit + 5)}
-                  className={`h-11 w-full rounded-xl border border-hc-accent/30 bg-white text-sm font-semibold text-hc-accent shadow-sm transition-colors hover:bg-hc-accent-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
+                  className={`h-11 w-full rounded-xl border border-hc-brand/30 bg-white text-sm font-semibold text-hc-brand shadow-sm transition-colors hover:bg-hc-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
                 >
                   Load more posts
                 </button>

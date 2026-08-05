@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 
-export default function ServiceCard({ service, count = 0, fromPrice = null, rating = null }) {
+export default function ServiceCard({ service, count = 0, rating = null }) {
   const Icon = service.icon;
   return (
     <Link
@@ -22,7 +22,6 @@ export default function ServiceCard({ service, count = 0, fromPrice = null, rati
             <Star size={12} className="fill-hc-brand text-hc-brand" /> {rating.toFixed(1)}
           </span>
         )}
-        {fromPrice != null && <span className="text-hc-ink-3">From ${fromPrice}/hr</span>}
       </div>
     </Link>
   );

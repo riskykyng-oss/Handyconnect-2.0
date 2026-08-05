@@ -119,7 +119,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, activeG
       {isHandyman && verified === false && (
         <button
           onClick={() => navigate('/handyman/profile')}
-          className="mb-4 flex w-full items-center gap-2 rounded-xl border border-black/[0.07] bg-hc-tile px-3 py-2 text-left text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300"
+          className="mb-4 flex w-full items-center gap-2 rounded-xl border border-hc-hairline bg-hc-tile px-3 py-2 text-left text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300"
         >
           <BadgeCheck size={14} />
           Only verified handymen can create groups — request your badge.
@@ -256,7 +256,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, activeG
                       onClick={() => onSelect(active ? null : g.id)}
                       title={active ? 'Stop filtering by this group' : 'Show this group\'s posts in the feed'}
                       className={`h-8 flex-1 rounded-lg text-xs font-medium transition-colors ${
-                        active ? 'bg-hc-ink text-white' : 'border border-hc-accent/30 bg-transparent text-hc-accent hover:bg-hc-accent-tint dark:border-gray-600 dark:text-gray-300'
+                        active ? 'bg-hc-ink text-white' : 'border border-hc-brand/30 bg-transparent text-hc-brand hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300'
                       }`}
                     >
                       {active ? 'Feed on' : 'Feed'}

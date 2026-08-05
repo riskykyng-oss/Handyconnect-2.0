@@ -222,7 +222,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
         )}
 
         {/* Media area */}
-        <div className={`mt-5 flex flex-wrap items-center justify-between gap-2 ${showFull ? 'border-t border-black/[0.06] pt-4' : 'pt-1'}`}>
+        <div className={`mt-5 flex flex-wrap items-center justify-between gap-2 ${showFull ? 'border-t border-hc-hairline pt-4' : 'pt-1'}`}>
           <div className="flex flex-wrap items-center gap-1">
             <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100 hover:text-hc-ink">
               <Images size={17} /> Photo

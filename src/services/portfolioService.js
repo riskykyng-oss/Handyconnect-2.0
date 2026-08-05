@@ -65,7 +65,6 @@ export const getPublicPro = async (proId) => {
         avatar: user.photoURL || null,
         bio: user.bio || '',
         skills: user.skills || '',
-        hourlyRate: user.hourlyRate ? Number(user.hourlyRate) : null,
         phone: user.phone || null,
         available: user.available !== false,
         rating: user.rating,
