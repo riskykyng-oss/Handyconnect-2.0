@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { subscribeToWallet, getTransactions } from '@/services/walletService';
+import { subscribeToWallet, subscribeToTransactions, backfillTransactionHistory } from '@/services/walletService';
 import { subscribeToUserPayments } from '@/services/paymentService';
 import WalletTabs from '@/features/wallet/components/WalletTabs';
 import SectionCard from '@/features/wallet/components/SectionCard';
@@ -48,9 +48,10 @@ export default function ClientWalletPage() {
       setWallet(w);
       setLoading(false);
     });
-    getTransactions(currentUser.uid).then(setTransactions).catch(() => setTransactions([]));
+    backfillTransactionHistory(currentUser.uid).catch(() => {});
+    const unsubTx = subscribeToTransactions(currentUser.uid, setTransactions);
     const unsubPayments = subscribeToUserPayments(currentUser.uid, 'payerId', setPayments);
-    return () => { unsubWallet(); unsubPayments(); };
+    return () => { unsubWallet(); unsubTx(); unsubPayments(); };
   }, [currentUser]);
 
   const methods = wallet?.paymentMethods?.length ? wallet.paymentMethods : [];

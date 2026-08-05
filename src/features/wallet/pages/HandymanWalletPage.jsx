@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { format, startOfDay, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 import { Loader2, Wallet, BarChart3, Landmark, ReceiptText, Send, History, Download, Check, RefreshCcw, FileText, Settings, QrCode } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { subscribeToWallet, subscribeToTransactions } from '@/services/walletService';
+import { subscribeToWallet, subscribeToTransactions, backfillTransactionHistory } from '@/services/walletService';
 import { subscribeToUserPayments, subscribeToMyPayouts, MIN_WITHDRAWAL } from '@/services/paymentService';
 import WalletTabs from '@/features/wallet/components/WalletTabs';
 import SectionCard from '@/features/wallet/components/SectionCard';
@@ -48,6 +48,7 @@ export default function HandymanWalletPage() {
       setLoading(false);
     });
     const unsubTxs = subscribeToTransactions(currentUser.uid, setTransactions);
+    backfillTransactionHistory(currentUser.uid).catch(() => {});
     const unsubPayments = subscribeToUserPayments(currentUser.uid, 'recipientId', setPayments);
     const unsubPayouts = subscribeToMyPayouts(currentUser.uid, setPayouts);
     return () => { unsubWallet(); unsubTxs(); unsubPayments(); unsubPayouts(); };
