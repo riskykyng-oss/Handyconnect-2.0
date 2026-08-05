@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { getAssignedJobs, getOpenJobs } from '@/services/jobService';
+import { getUserProfile, updateUserProfile } from '@/services/userService';
+import { rankJobsForHandyman } from '@/utils/jobRanking';
+import { formatDistance } from '@/utils/distance';
 import HandymanHero from '../components/HandymanHero';
 
 function SectionHeader({ title, subtitle, actionLabel, to }) {
@@ -31,16 +34,25 @@ export default function HandymanDashboardPage() {
   const navigate = useNavigate();
   const [available, setAvailable] = useState(true);
   const [jobs, setJobs] = useState([]);
-  const [nearby, setNearby] = useState([]);
+  const [openJobs, setOpenJobs] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       if (!currentUser) return;
       try {
-        const [assigned, open] = await Promise.all([getAssignedJobs(currentUser.uid), getOpenJobs()]);
+        const [assigned, open, prof] = await Promise.all([
+          getAssignedJobs(currentUser.uid),
+          getOpenJobs(),
+          getUserProfile(currentUser.uid),
+        ]);
         setJobs(assigned);
-        setNearby(open.filter((j) => !j.handymanId || j.handymanId === currentUser.uid).slice(0, 3));
+        setOpenJobs(open);
+        if (prof) {
+          setProfile(prof);
+          setAvailable(prof.available !== false);
+        }
       } catch (e) {
         console.error(e);
       } finally {
@@ -48,6 +60,24 @@ export default function HandymanDashboardPage() {
       }
     })();
   }, [currentUser]);
+
+  const ranked = rankJobsForHandyman(
+    openJobs.filter((j) => !j.handymanId || j.handymanId === currentUser?.uid),
+    profile
+  );
+  const nearby = available ? ranked.slice(0, 3) : [];
+  const nearbyCount = ranked.filter((r) => r.km != null && r.km <= 15).length;
+
+  const handleToggle = async () => {
+    if (!currentUser) return;
+    const next = !available;
+    setAvailable(next);
+    try {
+      await updateUserProfile(currentUser.uid, { available: next });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
@@ -68,7 +98,7 @@ export default function HandymanDashboardPage() {
       </div>
 
       {/* Hero Section */}
-      <HandymanHero name={name} available={available} onToggle={() => setAvailable(!available)} />
+      <HandymanHero name={name} available={available} onToggle={handleToggle} nearbyCount={nearbyCount} />
 
       {/* Stats */}
       <div>
@@ -108,7 +138,7 @@ export default function HandymanDashboardPage() {
           </div>
         ) : nearby.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {nearby.map((job) => (
+            {nearby.map(({ job, km, tradeMatch }) => (
               <motion.button
                 key={job.id}
                 whileHover={{ y: -2 }}
@@ -119,7 +149,7 @@ export default function HandymanDashboardPage() {
                   <div>
                     <h3 className="text-base font-semibold tracking-tight text-hc-ink">{job.title}</h3>
                     <p className="mt-1 text-xs text-hc-caption flex items-center gap-1">
-                      <MapPin size={11} className="text-gray-400" /> Nearby
+                      <MapPin size={11} className="text-gray-400" /> {km != null ? `${formatDistance(km)} away` : job.location || 'Nearby'}
                     </p>
                   </div>
                   <span className="shrink-0 rounded-full bg-black/[0.06] px-2.5 py-0.5 text-[10px] font-bold text-hc-ink-2 uppercase tracking-wider">
@@ -127,7 +157,11 @@ export default function HandymanDashboardPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between border-t border-black/[0.07] pt-3">
-                  <span className="text-[11px] text-hc-caption">Posted today</span>
+                  {tradeMatch ? (
+                    <span className="rounded-full bg-hc-tint px-2 py-0.5 text-[10px] font-bold text-hc-tint-text uppercase tracking-wider">Trade match</span>
+                  ) : (
+                    <span className="text-[11px] text-hc-caption">Open request</span>
+                  )}
                   <span className="flex items-center gap-1 text-xs font-bold text-hc-brand">
                     View Details <ArrowRight size={12} />
                   </span>

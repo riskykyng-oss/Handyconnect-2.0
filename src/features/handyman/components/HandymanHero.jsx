@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { ToggleLeft, ToggleRight, Star, MapPin } from 'lucide-react';
 
-export default function HandymanHero({ name, available, onToggle }) {
+export default function HandymanHero({ name, available, onToggle, nearbyCount = 0 }) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
@@ -87,7 +87,7 @@ export default function HandymanHero({ name, available, onToggle }) {
               className="flex w-[140px] items-center gap-3 rounded-[20px] border border-[rgba(255,255,255,.15)] bg-[rgba(255,255,255,.10)] px-4 py-3 shadow-[0_8px_20px_rgba(0,0,0,.08)] backdrop-blur-[16px]"
             >
               <div>
-                <p className="font-display text-[22px] font-semibold leading-none text-white">12</p>
+                <p className="font-display text-[22px] font-semibold leading-none text-white">{nearbyCount}</p>
                 <p className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-gray-200/80">
                   <MapPin size={10} /> Jobs Near You
                 </p>

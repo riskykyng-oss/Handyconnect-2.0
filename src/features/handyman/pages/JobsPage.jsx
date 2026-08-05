@@ -1,13 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getOpenJobs, acceptJob, declineJob, submitQuote } from '@/services/jobService';
+import { getUserProfile, updateUserProfile } from '@/services/userService';
+import { rankJobsForHandyman } from '@/utils/jobRanking';
+import { formatDistance } from '@/utils/distance';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { JobCardSkeleton } from '@/components/ui/Skeleton';
-import { MapPin, DollarSign, X, Briefcase, Wrench, Zap, User, FileText } from 'lucide-react';
+import { MapPin, DollarSign, X, Briefcase, Wrench, Zap, User, FileText, ToggleRight } from 'lucide-react';
 
 export default function JobsPage() {
   const { currentUser } = useAuth();
   const [jobs, setJobs] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [available, setAvailable] = useState(true);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [accepting, setAccepting] = useState(false);
@@ -17,25 +22,42 @@ export default function JobsPage() {
   const [quoteMsg, setQuoteMsg] = useState('');
   const [sending, setSending] = useState(false);
 
-  const fetch = async () => {
+  const fetch = useCallback(async () => {
     setLoading(true);
     try {
-      setJobs(await getOpenJobs());
+      const [open, prof] = await Promise.all([getOpenJobs(), currentUser ? getUserProfile(currentUser.uid) : Promise.resolve(null)]);
+      setJobs(open);
+      if (prof) {
+        setProfile(prof);
+        setAvailable(prof.available !== false);
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
+  }, [currentUser]);
+
+  useEffect(() => { const raf = requestAnimationFrame(() => fetch()); return () => cancelAnimationFrame(raf); }, [fetch]);
+
+  const goOnline = async () => {
+    if (!currentUser) return;
+    setAvailable(true);
+    try {
+      await updateUserProfile(currentUser.uid, { available: true });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  useEffect(() => { const raf = requestAnimationFrame(() => fetch()); return () => cancelAnimationFrame(raf); }, []);
-
   // Show general jobs plus any requests targeted directly at this handyman.
-  const visible = jobs
-    .filter((j) => !j.handymanId || j.handymanId === currentUser?.uid)
-    .sort((a, b) => (b.handymanId ? 1 : 0) - (a.handymanId ? 1 : 0));
+  const visible = jobs.filter((j) => !j.handymanId || j.handymanId === currentUser?.uid);
+  const ranked = rankJobsForHandyman(visible, profile);
 
-  const filtered = visible.filter((j) => j.title?.toLowerCase().includes(search.toLowerCase()) || j.description?.toLowerCase().includes(search.toLowerCase()));
+  const filtered = ranked.filter(({ job }) =>
+    job.title?.toLowerCase().includes(search.toLowerCase()) ||
+    job.description?.toLowerCase().includes(search.toLowerCase())
+  );
 
   const handleAccept = async () => {
     if (!selected || !currentUser) return;
@@ -95,6 +117,18 @@ export default function JobsPage() {
         <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search jobs..." className="w-full bg-transparent text-sm text-hc-ink outline-none placeholder:text-hc-caption" />
       </div>
 
+      {!available && (
+        <div className="flex flex-col items-start gap-3 rounded-xl border border-black/[0.07] bg-hc-tile px-4 py-3 sm:flex-row sm:items-center">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-hc-ink">You&apos;re offline</p>
+            <p className="text-xs text-hc-ink-2">Turn your availability on to get matched with new jobs.</p>
+          </div>
+          <button onClick={goOnline} className="inline-flex items-center gap-1.5 rounded-lg bg-hc-brand px-4 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong">
+            <ToggleRight size={14} /> Go online
+          </button>
+        </div>
+      )}
+
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (<JobCardSkeleton key={i} />))}
@@ -107,7 +141,7 @@ export default function JobsPage() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          {filtered.map((job) => (
+          {filtered.map(({ job, km, tradeMatch }) => (
             <motion.button
               key={job.id}
               layout
@@ -121,10 +155,13 @@ export default function JobsPage() {
                   </span>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-hc-ink">{job.title}</p>
-                    <p className="flex items-center gap-1 text-xs text-hc-caption mt-0.5"><MapPin size={10} /> {job.location || 'Nearby'}</p>
+                    <p className="flex items-center gap-1 text-xs text-hc-caption mt-0.5"><MapPin size={10} /> {km != null ? `${formatDistance(km)} away` : job.location || 'Nearby'}</p>
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">
+                  {tradeMatch && (
+                    <span className="rounded-full bg-hc-tint px-2 py-0.5 text-[10px] font-bold text-hc-tint-text">Trade match</span>
+                  )}
                   <span className="flex items-center gap-0.5 rounded-md bg-black/[0.06] px-2 py-0.5 text-xs font-semibold text-hc-ink-2">
                     <DollarSign size={11} /> {job.budget}
                   </span>
