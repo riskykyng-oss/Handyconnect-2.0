@@ -108,19 +108,21 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={handleClose}>
       <div className="flex max-h-[85vh] w-full max-w-md flex-col overflow-y-auto rounded-xl border border-black/[0.07] bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between gap-3 border-b border-gray-200/70 px-5 py-4 dark:border-gray-700">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-              <QrCode size={18} />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight text-hc-ink dark:text-white">Request Payment</h2>
-              <p className="mt-0.5 text-xs text-hc-caption dark:text-gray-400">{linkedJob?.title || 'Receive a payment'}</p>
-            </div>
-          </div>
-          <button onClick={handleClose} className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" aria-label="Close">
+        <div className="relative border-b border-gray-200/70 px-5 pb-5 pt-2 dark:border-gray-700">
+          <button
+            onClick={handleClose}
+            className="absolute right-4 top-3 rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+            aria-label="Close"
+          >
             <X size={18} />
           </button>
+          <div className="flex flex-col items-center pt-2">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-orange-100 bg-orange-50 text-orange-500 dark:border-orange-900/40 dark:bg-orange-500/10 dark:text-orange-400">
+              <QrCode size={26} />
+            </div>
+            <h2 className="text-xl font-semibold tracking-tight text-hc-ink dark:text-white">Request Payment</h2>
+            <p className="mt-2 text-sm text-hc-caption dark:text-gray-400">{linkedJob?.title || 'Receive a payment from a client'}</p>
+          </div>
         </div>
 
         {step === 'setup' && (
@@ -185,7 +187,7 @@ export default function RequestPaymentModal({ open, onClose, job = null }) {
         {step === 'active' && (
           <div className="p-6">
             <div className="rounded-xl border border-gray-200/80 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-800/60">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Payment QR</p>
+              <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Scan to Pay</p>
               <div className="mx-auto mt-4 flex w-fit items-center justify-center rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
                 <QRCodeCanvas value={token} size={216} level="M" includeMargin={false} />
               </div>
