@@ -3,11 +3,6 @@ import { motion } from 'framer-motion';
 import { subscribeProfessionals } from '@/services/userService';
 import StatCounter from './StatCounter';
 
-const PLACEHOLDERS = {
-  answered: 250,
-  reviews: 190,
-};
-
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
@@ -24,38 +19,34 @@ export default function StatsSection() {
   }, []);
 
   const stats = useMemo(() => {
-    const totalJobs = pros.reduce((sum, p) => sum + (typeof p.jobs === 'number' ? p.jobs : 0), 0);
-    return [
-      { key: 'pros', value: pros.length, label: 'Verified professionals' },
-      { key: 'jobs', value: totalJobs, label: 'Jobs completed' },
-      { key: 'answered', value: PLACEHOLDERS.answered, label: 'Questions answered', placeholder: true },
-      { key: 'reviews', value: PLACEHOLDERS.reviews, label: 'Real reviews left', placeholder: true },
-    ];
+    const rated = pros.filter((p) => typeof p.rating === 'number' && p.rating > 0);
+    const jobs = pros.reduce((sum, p) => sum + (typeof p.jobs === 'number' ? p.jobs : 0), 0);
+    const verified = pros.filter((p) => p.verified === true).length;
+    return {
+      rating: rated.length ? rated.reduce((a, b) => a + b.rating, 0) / rated.length : 0,
+      jobs,
+      pros: verified,
+    };
   }, [pros]);
 
+  if (!pros.length) return null;
+
+  const hasRating = stats.rating > 0;
+
   return (
-    <section className="py-14 lg:py-24">
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
-          <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-hc-brand">Marketplace stats</p>
-          <h2 className="mt-2 font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
-            A growing community you can count on.
-          </h2>
+    <section className="border-t border-hc-hairline py-12 sm:py-16 lg:py-20">
+      <div className="mx-auto flex max-w-4xl flex-col items-center gap-y-10 sm:flex-row sm:justify-center sm:gap-16 lg:gap-24">
+        {hasRating && (
+          <motion.div {...fadeUp}>
+            <StatCounter value={stats.rating} format={(v) => `${v.toFixed(1)} ★`} label="Average rating" />
+          </motion.div>
+        )}
+        <motion.div {...fadeUp} transition={{ delay: 0.08, duration: 0.5 }}>
+          <StatCounter value={stats.jobs} format={(v) => `${v.toLocaleString()}+`} label="Jobs completed" />
         </motion.div>
-
-        <motion.div
-          {...fadeUp}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="mt-10 grid grid-cols-2 gap-6 rounded-xl border-[0.5px] border-hc-hairline bg-white px-6 py-10 shadow-sm lg:grid-cols-4"
-        >
-          {stats.map((stat) => (
-            <StatCounter key={stat.key} value={stat.value} label={stat.label} format={(v) => `${v.toLocaleString()}+`} />
-          ))}
+        <motion.div {...fadeUp} transition={{ delay: 0.16, duration: 0.5 }}>
+          <StatCounter value={stats.pros} format={(v) => `${v.toLocaleString()}+`} label="Verified professionals" />
         </motion.div>
-
-        <p className="mt-4 text-center text-[13px] text-hc-ink-3">
-          Live counts update automatically; a couple of figures are illustrative until the community grows.
-        </p>
       </div>
     </section>
   );

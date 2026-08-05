@@ -7,6 +7,7 @@ import AuthLayout from '@/app/layouts/AuthLayout';
 import ClientLayout from '@/app/layouts/ClientLayout';
 import HandymanLayout from '@/app/layouts/HandymanLayout';
 import AdminLayout from '@/app/layouts/AdminLayout';
+import CommunityLayout from '@/app/layouts/CommunityLayout';
 import ProtectedRoute from '@/app/router/ProtectedRoute';
 import RoleLayout from '@/app/router/RoleLayout';
 import { PageSkeleton } from '@/components/ui/Skeleton';
@@ -81,10 +82,13 @@ function App() {
             
             <Route path="/auth/select-role" element={<RoleSelectionPage />} />
 
-            {/* Shared Community route — personalized per role (must sit outside role branches) */}
+            {/* Public community feed — guests can browse, members get their role shell */}
+            <Route element={<CommunityLayout />}>
+              <Route path="/community" element={<CommunityPage />} />
+            </Route>
+
             <Route element={<ProtectedRoute allowedRoles={['client', 'handyman']} />}>
               <Route element={<RoleLayout />}>
-                <Route path="/community" element={<CommunityPage />} />
                 <Route path="/community/groups/:groupId" element={<GroupPage />} />
               </Route>
             </Route>

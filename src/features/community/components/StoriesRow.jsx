@@ -9,7 +9,7 @@ function StoryAvatar({ s }) {
     return <img src={src} alt={s.name} className="h-[72px] w-[72px] rounded-full object-cover" />;
   }
   return (
-    <div className="grid h-[72px] w-[72px] place-items-center rounded-full bg-gray-100 text-2xl font-bold text-gray-500">
+    <div className="grid h-[72px] w-[72px] place-items-center rounded-full bg-hc-tile text-2xl font-bold text-hc-ink-3">
       {(s.name || '?').charAt(0).toUpperCase()}
     </div>
   );
@@ -20,7 +20,7 @@ export default function StoriesRow({ stories = [], currentUserId, onOpen, onAddS
   const myStory = stories.find((s) => s.authorId && s.authorId === currentUserId);
   const others = stories.filter((s) => !s.authorId || s.authorId !== currentUserId);
 
-  const ringClass = (expired) => (expired ? 'bg-gray-200 opacity-60' : 'ring-2 ring-black/[0.06]');
+  const ringClass = (expired) => (expired ? 'bg-black/[0.08] opacity-60' : 'ring-2 ring-black/[0.06]');
 
   return (
     <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
@@ -51,7 +51,7 @@ export default function StoriesRow({ stories = [], currentUserId, onOpen, onAddS
         </div>
       ) : (
         <button onClick={onAddStory} className="flex shrink-0 flex-col items-center gap-2">
-          <span className="grid h-[72px] w-[72px] place-items-center rounded-full border-2 border-dashed border-gray-300 bg-white text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-600 dark:border-gray-600 dark:bg-gray-800">
+          <span className="grid h-[72px] w-[72px] place-items-center rounded-full border-2 border-dashed border-black/[0.15] bg-white text-hc-ink-3 transition-colors hover:border-black/[0.3] hover:text-hc-ink-2 dark:border-gray-600 dark:bg-gray-800">
             <Plus size={24} />
           </span>
           <span className="text-xs font-medium text-hc-ink-2 dark:text-gray-300">Your story</span>

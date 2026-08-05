@@ -38,7 +38,7 @@ export default function ChatInput({ onSend, loading }) {
   };
 
   return (
-    <form onSubmit={handleSend} className="border-t border-gray-200 bg-white px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] dark:border-gray-700 dark:bg-gray-800">
+    <form onSubmit={handleSend} className="border-t border-black/[0.08] bg-white px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] dark:border-gray-700 dark:bg-gray-800">
       {file && (
         <div className="mb-2 flex items-center gap-2 rounded-xl bg-gray-50 px-3 py-2 text-xs text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
           {file.type.startsWith('image/') ? '📷' : file.type.startsWith('audio/') ? '🎤' : '📎'}
@@ -73,15 +73,15 @@ export default function ChatInput({ onSend, loading }) {
           placeholder={recording ? 'Recording...' : locationMode ? 'Add a note with your location...' : 'Type a message...'}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-[16px] outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 md:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          className="flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-[16px] outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
           disabled={recording}
         />
         <button
           type="submit"
           disabled={(!text.trim() && !file && !locationMode) || loading}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-hc-brand text-white shadow-sm transition-all hover:bg-hc-brand-strong disabled:opacity-50"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-hc-brand text-white shadow-sm transition-all hover:bg-hc-brand-strong disabled:opacity-50"
         >
-          {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+          {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={19} />}
         </button>
       </div>
     </form>

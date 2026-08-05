@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { LayoutDashboard, Users, Briefcase, LogOut, Menu, X, Search, Bell, MessageSquare, Scale, BadgeCheck, Wallet } from 'lucide-react';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 
 export default function AdminLayout() {
   const { currentUser, logout } = useAuth();
@@ -88,17 +87,17 @@ export default function AdminLayout() {
       {/* Main column */}
       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
-          <button className="md:hidden text-gray-900 dark:text-gray-100 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-black/[0.08] bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
+          <button className="md:hidden text-hc-ink dark:text-gray-100 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
             <Menu size={22} />
           </button>
 
           <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-gray-100 rounded-full px-4 py-2.5">
-            <Search size={17} className="text-gray-400" />
+            <Search size={17} className="text-hc-ink-3 dark:text-gray-400" />
             <input
               type="text"
               placeholder="Search users, jobs, reports..."
-              className="w-full bg-transparent outline-none text-sm text-gray-900 placeholder:text-gray-400"
+              className="w-full bg-transparent outline-none text-sm text-hc-ink placeholder:text-hc-ink-3 dark:text-gray-100 dark:placeholder:text-gray-500"
             />
           </div>
 
@@ -107,10 +106,9 @@ export default function AdminLayout() {
           </span>
 
           <div className="flex items-center gap-2 ml-auto">
-            <ThemeToggle />
             <button className="relative w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
-              <Bell size={19} className="text-gray-700" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#F97316] rounded-full" />
+              <Bell size={19} className="text-hc-ink-2" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-hc-brand rounded-full" />
             </button>
             <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
               {currentUser?.email?.[0]?.toUpperCase()}

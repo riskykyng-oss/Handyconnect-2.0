@@ -16,23 +16,25 @@ export default function ProfessionalsSection() {
   const [pros, setPros] = useState([]);
 
   useEffect(() => {
-    const unsub = subscribeProfessionals((list) => setPros(list.slice(0, 6)));
+    const unsub = subscribeProfessionals((list) => setPros(list.slice(0, 4)));
     return unsub;
   }, []);
 
   return (
-    <section id="professionals" className="py-14 lg:py-24">
+    <section id="professionals" className="scroll-mt-20 border-t border-hc-hairline py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <motion.div {...fadeUp} className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-hc-brand">Featured professionals</p>
-            <h2 className="mt-2 font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
-              Meet the people who care for local homes.
+            <h2 className="font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
+              Top Rated Professionals
             </h2>
+            <p className="mt-3 text-base leading-7 text-hc-ink-2">
+              The highest rated pros, trusted by homeowners near you.
+            </p>
           </div>
           <Link
             to="/client/explore"
-            className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-hc-brand transition-colors hover:text-hc-brand-strong"
+            className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-hc-ink-2 transition-colors hover:text-hc-brand"
           >
             Browse all pros <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -47,7 +49,7 @@ export default function ProfessionalsSection() {
             </p>
           </div>
         ) : (
-          <div className="mt-8 flex snap-x gap-4 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
             {pros.map((pro, i) => (
               <motion.div
                 key={pro.id || i}

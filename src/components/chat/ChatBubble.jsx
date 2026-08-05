@@ -5,8 +5,8 @@ import VoicePlayer from './VoicePlayer';
 function ReadReceipt({ read, isOwn }) {
   if (!isOwn) return null;
   return (
-    <span className="ml-1 inline-flex">
-      {read ? <CheckCheck size={13} className="text-emerald-500" /> : <Check size={13} className="text-gray-400" />}
+    <span className="inline-flex shrink-0">
+      {read ? <CheckCheck size={15} className="text-emerald-400" /> : <Check size={15} className="text-white/70" />}
     </span>
   );
 }
@@ -14,7 +14,7 @@ function ReadReceipt({ read, isOwn }) {
 function TimeBadge({ date }) {
   if (!date) return null;
   return (
-    <span className="text-[10px] text-gray-400">
+    <span className="shrink-0 text-[11px] font-medium leading-none opacity-80">
       {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
     </span>
   );
@@ -25,17 +25,17 @@ export default function ChatBubble({ message, isOwn }) {
   const m = message;
   const type = m.type || 'text';
 
-  const bubbleBase = 'max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm break-words';
+  const bubbleBase = 'max-w-[82%] rounded-[20px] px-4 py-3 shadow-sm break-words';
   const bubbleStyle = isOwn
-    ? 'bg-hc-brand text-white rounded-br-sm'
-    : 'bg-gray-100 text-hc-ink rounded-bl-sm dark:bg-gray-700 dark:text-gray-100';
+    ? 'bg-hc-brand text-white rounded-br-[6px]'
+    : 'bg-gray-100 text-hc-ink rounded-bl-[6px] dark:bg-gray-700 dark:text-gray-100';
 
   return (
-    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-2.5`}>
+    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-3`}>
       <div className={`${bubbleBase} ${bubbleStyle}`}>
         {/* Image message */}
         {type === 'image' && m.attachment?.url && (
-          <div className="mb-1.5 -mx-4 -mt-2.5 overflow-hidden rounded-t-2xl">
+          <div className="-mx-4 -mt-3 mb-2 overflow-hidden rounded-t-[20px]">
             {!imgLoaded && <div className="h-48 w-full animate-pulse bg-gray-200 dark:bg-gray-600" />}
             <img
               src={m.attachment.url}
@@ -47,9 +47,9 @@ export default function ChatBubble({ message, isOwn }) {
         )}
         {/* Voice message */}
         {type === 'voice' && m.attachment?.url && (
-          <div className="mb-1.5 min-w-[180px]">
-            <div className="mb-1 flex items-center gap-1.5 text-[11px] opacity-70">
-              <Mic size={12} />
+          <div className="mb-2 min-w-[200px]">
+            <div className="mb-1.5 flex items-center gap-1.5 text-xs opacity-75">
+              <Mic size={14} />
               <span>Voice note</span>
             </div>
             <VoicePlayer src={m.attachment.url} duration={m.attachment.duration} />
@@ -57,9 +57,9 @@ export default function ChatBubble({ message, isOwn }) {
         )}
         {/* Location message */}
         {type === 'location' && m.location && (
-          <div className="mb-1.5 overflow-hidden rounded-xl bg-white/10">
-            <div className="flex items-center gap-2 p-2 text-sm">
-              <MapPin size={16} />
+          <div className="mb-2 overflow-hidden rounded-xl bg-white/10">
+            <div className="flex items-center gap-2 p-2.5 text-sm">
+              <MapPin size={17} />
               <span className="font-medium">Shared location</span>
             </div>
             <a
@@ -73,16 +73,16 @@ export default function ChatBubble({ message, isOwn }) {
           </div>
         )}
         {/* Text content */}
-        {m.text && <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">{m.text}</p>}
+        {m.text && <p className="whitespace-pre-wrap break-words text-[15px] leading-[1.5]">{m.text}</p>}
         {/* Reply reference */}
         {m.replyTo && (
-          <div className={`mt-1.5 rounded-lg border-l-4 ${isOwn ? 'border-white/40 bg-white/10' : 'border-gray-300 bg-white/50'} px-2 py-1 text-xs opacity-70`}>
+          <div className={`mt-2 rounded-lg border-l-4 ${isOwn ? 'border-white/40 bg-white/10' : 'border-gray-300 bg-white/50'} px-2.5 py-1.5 text-xs opacity-75`}>
             <p className="font-semibold">{m.replyTo.senderName}</p>
             <p className="truncate">{m.replyTo.text}</p>
           </div>
         )}
         {/* Footer */}
-        <div className={`mt-1 flex items-end justify-end gap-1 ${isOwn ? 'text-white/70' : 'text-hc-ink-3'}`}>
+        <div className={`mt-1.5 flex items-end justify-end gap-1 ${isOwn ? 'text-white/80' : 'text-hc-ink-3'}`}>
           <TimeBadge date={m.createdAt} />
           <ReadReceipt read={m.read} isOwn={isOwn} />
         </div>

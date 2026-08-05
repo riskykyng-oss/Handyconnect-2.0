@@ -94,7 +94,7 @@ export default function ConversationItem({ conversation, currentUserId, onClick,
         <div className="flex items-center justify-between gap-2">
           <h3 className={`flex min-w-0 items-center gap-1 truncate ${unread > 0 ? 'font-bold' : 'font-semibold'} text-hc-ink dark:text-gray-100`}>
             <span className="truncate">{partner?.displayName || 'Loading...'}</span>
-            {partner?.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
+            {partner?.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
           </h3>
           <span className="shrink-0 text-[11px] text-hc-ink-3">{formatTime(lastMsg?.createdAt)}</span>
         </div>

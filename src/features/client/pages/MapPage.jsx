@@ -195,7 +195,7 @@ export default function MapPage() {
                   <div className="min-w-0 flex-1">
                     <p className="flex items-center gap-1 truncate text-sm font-semibold text-hc-ink">
                       {selected.name}
-                      {selected.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
+                      {selected.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
                     </p>
                     <p className="truncate text-xs text-hc-caption">{selected.role}</p>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-hc-ink-2">
@@ -295,7 +295,7 @@ export default function MapPage() {
                 <div className="min-w-0 flex-1">
                   <p className="flex items-center gap-1 truncate text-sm font-semibold text-hc-ink">
                     {pro.name}
-                    {pro.verified && <BadgeCheck size={13} className="shrink-0 fill-hc-brand text-white" />}
+                    {pro.verified && <BadgeCheck size={13} className="shrink-0 fill-hc-accent text-white" />}
                   </p>
                   <p className="truncate text-xs text-hc-caption">{pro.role}</p>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-hc-ink-2">

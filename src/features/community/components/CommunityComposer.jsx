@@ -119,7 +119,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
       </div>
 
       {group && (
-        <div className="mb-3 flex items-center gap-2 rounded-xl bg-gray-100 px-3 py-2 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
+        <div className="mb-3 flex items-center gap-2 rounded-xl bg-hc-tile px-3 py-2 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
           Posting to the <span className="underline">"{group.name}"</span> group
         </div>
       )}
@@ -130,7 +130,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
             <input
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+              className="w-full rounded-xl border border-black/[0.12] bg-white px-3 py-2.5 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
               placeholder="Ask a question… e.g. Which kitchen design do you prefer?"
             />
             {options.map((o, i) => (
@@ -138,7 +138,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
                 <input
                   value={o}
                   onChange={(e) => setOption(i, e.target.value)}
-                  className="min-w-0 flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                  className="min-w-0 flex-1 rounded-xl border border-black/[0.12] bg-white px-3 py-2 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                   placeholder={`Option ${i + 1}`}
                 />
                 {options.length > 2 && (
@@ -179,7 +179,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
             key={p}
             type="button"
             onClick={() => setText(text ? `${text} ${p}` : p)}
-            className="mr-2 mt-2 inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
+            className="mr-2 mt-2 inline-block rounded-full bg-hc-tile px-3 py-1 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
           >
             {p}
           </button>
@@ -191,7 +191,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
             <select
               value={type}
               onChange={(e) => { setType(e.target.value); if (e.target.value === 'beforeafter') setBaMode(true); }}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              className="rounded-xl border border-black/[0.12] bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
             >
               <option value="project">Project</option>
               <option value="beforeafter">Before & After</option>
@@ -201,7 +201,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
             <select
               value={trade}
               onChange={(e) => setTrade(e.target.value)}
-              className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              className="rounded-xl border border-black/[0.12] bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
             >
               <option value="">Select trade</option>
               {JOB_CATEGORIES.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -210,7 +210,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
               <input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="w-full rounded-xl border border-black/[0.12] bg-white px-3 py-2 text-sm text-hc-ink-2 outline-none transition-colors focus:border-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 placeholder="Area e.g. Borrowdale"
               />
             </div>
@@ -222,7 +222,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
         )}
 
         {/* Media area */}
-        <div className={`mt-5 flex flex-wrap items-center justify-between gap-2 ${showFull ? 'border-t border-gray-100 pt-4' : 'pt-1'}`}>
+        <div className={`mt-5 flex flex-wrap items-center justify-between gap-2 ${showFull ? 'border-t border-black/[0.06] pt-4' : 'pt-1'}`}>
           <div className="flex flex-wrap items-center gap-1">
             <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100 hover:text-hc-ink">
               <Images size={17} /> Photo
@@ -255,21 +255,21 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
         </div>
 
         {image && (
-          <div className="mt-3 flex items-center gap-3 rounded-xl bg-gray-50 p-2 dark:bg-gray-700">
+          <div className="mt-3 flex items-center gap-3 rounded-xl bg-hc-page p-2 dark:bg-gray-700">
             <img src={URL.createObjectURL(image)} alt="Attachment preview" className="h-14 w-14 rounded-lg object-cover" />
             <p className="min-w-0 flex-1 truncate text-xs text-hc-ink-2 dark:text-gray-300">{image.name}</p>
-            <button type="button" onClick={() => setImage(null)} className="rounded-lg p-1 text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"><X size={15} /></button>
+            <button type="button" onClick={() => setImage(null)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-gray-200 dark:hover:bg-gray-600"><X size={15} /></button>
           </div>
         )}
 
         {baMode && (
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <label className="cursor-pointer rounded-xl border border-dashed border-gray-300 p-3 text-center text-xs font-semibold text-hc-ink-2 transition-colors hover:border-gray-400 hover:text-gray-600 dark:border-gray-600">
+            <label className="cursor-pointer rounded-xl border border-dashed border-black/[0.15] p-3 text-center text-xs font-semibold text-hc-ink-2 transition-colors hover:border-black/[0.3] hover:text-hc-ink-2 dark:border-gray-600">
               {beforeImage ? <img src={URL.createObjectURL(beforeImage)} alt="Before" className="mx-auto mb-1 h-20 w-full rounded-lg object-cover" /> : <Camera size={18} className="mx-auto mb-1" />}
               {beforeImage ? 'Change before photo' : 'Upload BEFORE'}
               <input type="file" accept="image/*" onChange={(e) => setBeforeImage(e.target.files?.[0])} className="hidden" />
             </label>
-            <label className="cursor-pointer rounded-xl border border-dashed border-gray-300 p-3 text-center text-xs font-semibold text-hc-ink-2 transition-colors hover:border-gray-400 hover:text-gray-600 dark:border-gray-600">
+            <label className="cursor-pointer rounded-xl border border-dashed border-black/[0.15] p-3 text-center text-xs font-semibold text-hc-ink-2 transition-colors hover:border-black/[0.3] hover:text-hc-ink-2 dark:border-gray-600">
               {afterImage ? <img src={URL.createObjectURL(afterImage)} alt="After" className="mx-auto mb-1 h-20 w-full rounded-lg object-cover" /> : <Camera size={18} className="mx-auto mb-1" />}
               {afterImage ? 'Change after photo' : 'Upload AFTER'}
               <input type="file" accept="image/*" onChange={(e) => setAfterImage(e.target.files?.[0])} className="hidden" />

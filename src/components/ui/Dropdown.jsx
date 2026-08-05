@@ -8,7 +8,7 @@ export default function Dropdown({ trigger, children, align = 'right' }) {
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, []);
-  return <div ref={ref} className="relative inline-block"><div onClick={() => setOpen(!open)}>{trigger}</div>{open && <div className={`absolute z-40 mt-2 min-w-48 rounded-xl border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800 ${align === 'right' ? 'right-0' : 'left-0'}`} onClick={() => setOpen(false)}>{children}</div>}</div>;
+  return <div ref={ref} className="relative inline-block"><div onClick={() => setOpen(!open)}>{trigger}</div>{open && <div className={`absolute z-40 mt-2 min-w-48 rounded-xl border border-black/[0.07] bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800 ${align === 'right' ? 'right-0' : 'left-0'}`} onClick={() => setOpen(false)}>{children}</div>}</div>;
 }
 
 export function DropdownItem({ children, className = '', ...props }) {

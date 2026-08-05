@@ -1,11 +1,11 @@
 
 export const Skeleton = ({ className = '' }) => (
-  <div aria-hidden="true" className={`animate-pulse rounded-xl bg-gray-200 dark:bg-gray-700 ${className}`}></div>
+  <div aria-hidden="true" className={`animate-pulse rounded-xl bg-black/[0.06] dark:bg-white/10 ${className}`}></div>
 );
 
 // A specific skeleton for Job Cards
 export const JobCardSkeleton = () => (
-  <div className="flex flex-col justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+  <div className="flex flex-col justify-between rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
     <div>
       <div className="flex justify-between mb-3">
         <Skeleton className="w-2/3 h-6" />
@@ -40,7 +40,7 @@ export const PageSkeleton = () => (
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className={`rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 ${
+            className={`rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 ${
               i === 2 ? 'sm:col-span-2' : ''
             }`}
           >

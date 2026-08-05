@@ -11,11 +11,11 @@ const fadeUp = {
 
 export default function CTASection() {
   return (
-    <section className="py-24">
+    <section className="border-t border-hc-hairline py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <motion.div
           {...fadeUp}
-          className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-orange-500 via-orange-600 to-rose-600 px-8 py-16 text-center shadow-2xl shadow-orange-500/30 sm:px-16 sm:py-20"
+          className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-hc-brand via-hc-brand to-hc-brand-strong px-8 py-14 text-center shadow-2xl shadow-hc-brand/30 sm:px-16 sm:py-16"
         >
           {/* Animated orbs */}
           <motion.div
@@ -26,35 +26,30 @@ export default function CTASection() {
           <motion.div
             animate={{ x: [0, -15, 0], y: [0, 20, 0] }}
             transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -bottom-24 -right-8 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl"
-          />
-          <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-1/3 top-1/4 h-40 w-40 rounded-full bg-rose-300/15 blur-2xl"
+            className="absolute -bottom-24 -right-8 h-72 w-72 rounded-full bg-white/10 blur-3xl"
           />
 
           <div className="relative">
-            <h2 className="mx-auto max-w-3xl font-display text-4xl font-extrabold tracking-[-0.03em] text-white sm:text-5xl">
+            <h2 className="mx-auto max-w-3xl font-display text-4xl font-medium tracking-tight text-white sm:text-5xl">
               The right person for the job is{' '}
               <span className="text-orange-200">waiting.</span>
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-lg text-orange-100">
+            <p className="mx-auto mt-5 max-w-xl text-lg text-white/85">
               Join the easier way to care for your home.
             </p>
             <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="mt-9 inline-block"
+              className="mt-9 block sm:inline-block"
             >
               <Link
                 to="/auth/signup"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-base font-bold text-orange-600 shadow-xl transition-all hover:bg-orange-50 hover:shadow-2xl"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-base font-medium text-hc-brand shadow-xl transition-all hover:bg-orange-50 hover:shadow-2xl sm:w-auto"
               >
                 Create your free account <ArrowRight size={18} />
               </Link>
             </motion.div>
-            <p className="mt-5 text-xs text-orange-200/80">No credit card required. Free to join.</p>
+            <p className="mt-5 text-xs text-white/70">No credit card required. Free to join.</p>
           </div>
         </motion.div>
       </div>

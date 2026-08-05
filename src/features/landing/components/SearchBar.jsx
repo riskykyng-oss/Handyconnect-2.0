@@ -24,7 +24,7 @@ export default function SearchBar({ initialQuery = '' }) {
       role="search"
       className="flex w-full max-w-2xl flex-col overflow-hidden rounded-full border-[0.5px] border-hc-hairline bg-white shadow-lg shadow-hc-ink/5 sm:flex-row sm:items-stretch"
     >
-      <label className="flex min-w-0 flex-1 items-center gap-3 px-5 py-3.5">
+      <label className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 sm:px-5 sm:py-3.5">
         <Search size={19} className="shrink-0 text-hc-brand" />
         <input
           type="search"
@@ -38,7 +38,7 @@ export default function SearchBar({ initialQuery = '' }) {
 
       <div className="hidden w-px bg-hc-hairline sm:block" />
 
-      <label className="flex items-center gap-2 px-5 py-3.5">
+      <label className="flex items-center gap-2 px-4 py-3 sm:px-5 sm:py-3.5">
         <MapPin size={17} className="shrink-0 text-hc-brand" />
         <select
           aria-label="Location"
@@ -57,7 +57,7 @@ export default function SearchBar({ initialQuery = '' }) {
       <div className="p-2 sm:p-1.5">
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-hc-brand px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-hc-brand-strong sm:h-full"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-hc-brand px-6 py-3 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md hover:shadow-hc-brand/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98] sm:h-full"
         >
           Search <ArrowRight size={16} />
         </button>

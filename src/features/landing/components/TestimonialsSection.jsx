@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { testimonials } from '../data/landingData';
 
 const fadeUp = {
@@ -11,25 +11,18 @@ const fadeUp = {
 
 export default function TestimonialsSection() {
   return (
-    <section className="relative py-24">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{ x: [0, 30, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -left-40 top-1/2 h-[350px] w-[350px] rounded-full bg-gradient-to-r from-orange-200/15 to-amber-200/10 blur-[100px]"
-        />
-      </div>
-
+    <section className="border-t border-hc-hairline bg-white py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <motion.div {...fadeUp} className="text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.12em] text-orange-600">Loved locally</p>
-          <h2 className="mt-3 font-display text-4xl font-extrabold tracking-[-0.03em] text-gray-900">
-            The feeling is{' '}
-            <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">mutual.</span>
+        <motion.div {...fadeUp} className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
+            Hear from homeowners.
           </h2>
+          <p className="mt-3 text-base leading-7 text-hc-ink-2">
+            Real words from people who used HandyConnect.
+          </p>
         </motion.div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-6 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
           {testimonials.map((t, i) => (
             <motion.figure
               key={t.name}
@@ -37,22 +30,19 @@ export default function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06, duration: 0.45 }}
-              className="relative rounded-3xl border border-gray-200/80 bg-white/60 p-7 shadow-sm backdrop-blur-sm transition-all hover:shadow-lg hover:-translate-y-0.5"
+              className="rounded-xl border border-hc-hairline bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="absolute right-6 top-6 text-orange-200/50">
-                <Quote size={32} />
-              </div>
-              <div className="flex gap-1 text-orange-400">
+              <div className="flex gap-1 text-hc-brand">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <Star key={n} className="fill-current" size={14} />
                 ))}
               </div>
-              <blockquote className="mt-5 font-display text-base font-bold leading-7 text-gray-900">
+              <blockquote className="mt-4 text-base font-medium leading-7 text-hc-ink">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
-              <figcaption className="mt-6 text-sm">
-                <p className="font-bold text-gray-900">{t.name}</p>
-                <p className="mt-0.5 text-gray-500">{t.role}</p>
+              <figcaption className="mt-5 border-t border-hc-hairline pt-4 text-sm">
+                <p className="font-medium text-hc-ink">{t.name}</p>
+                <p className="mt-0.5 text-hc-ink-2">{t.role}</p>
               </figcaption>
             </motion.figure>
           ))}

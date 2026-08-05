@@ -75,11 +75,11 @@ export default function ClientLayout() {
   const renderSidebar = () => (
     <>
       <Link to="/client/home" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2 px-6 pt-8 pb-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-500 text-sm font-extrabold text-white shadow-lg shadow-orange-500/20">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-hc-brand text-sm font-extrabold text-white">
           HC
         </div>
-        <span className="font-display text-xl font-extrabold tracking-tight text-gray-900">
-          Handy<span className="text-orange-500">Connect</span>
+        <span className="font-display text-xl font-extrabold tracking-tight text-hc-ink">
+          Handy<span className="text-hc-brand">Connect</span>
         </span>
       </Link>
 
@@ -93,8 +93,8 @@ export default function ClientLayout() {
               onClick={() => setDrawerOpen(false)}
               className={`group relative flex min-h-11 items-center gap-3 rounded-xl border-l-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                 active
-                  ? 'border-hc-brand bg-hc-tint text-hc-brand'
-                  : 'border-transparent text-gray-600 hover:bg-orange-50/70 hover:text-hc-brand'
+                  ? 'border-hc-brand bg-white text-hc-ink shadow-sm'
+                  : 'border-transparent text-gray-600 hover:bg-white/70 hover:text-hc-ink'
               }`}
             >
               <item.icon
@@ -111,7 +111,7 @@ export default function ClientLayout() {
           );
         })}
 
-        <div className="my-3 border-t border-gray-300/60" />
+        <div className="my-3 border-t border-hc-hairline" />
 
         {sidebarSecondary.map((item) => {
           const active = location.pathname === item.path;
@@ -122,8 +122,8 @@ export default function ClientLayout() {
               onClick={() => setDrawerOpen(false)}
               className={`group flex min-h-11 items-center gap-3 rounded-xl border-l-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                 active
-                  ? 'border-hc-brand bg-hc-tint text-hc-brand'
-                  : 'border-transparent text-gray-600 hover:bg-orange-50/70 hover:text-hc-brand'
+                  ? 'border-hc-brand bg-white text-hc-ink shadow-sm'
+                  : 'border-transparent text-gray-600 hover:bg-white/70 hover:text-hc-ink'
               }`}
             >
               <item.icon
@@ -137,17 +137,17 @@ export default function ClientLayout() {
       </nav>
 
       {/* User Profile Section */}
-      <div className="border-t border-gray-300/60 px-4 py-4">
+      <div className="border-t border-hc-hairline px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gray-400 text-sm font-bold text-white">
               {avatar}
             </div>
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#F3F4F6] bg-green-500" />
+            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-hc-tile bg-green-500" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-gray-900">{currentUser?.displayName || currentUser?.email}</p>
-            <p className="text-xs text-gray-500">Client</p>
+            <p className="truncate text-sm font-semibold text-hc-ink">{currentUser?.displayName || currentUser?.email}</p>
+            <p className="text-xs text-hc-ink-2">Client</p>
           </div>
           <button
             onClick={handleLogout}
@@ -162,10 +162,10 @@ export default function ClientLayout() {
   );
 
   return (
-    <div className="flex min-h-screen justify-center bg-[#F2F0EB] font-sans text-hc-ink">
+    <div className="flex min-h-screen justify-center bg-hc-page font-sans text-hc-ink">
       <div className="flex w-full max-w-[1500px]">
         {/* Sidebar (Desktop >=1024px) — 280px */}
-        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-black/[0.07] bg-[#F3F4F6] lg:flex">
+        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-hc-hairline bg-hc-tile lg:flex">
           {renderSidebar()}
         </aside>
 
@@ -173,7 +173,7 @@ export default function ClientLayout() {
         {drawerOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-            <aside className="absolute left-0 top-0 h-full w-[280px] overflow-y-auto border-r border-black/[0.07] bg-[#F3F4F6] shadow-xl">
+            <aside className="absolute left-0 top-0 h-full w-[280px] overflow-y-auto border-r border-hc-hairline bg-hc-tile shadow-xl">
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
@@ -189,7 +189,7 @@ export default function ClientLayout() {
         {/* Main Content */}
         <main className={`flex min-w-0 flex-1 flex-col bg-white md:pb-0 lg:h-screen lg:overflow-y-auto ${isChatPage ? 'pb-0' : 'pb-[calc(6rem+env(safe-area-inset-bottom))]'}`}>
           {/* Top Bar (Tablet 768-1023px) */}
-          <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur-md md:flex lg:hidden">
+          <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-hc-hairline bg-white/80 px-4 py-3 backdrop-blur-md md:flex lg:hidden">
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
@@ -198,11 +198,11 @@ export default function ClientLayout() {
               <Menu size={22} />
             </button>
             <Link to="/client/home" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-extrabold text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-hc-brand text-xs font-extrabold text-white">
                 HC
               </div>
-              <span className="font-display text-base font-extrabold tracking-tight text-gray-900">
-                Handy<span className="text-orange-500">Connect</span>
+              <span className="font-display text-base font-extrabold tracking-tight text-hc-ink">
+                Handy<span className="text-hc-brand">Connect</span>
               </span>
             </Link>
             <div className="flex-1" />
@@ -211,9 +211,9 @@ export default function ClientLayout() {
               onClick={() => navigate('/client/messages')}
               className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
             >
-              <MessageSquare size={20} className="text-gray-700" />
+              <MessageSquare size={20} className="text-hc-ink-2" />
               {!!unreadMessages && (
-                <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
+                <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
                   {unreadMessages}
                 </span>
               )}
@@ -221,11 +221,11 @@ export default function ClientLayout() {
           </div>
 
           {/* Top Bar (Desktop >=1024px) */}
-          <div className="sticky top-0 z-30 hidden border-b border-gray-200 bg-white/80 backdrop-blur-md lg:flex items-center justify-between gap-4 px-8 py-4">
+          <div className="sticky top-0 z-30 hidden border-b border-hc-hairline bg-white/80 backdrop-blur-md lg:flex items-center justify-between gap-4 px-8 py-4">
             <div className="flex-1" />
 
-            <button className="flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-200">
-              <MapPin size={16} className="text-orange-500" /> Harare, Zimbabwe
+            <button className="flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200">
+              <MapPin size={16} className="text-hc-ink-3" /> Harare, Zimbabwe
             </button>
 
             <div className="flex items-center gap-2">
@@ -234,9 +234,9 @@ export default function ClientLayout() {
                 onClick={() => navigate('/client/messages')}
                 className="relative rounded-full bg-gray-100 p-2.5 transition-colors hover:bg-gray-200"
               >
-                <MessageSquare size={18} className="text-gray-700" />
+                <MessageSquare size={18} className="text-hc-ink-2" />
                 {!!unreadMessages && (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
                     {unreadMessages}
                   </span>
                 )}
@@ -248,43 +248,43 @@ export default function ClientLayout() {
                   onClick={() => setNotifOpen((o) => !o)}
                   className="relative rounded-full bg-gray-100 p-2.5 transition-colors hover:bg-gray-200"
                 >
-                  <Bell size={18} className="text-gray-700" />
+                  <Bell size={18} className="text-hc-ink-2" />
                   {!!unreadCount && (
-                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-500 px-1 text-[9px] font-bold text-white">
+                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
                       {unreadCount}
                     </span>
                   )}
                 </button>
 
                 {notifOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-gray-200 bg-white py-3 shadow-lg z-50">
-                    <div className="flex items-center justify-between px-4 pb-2 border-b border-gray-100">
-                      <p className="text-xs font-bold text-gray-900">Notifications</p>
+                  <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-hc-hairline bg-white py-3 shadow-lg z-50">
+                    <div className="flex items-center justify-between px-4 pb-2 border-b border-hc-hairline">
+                      <p className="text-xs font-bold text-hc-ink">Notifications</p>
                       {unreadCount > 0 && (
-                        <button onClick={() => markAllNotificationsRead(currentUser.uid)} className="text-[10px] font-semibold text-orange-500 hover:underline">
+                        <button onClick={() => markAllNotificationsRead(currentUser.uid)} className="text-[10px] font-semibold text-hc-brand hover:underline">
                           Mark all read
                         </button>
                       )}
                     </div>
                     <div className="px-2 pt-2 space-y-1 max-h-80 overflow-y-auto">
                       {!notifications.length && (
-                        <p className="py-6 text-center text-xs text-gray-400">No notifications yet</p>
+                        <p className="py-6 text-center text-xs text-hc-ink-3">No notifications yet</p>
                       )}
                       {notifications.slice(0, 8).map((n) => (
                         <div
                           key={n.id}
                           onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
-                          className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-orange-50/50' : ''}`}
+                          className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
                         >
-                          <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-gray-200' : 'bg-orange-500'}`} />
+                          <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-hc-hairline' : 'bg-hc-brand'}`} />
                           <div className="min-w-0">
-                            <p className="text-sm text-gray-700">{n.data?.text || n.type}</p>
-                            <p className="text-[10px] text-gray-400">{timeAgo(n.createdAt)}</p>
+                            <p className="text-sm text-hc-ink-2">{n.data?.text || n.type}</p>
+                            <p className="text-[10px] text-hc-ink-3">{timeAgo(n.createdAt)}</p>
                           </div>
                         </div>
                       ))}
                     </div>
-                    <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-gray-500 py-2 hover:bg-gray-50 rounded-b-xl">
+                    <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
                       View all notifications
                     </button>
                   </div>
@@ -299,15 +299,15 @@ export default function ClientLayout() {
                   <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gray-800 text-xs font-bold text-white">
                     {avatar}
                   </div>
-                  <ChevronDown size={14} className={`text-gray-500 transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={14} className={`text-hc-ink-3 transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {profileOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-gray-200 bg-white py-2 shadow-lg z-50">
-                    <Link to="/client/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-hc-hairline bg-white py-2 shadow-lg z-50">
+                    <Link to="/client/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-hc-ink-2 hover:bg-gray-50">
                       <User size={16} /> Profile
                     </Link>
-                    <Link to="/client/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <Link to="/client/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-hc-ink-2 hover:bg-gray-50">
                       <Settings size={16} /> Settings
                     </Link>
                     <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50">

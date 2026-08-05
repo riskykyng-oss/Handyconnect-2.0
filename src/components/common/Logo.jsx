@@ -6,7 +6,7 @@ return(
 
 <div
 className="
-bg-orange-500
+bg-hc-brand
 text-white
 rounded-2xl
 w-10
@@ -26,7 +26,7 @@ H
 className="
 text-2xl
 font-bold
-text-gray-900
+text-hc-ink
 "
 >
 HandyConnect

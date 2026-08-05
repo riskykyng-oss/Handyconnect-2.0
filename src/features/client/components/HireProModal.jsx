@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Zap, DollarSign, CheckCircle2, BadgeCheck } from 'lucide-react';
+import { Zap, DollarSign, CheckCircle2, BadgeCheck } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { createJob } from '@/services/jobService';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import LocationPicker from '@/components/ui/LocationPicker';
 
 export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
   const { currentUser } = useAuth();
@@ -13,7 +14,7 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
   const isQuote = mode === 'quote';
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [address, setAddress] = useState('Current Location');
+  const [jobLocation, setJobLocation] = useState(null);
   const [preferredDate, setPreferredDate] = useState('');
   const [urgent, setUrgent] = useState(false);
   const [budget, setBudget] = useState('');
@@ -24,6 +25,7 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
   const handleClose = () => {
     if (loading) return;
     setDone(false);
+    setJobLocation(null);
     onClose();
   };
 
@@ -37,7 +39,9 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
           title: title.trim(),
           description: description.trim(),
           budget: Number(budget) || 0,
-          location: address.trim(),
+          location: jobLocation?.address?.trim() || 'Current Location',
+          lat: jobLocation?.lat ?? null,
+          lng: jobLocation?.lng ?? null,
           preferredDate: preferredDate || null,
           urgent,
           clientName: currentUser?.displayName || 'Client',
@@ -144,16 +148,8 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">Address</label>
-                    <div className="relative">
-                      <MapPin size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                      <input
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3.5 pl-10 pr-4 text-base text-gray-900 outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10"
-                        required
-                      />
-                    </div>
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">Location</label>
+                    <LocationPicker initialLocation={jobLocation} onLocationChange={setJobLocation} />
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

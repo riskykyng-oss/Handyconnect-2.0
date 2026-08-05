@@ -21,13 +21,15 @@ export default function FeedFilters({ role, active, onChange, activeSkill, onCle
       ];
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div role="tablist" aria-label="Post filters" className="flex flex-wrap items-center gap-2">
       {filters.map((f) => (
         <button
           key={f.id}
+          role="tab"
+          aria-selected={active === f.id}
           onClick={() => onChange(f.id)}
           className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-            active === f.id ? 'bg-hc-brand text-white shadow-sm' : 'border border-hc-hairline bg-white text-hc-ink-2 hover:border-gray-300 hover:text-hc-ink dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+            active === f.id ? 'bg-hc-brand text-white shadow-sm' : 'border border-hc-hairline bg-white text-hc-ink-2 hover:border-black/[0.15] hover:text-hc-ink dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
           }`}
         >
           {f.label}
@@ -36,7 +38,7 @@ export default function FeedFilters({ role, active, onChange, activeSkill, onCle
       {activeSkill && (
         <button
           onClick={onClearSkill}
-          className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+          className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.07] bg-hc-tile px-3 py-1.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
         >
           #{activeSkill} <X size={12} />
         </button>

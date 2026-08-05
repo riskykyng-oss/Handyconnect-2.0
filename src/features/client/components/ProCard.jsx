@@ -30,7 +30,7 @@ export default function ProCard({ pro, onHire }) {
           </span>
         )}
         {pro.verified && (
-          <BadgeCheck className="absolute -bottom-0.5 -right-1 h-4 w-4 fill-hc-brand text-white" />
+          <BadgeCheck className="absolute -bottom-0.5 -right-1 h-4 w-4 fill-hc-accent text-white" />
         )}
       </div>
 

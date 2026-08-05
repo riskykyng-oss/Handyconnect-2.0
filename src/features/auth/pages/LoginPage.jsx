@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AuthShell, {
   TextField,
@@ -101,12 +102,15 @@ export default function LoginPage() {
       <SocialDivider />
       <SocialButtons />
 
-      <p className="mt-6 text-center text-sm text-hc-ink-2">
-        Don&apos;t have an account?{' '}
-        <Link to="/auth/signup" className="font-medium text-hc-brand transition-colors hover:text-hc-brand-strong">
-          Create account
+      <div className="mt-6 rounded-2xl border border-hc-hairline bg-hc-page/70 p-4">
+        <p className="text-center text-sm text-hc-ink-2">New to HandyConnect?</p>
+        <Link
+          to="/auth/signup"
+          className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-hc-brand bg-white px-5 text-[15px] font-medium text-hc-brand transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand hover:text-white hover:shadow-md hover:shadow-hc-brand/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98]"
+        >
+          Create account <ArrowRight size={16} />
         </Link>
-      </p>
+      </div>
     </AuthShell>
   );
 }

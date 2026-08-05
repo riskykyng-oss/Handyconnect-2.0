@@ -157,7 +157,7 @@ export default function MessagesPage() {
                   <div className="min-w-0 flex-1">
                     <p className="flex items-center gap-1 truncate text-sm font-semibold text-hc-ink">
                       {pro.name}
-                      {pro.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
+                      {pro.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
                     </p>
                     <p className="truncate text-xs text-hc-caption dark:text-gray-400">{pro.trade}{pro.area ? ` · ${pro.area}` : ''}</p>
                   </div>

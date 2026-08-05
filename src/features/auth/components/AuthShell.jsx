@@ -210,7 +210,7 @@ export function TextField({ id, label, type = 'text', rightLink, error, invalid,
           id={id}
           type={resolvedType}
           aria-invalid={!!invalid}
-          className={`h-11 w-full rounded-lg border-[0.5px] bg-white px-3.5 text-[15px] text-hc-ink outline-none transition-colors placeholder:text-hc-ink-3 ${
+          className={`h-11 w-full rounded-xl border-[0.5px] bg-white px-3.5 text-[15px] text-hc-ink outline-none transition-colors placeholder:text-hc-ink-3 ${
             invalid
               ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
               : 'border-hc-hairline focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/30'
@@ -239,7 +239,7 @@ export function AuthButton({ loading, loadingText = 'Please wait…', type = 'su
       type={type}
       disabled={loading}
       {...props}
-      className="group flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-hc-brand px-5 text-[15px] font-medium text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:cursor-not-allowed disabled:opacity-60"
+      className="group flex h-11 w-full items-center justify-center gap-2 rounded-full bg-hc-brand px-5 text-[15px] font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md hover:shadow-hc-brand/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loading ? (
         <span className="flex items-center gap-2">
@@ -267,7 +267,7 @@ export function SocialDivider() {
 }
 
 const socialBtnClass =
-  'flex h-11 w-full items-center justify-center gap-3 rounded-lg border-[0.5px] border-hc-hairline bg-white text-sm font-medium text-hc-ink transition-colors hover:border-hc-ink-3 hover:bg-hc-page';
+  'flex h-11 w-full items-center justify-center gap-3 rounded-full border-[0.5px] border-hc-hairline bg-white text-sm font-medium text-hc-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-hc-ink-3 hover:bg-hc-page hover:shadow-md active:translate-y-0 active:scale-[0.99]';
 
 export function SocialButtons() {
   const [more, setMore] = useState(false);

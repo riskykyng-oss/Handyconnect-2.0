@@ -119,7 +119,7 @@ export default function ChatThread({ conv, onBack, embedded }) {
             <div className="min-w-0 flex-1">
               <h2 className="flex items-center gap-1 truncate font-semibold text-hc-ink dark:text-gray-100">
                 {partner?.displayName || 'Loading...'}
-                {partner?.verified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
+                {partner?.verified && <BadgeCheck size={15} className="shrink-0 fill-hc-accent text-white" />}
                 <ChevronRight size={16} className="shrink-0 text-hc-ink-3 transition-transform group-hover:translate-x-0.5" />
               </h2>
               <p className="truncate text-xs text-hc-ink-3">{subtitle}</p>
@@ -137,7 +137,7 @@ export default function ChatThread({ conv, onBack, embedded }) {
             <div className="min-w-0 flex-1">
               <h2 className="flex items-center gap-1 truncate font-semibold text-hc-ink dark:text-gray-100">
                 {partner?.displayName || 'Loading...'}
-                {partner?.verified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
+                {partner?.verified && <BadgeCheck size={15} className="shrink-0 fill-hc-accent text-white" />}
               </h2>
               <p className="truncate text-xs text-hc-ink-3">{subtitle}</p>
             </div>

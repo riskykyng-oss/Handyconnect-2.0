@@ -74,7 +74,7 @@ function ProCard({ pro, index, onView, onHire }) {
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1 truncate text-sm font-semibold text-hc-ink">
             {pro.name}
-            {pro.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
+            {pro.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
           </p>
           <p className="mt-0.5 truncate text-xs text-hc-caption">{pro.role}</p>
         </div>

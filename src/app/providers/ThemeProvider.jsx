@@ -1,24 +1,20 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext(null);
 
+// The app is intentionally light-only. We pin the theme to light and never
+// apply a `dark` class, regardless of OS preference or any stored setting.
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => localStorage.getItem('handyconnect-theme') || 'system');
-
   useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    const applyTheme = () => {
-      const isDark = theme === 'dark' || (theme === 'system' && prefersDark.matches);
-      document.documentElement.classList.toggle('dark', isDark);
-      document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-    };
-    applyTheme();
-    prefersDark.addEventListener('change', applyTheme);
-    localStorage.setItem('handyconnect-theme', theme);
-    return () => prefersDark.removeEventListener('change', applyTheme);
-  }, [theme]);
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
+  }, []);
 
-  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={{ theme: 'light', setTheme: () => {} }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 export const useTheme = () => {

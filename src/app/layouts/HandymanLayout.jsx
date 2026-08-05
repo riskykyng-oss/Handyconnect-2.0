@@ -37,11 +37,11 @@ function SidebarContent({ onNavigate, unread }) {
   return (
     <div className="flex h-full flex-col">
       <Link to="/handyman/dashboard" onClick={onNavigate} className="flex items-center gap-2.5 px-5 pt-7 pb-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-extrabold text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-hc-brand text-xs font-extrabold text-white">
           HC
         </div>
         <span className="font-display text-base font-extrabold tracking-tight text-hc-ink">
-          Handy<span className="text-orange-500">Connect</span>
+          Handy<span className="text-hc-brand">Connect</span>
         </span>
       </Link>
 
@@ -56,8 +56,8 @@ function SidebarContent({ onNavigate, unread }) {
               onClick={onNavigate}
               className={`group relative flex min-h-11 items-center gap-3 rounded-lg border-l-2 pl-3 pr-3 py-2 text-sm font-semibold transition-all ${
                 active
-                  ? 'border-hc-brand bg-hc-tint text-hc-brand'
-                  : 'border-transparent text-gray-600 hover:bg-gray-100'
+                  ? 'border-hc-brand bg-white text-hc-ink shadow-sm'
+                  : 'border-transparent text-gray-600 hover:bg-white/70 hover:text-hc-ink'
               }`}
             >
               <Icon size={17} className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'} />
@@ -72,7 +72,7 @@ function SidebarContent({ onNavigate, unread }) {
         })}
       </nav>
 
-      <div className="border-t border-black/[0.08] px-3 py-4">
+      <div className="border-t border-hc-hairline px-3 py-4">
         <div className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
             {currentUser?.email?.[0]?.toUpperCase() || 'H'}
@@ -105,7 +105,7 @@ export default function HandymanLayout() {
     <div className="flex min-h-screen justify-center bg-hc-page font-sans text-hc-ink">
       <div className="flex w-full max-w-[1500px]">
         {/* Desktop sidebar (>=1024px) — 280px */}
-        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-black/[0.08] bg-[#F3F4F6] lg:flex">
+        <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-hc-hairline bg-hc-tile lg:flex">
           <SidebarContent unread={unread} />
         </aside>
 
@@ -113,7 +113,7 @@ export default function HandymanLayout() {
         {drawerOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-            <aside className="absolute left-0 top-0 h-full w-[280px] border-r border-black/[0.08] bg-[#F3F4F6] shadow-xl">
+            <aside className="absolute left-0 top-0 h-full w-[280px] border-r border-hc-hairline bg-hc-tile shadow-xl">
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
@@ -129,7 +129,7 @@ export default function HandymanLayout() {
         {/* Main */}
         <main className={`flex min-w-0 flex-1 flex-col md:pb-0 ${isChatPage ? 'pb-0' : 'pb-[calc(6rem+env(safe-area-inset-bottom))]'}`}>
           {/* Top bar — tablet (hamburger + brand) + desktop (bell + profile) */}
-          <div className={`sticky top-0 z-30 border-b border-black/[0.07] bg-white/80 backdrop-blur-md ${isChatPage ? 'hidden md:block' : 'block'}`}>
+          <div className={`sticky top-0 z-30 border-b border-hc-hairline bg-white/80 backdrop-blur-md ${isChatPage ? 'hidden md:block' : 'block'}`}>
             <div className="flex items-center gap-3 px-4 py-3 lg:justify-end lg:px-7 lg:py-3">
               {/* Hamburger + brand: tablet only (<1024px, >=768px) */}
               <button
@@ -143,11 +143,11 @@ export default function HandymanLayout() {
                 to="/handyman/dashboard"
                 className="flex items-center gap-2 md:flex lg:hidden"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-xs font-extrabold text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-hc-brand text-xs font-extrabold text-white">
                   HC
                 </div>
                 <span className="font-display text-sm font-extrabold tracking-tight text-hc-ink">
-                  Handy<span className="text-orange-500">Connect</span>
+                  Handy<span className="text-hc-brand">Connect</span>
                 </span>
               </Link>
 
@@ -175,7 +175,7 @@ export default function HandymanLayout() {
       </div>
 
       {/* Mobile bottom nav (<768px) — Instagram style */}
-      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-black/[0.07] bg-white/95 backdrop-blur-xl ${isChatThread ? 'hidden' : 'md:hidden'}`}>
+      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-hc-hairline bg-white/95 backdrop-blur-xl ${isChatThread ? 'hidden' : 'md:hidden'}`}>
         <div className="flex h-[calc(4rem+env(safe-area-inset-bottom))] items-center justify-around pb-[env(safe-area-inset-bottom)]">
           {bottomNav.map((item) => {
             const active = pathname === item.path;

@@ -45,7 +45,7 @@ export default function MobileBottomNav() {
   ];
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-hc-hairline bg-[#ECEDEF]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Bottom navigation">
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-hc-hairline bg-hc-tile/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden" aria-label="Bottom navigation">
       <div className="mx-auto flex h-16 max-w-md items-stretch justify-between px-2">
         {left.map((item) => (
           <NavLink key={item.path} item={item} location={location} />

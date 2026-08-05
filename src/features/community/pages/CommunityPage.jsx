@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion, useReducedMotion } from 'framer-motion';
 import { BadgeCheck, Briefcase, Flame, Hash, MessageCircle, Star, Users, X } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { createPost, reactToPost, subscribeToPosts, toggleSave, votePoll, updatePost, deletePost, updateComment, deleteComment } from '@/services/postService';
@@ -29,10 +30,12 @@ function Stars({ value }) {
   );
 }
 
+const cardShadow = 'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.06)]';
+
 function Widget({ icon, title, children }) {
   return (
-    <div className="rounded-xl border border-hc-hairline bg-white p-3.5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-      <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-hc-ink dark:text-gray-100">
+    <div className={`rounded-xl border border-hc-hairline bg-white p-4 ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
+      <h3 className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-hc-caption dark:text-gray-400">
         {icon} {title}
       </h3>
       {children}
@@ -42,6 +45,7 @@ function Widget({ icon, title, children }) {
 
 export default function CommunityPage() {
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
   const { currentUser, userRole } = useAuth();
   const isClient = userRole === 'client';
 
@@ -180,6 +184,15 @@ export default function CommunityPage() {
   };
   const handleJoin = (groupId) => joinGroup(groupId, currentUser.uid).catch(() => {});
 
+  // Guests can browse the feed read-only; interactive actions ask them to sign in.
+  const authed = (fn) => (...args) => {
+    if (!currentUser) {
+      navigate('/auth/login', { state: { from: '/community' } });
+      return;
+    }
+    return fn(...args);
+  };
+
   const openStory = (story) => {
     if (currentUser && story.id) markStorySeen(story.id, currentUser.uid).catch(() => {});
     const idx = stories.findIndex((s) => s.id === story.id);
@@ -192,7 +205,7 @@ export default function CommunityPage() {
       <div className="mx-auto max-w-[960px] px-4 py-8 lg:py-10">
         {/* Header */}
         <header className="mb-6">
-          <h1 className="text-xl font-semibold tracking-tight text-hc-ink dark:text-gray-100">Community</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-hc-ink dark:text-gray-100">Community</h1>
           <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Connect, learn and showcase your work.</p>
         </header>
 
@@ -200,14 +213,16 @@ export default function CommunityPage() {
           {/* Center feed */}
           <div className="min-w-0 lg:max-w-[640px] lg:flex-1">
             {/* Stories */}
-            <div className="mb-6 rounded-xl border border-hc-hairline bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <StoriesRow
-                stories={stories}
-                currentUserId={currentUser.uid}
-                onOpen={openStory}
-                onAddStory={() => setComposerOpen(true)}
-              />
-            </div>
+            {currentUser && (
+              <div className={`mb-6 rounded-xl border border-hc-hairline bg-white p-5 ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
+                <StoriesRow
+                  stories={stories}
+                  currentUserId={currentUser.uid}
+                  onOpen={openStory}
+                  onAddStory={() => setComposerOpen(true)}
+                />
+              </div>
+            )}
 
             {/* Featured This Week */}
             {featuredPros.length > 0 && (
@@ -215,17 +230,17 @@ export default function CommunityPage() {
                 <h2 className="mb-3 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Featured This Week</h2>
                 <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
                   {featuredPros.map((p) => (
-                    <div key={p.id} className="flex w-[176px] shrink-0 flex-col items-center rounded-xl border border-hc-hairline bg-white p-3.5 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div key={p.id} className={`flex w-[176px] shrink-0 flex-col items-center rounded-xl border border-hc-hairline bg-white p-3.5 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
                       {p.avatar ? (
                         <img src={p.avatar} alt={p.name} className="h-14 w-14 rounded-full border-2 border-gray-100 object-cover dark:border-gray-700" />
                       ) : (
                         <ColoredAvatar id={p.id} name={p.name} size="lg" className="border-2 border-gray-100 dark:border-gray-700" />
                       )}
-                      <p className="mt-2 flex max-w-full items-center gap-1 truncate text-sm font-semibold text-hc-ink dark:text-gray-100">
-                        <span className="truncate">{p.name}</span>
-                        {p.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
+                      <p className="mt-2 flex max-w-full items-center justify-center gap-1 text-center text-sm font-semibold text-hc-ink dark:text-gray-100">
+                        <span className="min-w-0 break-words">{p.name}</span>
+                        {p.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
                       </p>
-                      <p className="mt-0.5 truncate text-xs font-medium text-hc-ink-2">{p.trade}</p>
+                      <p className="mt-0.5 w-full truncate text-xs font-medium text-hc-ink-2">{p.trade}</p>
                       <div className="mt-1 flex items-center gap-1.5">
                         <Stars value={p.rating} />
                         <span className="text-[11px] font-semibold text-hc-ink dark:text-gray-100">{p.rating ? p.rating.toFixed(1) : 'New'}</span>
@@ -246,27 +261,46 @@ export default function CommunityPage() {
             )}
 
             {/* Groups */}
-            <div className="mb-6">
-              <GroupsSection
-                groups={groups}
-                currentUserId={currentUser.uid}
-                userRole={userRole}
-                activeGroupId={activeGroupId}
-                onSelect={setActiveGroupId}
-                onCreate={handleCreateGroup}
-                latestPosts={groupLastPosts}
-              />
-            </div>
+            {currentUser && (
+              <div className="mb-6">
+                <GroupsSection
+                  groups={groups}
+                  currentUserId={currentUser.uid}
+                  userRole={userRole}
+                  activeGroupId={activeGroupId}
+                  onSelect={setActiveGroupId}
+                  onCreate={handleCreateGroup}
+                  latestPosts={groupLastPosts}
+                />
+              </div>
+            )}
 
-            {/* Composer */}
+            {/* Composer / join prompt */}
             <div className="mb-6">
-              <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={activeGroup} user={currentUser} />
+              {currentUser ? (
+                <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={activeGroup} user={currentUser} />
+              ) : (
+                <div className={`flex flex-col items-center gap-3 rounded-xl border border-hc-hairline bg-white p-6 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
+                  <p className="text-[15px] font-semibold tracking-tight text-hc-ink dark:text-gray-100">
+                    Join the conversation
+                  </p>
+                  <p className="max-w-sm text-sm text-hc-caption dark:text-gray-400">
+                    Create a free account to share projects, ask questions and follow local pros.
+                  </p>
+                  <Link
+                    to="/auth/signup"
+                    className="inline-flex h-10 items-center gap-2 rounded-full bg-hc-brand px-6 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
+                  >
+                    Create free account
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Filters */}
             <div ref={feedRef} className="mb-5 scroll-mt-24">
               {query && (
-                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-gray-200 bg-gray-100 px-3 py-1.5 text-xs font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
+                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-black/[0.07] bg-hc-tile px-3 py-1.5 text-xs font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
                   <Hash size={12} /> {query}
                   <button onClick={() => setQuery('')} aria-label="Clear tag filter" className="rounded-full hover:bg-gray-200">
                     <X size={12} />
@@ -285,27 +319,34 @@ export default function CommunityPage() {
             {/* Feed */}
             <div className="mt-3">
               {filtered.slice(0, limit).map((item) => (
-                <PostCard
+                <motion.div
                   key={item.id}
-                  post={item}
-                  viewerRole={userRole}
-                  currentUserId={currentUser.uid}
-                  currentUserName={currentUser.displayName || currentUser.email}
-                  isFollowing={following.has(item.authorId)}
-                  onToggleFollow={handleFollow}
-                  onReact={handleReact}
-                  onSave={handleSave}
-                  onVote={handleVote}
-                  onEditPost={handleEditPost}
-                  onDeletePost={handleDeletePost}
-                  onUpdateComment={handleUpdateComment}
-                  onDeleteComment={handleDeleteComment}
-                  onHashtag={handleHashtag}
-                />
+                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.28, ease: 'easeOut' }}
+                >
+                  <PostCard
+                    key={item.id}
+                    post={item}
+                    viewerRole={userRole}
+                    currentUserId={currentUser?.uid}
+                    currentUserName={currentUser?.displayName || currentUser?.email}
+                    isFollowing={following.has(item.authorId)}
+                    onToggleFollow={authed(handleFollow)}
+                    onReact={authed(handleReact)}
+                    onSave={authed(handleSave)}
+                    onVote={authed(handleVote)}
+                    onEditPost={authed(handleEditPost)}
+                    onDeletePost={authed(handleDeletePost)}
+                    onUpdateComment={authed(handleUpdateComment)}
+                    onDeleteComment={authed(handleDeleteComment)}
+                    onHashtag={handleHashtag}
+                  />
+                </motion.div>
               ))}
 
               {!filtered.length && (
-                <div className="rounded-xl border border-hc-hairline bg-white p-10 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div className={`rounded-xl border border-hc-hairline bg-white p-10 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
                   <p className="text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">No posts here yet</p>
                   <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Be the first to share something with the community.</p>
                 </div>
@@ -314,7 +355,7 @@ export default function CommunityPage() {
               {filtered.length > limit && (
                 <button
                   onClick={() => setLimit(limit + 5)}
-                  className="h-11 w-full rounded-lg border border-hc-hairline bg-white text-sm font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                  className={`h-11 w-full rounded-xl border border-hc-accent/30 bg-white text-sm font-semibold text-hc-accent shadow-sm transition-colors hover:bg-hc-accent-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
                 >
                   Load more posts
                 </button>
@@ -335,7 +376,7 @@ export default function CommunityPage() {
                         onClick={() => { setFilter('all'); setQuery(''); feedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}
                         className="block w-full text-left transition-colors"
                       >
-                        <p className="line-clamp-2 text-[13px] font-medium text-hc-ink">{p.text}</p>
+                        <p className="text-[13px] font-medium leading-snug text-hc-ink">{p.text}</p>
                         <p className="mt-1 flex items-center gap-1 text-[11px] text-hc-ink-3">
                           <MessageCircle size={11} /> {replies} {replies === 1 ? 'reply' : 'replies'}
                           {p.hashtags?.length > 0 && <span> · {p.hashtags[0]}</span>}
@@ -356,7 +397,7 @@ export default function CommunityPage() {
                     <button
                       key={tag}
                       onClick={() => handleHashtag(tag)}
-                      className="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
+                      className="rounded-lg bg-hc-tile px-2.5 py-1 text-xs font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
                     >
                       {tag} <span className="ml-0.5 text-[10px] font-semibold text-hc-ink-3">{count}</span>
                     </button>
@@ -376,11 +417,11 @@ export default function CommunityPage() {
                       <div key={g.id} className="flex items-center gap-2">
                         <ColoredAvatar id={g.id} name={g.name} size="sm" />
                         <button onClick={() => navigate(`/community/groups/${g.id}`)} className="min-w-0 flex-1 text-left">
-                          <span className="block truncate text-xs font-medium text-hc-ink">{g.name}</span>
-                          <span className="block text-[11px] text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
+                          <span className="block break-words text-xs font-medium leading-snug text-hc-ink">{g.name}</span>
+                          <span className="mt-0.5 block text-[11px] text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
                         </button>
                         <button
-                          onClick={() => handleJoin(g.id)}
+                          onClick={() => authed(handleJoin)(g.id)}
                           className="h-7 shrink-0 rounded-lg bg-hc-brand px-2.5 text-[11px] font-medium text-white transition-colors hover:bg-hc-brand-strong"
                         >
                           Join

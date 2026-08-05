@@ -39,19 +39,18 @@ export default function ServicesSection() {
   }, [pros]);
 
   return (
-    <section id="services" className="py-14 lg:py-24">
+    <section id="services" className="scroll-mt-20 border-t border-hc-hairline py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <motion.div {...fadeUp} className="max-w-2xl">
-          <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-hc-brand">Explore services</p>
-          <h2 className="mt-2 font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
-            Everyday help. Exceptionally easy.
+          <h2 className="font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
+            Popular Categories
           </h2>
           <p className="mt-3 text-base leading-7 text-hc-ink-2">
-            Browse by trade, compare verified professionals, and book the right person for the job.
+            Browse by trade and find the right help for every job.
           </p>
         </motion.div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.name}

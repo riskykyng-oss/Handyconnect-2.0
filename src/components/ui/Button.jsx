@@ -13,10 +13,10 @@ export default function Button({
   ...props
 }) {
   const styles = {
-    primary: 'bg-orange-500 text-white shadow-sm hover:bg-orange-600',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
-    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
-    outline: 'border border-gray-300 bg-transparent text-gray-800 hover:bg-gray-50',
+    primary: 'bg-hc-brand text-white shadow-sm hover:bg-hc-brand-strong',
+    secondary: 'bg-gray-100 text-hc-ink hover:bg-gray-200',
+    ghost: 'bg-transparent text-hc-ink-2 hover:bg-gray-100',
+    outline: 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100',
     danger: 'bg-red-600 text-white shadow-sm shadow-red-600/20 hover:bg-red-700',
   };
   const sizes = { sm: 'min-h-9 px-3 py-2 text-sm', md: 'min-h-11 px-4 py-2.5 text-sm', lg: 'min-h-12 px-5 py-3 text-base' };

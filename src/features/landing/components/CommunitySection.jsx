@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, Share2, ChevronRight } from 'lucide-react';
+import { Heart, MessageCircle, ChevronRight } from 'lucide-react';
 import { subscribeToPosts } from '@/services/postService';
 import { timeAgo } from '@/utils/time';
 
@@ -13,10 +14,10 @@ const fadeUp = {
 
 function Avatar({ post }) {
   if (post.avatar) {
-    return <img className="h-10 w-10 rounded-full object-cover shadow-sm" src={post.avatar} alt={post.author} />;
+    return <img className="h-10 w-10 rounded-full object-cover" src={post.avatar} alt={post.author} />;
   }
   return (
-    <div className="grid h-10 w-10 place-items-center rounded-full bg-orange-100 text-sm font-bold text-orange-600 shadow-sm">
+    <div className="grid h-10 w-10 place-items-center rounded-full bg-hc-tile text-sm font-medium text-hc-brand">
       {(post.author || '?').charAt(0).toUpperCase()}
     </div>
   );
@@ -24,24 +25,23 @@ function Avatar({ post }) {
 
 function PostCard({ post }) {
   return (
-    <div className="rounded-2xl border border-gray-200/80 bg-white/60 shadow-sm backdrop-blur-sm transition-all hover:shadow-md">
-      <div className="flex items-center gap-3 p-4">
+    <div className="flex flex-col rounded-xl border border-hc-hairline bg-white p-5 transition-all hover:-translate-y-1 hover:shadow-md">
+      <div className="flex items-center gap-3">
         <Avatar post={post} />
         <div className="flex-1">
-          <p className="text-sm font-bold text-gray-900">{post.author}</p>
-          <p className="text-xs text-gray-400">{post.role && `${post.role} • `}{post.time}</p>
+          <p className="text-[15px] font-medium text-hc-ink">{post.author}</p>
+          <p className="text-xs text-hc-ink-3">{post.role && `${post.role} • `}{post.time}</p>
         </div>
       </div>
-      <p className="px-4 pb-3 text-sm leading-6 text-gray-600">{post.content}</p>
+      <p className="mt-3 flex-1 text-[15px] leading-6 text-hc-ink-2">{post.content}</p>
       {post.image && (
-        <div className="overflow-hidden">
+        <div className="mt-3 overflow-hidden rounded-lg border border-hc-hairline">
           <img className="w-full object-cover transition-transform duration-500 hover:scale-105" src={post.image} alt="Post" />
         </div>
       )}
-      <div className="flex items-center gap-5 px-4 py-3 text-xs text-gray-400">
+      <div className="mt-4 flex items-center gap-5 border-t border-hc-hairline pt-3 text-xs text-hc-ink-3">
         <span className="flex items-center gap-1.5"><Heart size={16} /> {post.likes}</span>
         <span className="flex items-center gap-1.5"><MessageCircle size={16} /> {post.comments}</span>
-        <span className="flex items-center gap-1.5"><Share2 size={16} /> Share</span>
       </div>
     </div>
   );
@@ -68,42 +68,35 @@ export default function CommunitySection() {
   }));
 
   return (
-    <section className="relative py-24">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{ x: [0, -20, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -right-32 top-1/3 h-[300px] w-[300px] rounded-full bg-gradient-to-bl from-orange-200/20 to-rose-200/10 blur-[100px]"
-        />
-      </div>
-
+    <section id="community" className="scroll-mt-20 border-t border-hc-hairline py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <motion.div {...fadeUp} className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.12em] text-orange-600">Social community</p>
-            <h2 className="mt-3 max-w-2xl font-display text-4xl font-extrabold tracking-[-0.03em] text-gray-900">
-              See the work.{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">Follow the people.</span>
+            <h2 className="max-w-2xl font-display text-[28px] font-medium tracking-tight text-hc-ink sm:text-[32px]">
+              Latest Community Projects
             </h2>
-            <p className="mt-4 max-w-lg text-gray-500">
-              Professionals share their projects, tips, and before/after photos. Follow the ones you trust and never search for help again.
+            <p className="mt-3 max-w-lg text-base leading-7 text-hc-ink-2">
+              See real work before you hire.
             </p>
           </div>
-          <button className="group inline-flex items-center gap-2 text-sm font-bold text-orange-600 transition-colors hover:text-orange-500">
+          <Link
+            to="/community"
+            className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-hc-ink-2 transition-colors hover:text-hc-brand"
+          >
             View full feed <ChevronRight size={17} className="transition-transform group-hover:translate-x-0.5" />
-          </button>
+          </Link>
         </motion.div>
 
         {cards.length === 0 ? (
-          <div className="mt-10 rounded-2xl border border-dashed border-gray-300 bg-white/40 p-10 text-center backdrop-blur-sm">
-            <MessageCircle size={28} className="mx-auto text-gray-300" />
-            <p className="mt-3 font-display text-lg font-bold text-gray-900">No community posts yet</p>
-            <p className="mx-auto mt-1 max-w-md text-sm text-gray-500">
+          <div className="mt-8 rounded-xl border border-dashed border-hc-hairline bg-white p-10 text-center">
+            <MessageCircle size={28} className="mx-auto text-hc-ink-3" />
+            <p className="mt-3 text-lg font-medium text-hc-ink">No community posts yet</p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-hc-ink-2">
               Once members start sharing their projects and tips, the best posts from the community will show up here.
             </p>
           </div>
         ) : (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {cards.map((post, i) => (
               <motion.div
                 key={post.id || i}
