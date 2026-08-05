@@ -153,8 +153,13 @@ export default function ChatThread({ conv, onBack, embedded }) {
             <p className="mt-1 text-xs">Send a message to start the conversation</p>
           </div>
         ) : (
-          messages.map((msg) => (
-            <ChatBubble key={msg.id} message={msg} isOwn={msg.senderId === currentUser.uid} />
+          messages.map((msg, i) => (
+            <ChatBubble
+              key={msg.id}
+              message={msg}
+              isOwn={msg.senderId === currentUser.uid}
+              isGrouped={i > 0 && messages[i - 1].senderId === msg.senderId}
+            />
           ))
         )}
       </MessageList>
