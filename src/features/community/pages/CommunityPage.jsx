@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BadgeCheck, Briefcase, Flame, Hash, MessageCircle, Star, Users, X } from 'lucide-react';
+import { BadgeCheck, Briefcase, Flame, Hash, MessageCircle, Star, UserPlus, Users, X } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { createPost, reactToPost, subscribeToPosts, toggleSave, votePoll, updatePost, deletePost, updateComment, deleteComment } from '@/services/postService';
 import { followUser, unfollowUser, subscribeFollowing } from '@/services/followService';
@@ -227,35 +227,65 @@ export default function CommunityPage() {
             {/* Featured This Week */}
             {featuredPros.length > 0 && (
               <div className="mb-6">
-                <h2 className="mb-3 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Featured This Week</h2>
+                <div className="mb-3 flex items-baseline justify-between">
+                  <h2 className="text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Featured This Week</h2>
+                  <span className="text-xs font-semibold text-hc-ink-3">{featuredPros.length} pros</span>
+                </div>
                 <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
-                  {featuredPros.map((p) => (
-                    <div key={p.id} className={`flex w-[176px] shrink-0 flex-col items-center rounded-xl border border-hc-hairline bg-white p-3.5 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
-                      {p.avatar ? (
-                        <img src={p.avatar} alt={p.name} className="h-14 w-14 rounded-full border-2 border-gray-100 object-cover dark:border-gray-700" />
-                      ) : (
-                        <ColoredAvatar id={p.id} name={p.name} size="lg" className="border-2 border-gray-100 dark:border-gray-700" />
-                      )}
-                      <p className="mt-2 flex max-w-full items-center justify-center gap-1 text-center text-sm font-semibold text-hc-ink dark:text-gray-100">
-                        <span className="min-w-0 break-words">{p.name}</span>
-                        {p.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-brand text-white" />}
-                      </p>
-                      <p className="mt-0.5 w-full truncate text-xs font-medium text-hc-ink-2">{p.trade}</p>
-                      <div className="mt-1 flex items-center gap-1.5">
-                        <Stars value={p.rating} />
-                        <span className="text-[11px] font-semibold text-hc-ink dark:text-gray-100">{p.rating ? p.rating.toFixed(1) : 'New'}</span>
-                      </div>
-                      <p className="mt-0.5 flex items-center gap-1 text-[11px] text-hc-ink-3">
-                        <Briefcase size={11} /> {p.jobs} {p.jobs === 1 ? 'job' : 'jobs'}
-                      </p>
-                      <button
-                        onClick={() => navigate(`/pro/${p.id}`)}
-                        className="mt-3 h-8 w-full rounded-lg bg-hc-brand text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                  {featuredPros.map((p) => {
+                    const isFollowing = following.has(p.id);
+                    const isAvailable = p.available !== false;
+                    return (
+                      <div
+                        key={p.id}
+                        className={`flex w-[176px] shrink-0 flex-col rounded-2xl border border-hc-hairline bg-white p-4 text-center ${cardShadow} transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800`}
                       >
-                        View Profile
-                      </button>
-                    </div>
-                  ))}
+                        <div className="relative mx-auto">
+                          {p.avatar ? (
+                            <img src={p.avatar} alt={p.name} className="h-14 w-14 rounded-full border-2 border-gray-100 object-cover dark:border-gray-700" />
+                          ) : (
+                            <ColoredAvatar id={p.id} name={p.name} size="lg" className="border-2 border-gray-100 dark:border-gray-700" />
+                          )}
+                          {p.verified && (
+                            <BadgeCheck size={16} className="absolute -right-1 -top-0.5 fill-hc-brand text-white" />
+                          )}
+                          <span
+                            className={`absolute -left-1 bottom-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800 ${isAvailable ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                            title={isAvailable ? 'Available for work' : 'Currently unavailable'}
+                          />
+                        </div>
+                        <p className="mt-2.5 truncate text-sm font-semibold text-hc-ink dark:text-gray-100">{p.name}</p>
+                        <p className="mt-0.5 truncate text-xs font-medium text-hc-ink-2">{p.trade}</p>
+                        <div className="mt-2 flex items-center justify-center gap-1.5">
+                          <Stars value={p.rating} />
+                          <span className="text-[11px] font-semibold text-hc-ink dark:text-gray-100">{p.rating ? p.rating.toFixed(1) : 'New'}</span>
+                        </div>
+                        <div className="mt-3 flex items-center justify-center gap-1 border-t border-hc-hairline pt-2.5 text-[11px] font-medium text-hc-ink-3 dark:border-gray-700">
+                          <Briefcase size={11} className="text-hc-brand" /> {p.jobs} {p.jobs === 1 ? 'job' : 'jobs'}
+                        </div>
+                        <div className="mt-3 flex items-center gap-2">
+                          <button
+                            onClick={() => navigate(`/pro/${p.id}`)}
+                            className="h-8 flex-1 rounded-lg bg-hc-brand text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                          >
+                            View Profile
+                          </button>
+                          <button
+                            onClick={() => authed(handleFollow)(p.id, isFollowing)}
+                            aria-label={isFollowing ? 'Unfollow' : 'Follow'}
+                            title={isFollowing ? 'Unfollow' : 'Follow'}
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
+                              isFollowing
+                                ? 'border-hc-brand bg-hc-tint text-hc-brand'
+                                : 'border-hc-hairline bg-white text-hc-ink-3 hover:border-hc-brand/40 hover:text-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                            }`}
+                          >
+                            <UserPlus size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
