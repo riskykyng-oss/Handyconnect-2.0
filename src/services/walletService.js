@@ -7,9 +7,19 @@ export const getWallet = async (uid) => {
 };
 
 export const subscribeToWallet = (uid, callback) => {
-  return onSnapshot(doc(db, 'wallets', uid), (snap) => {
-    callback(snap.exists() ? { id: snap.id, ...snap.data() } : { balance: 0, currency: 'USD', pending: 0, coupons: 0, credits: 0 });
-  }, () => callback({ balance: 0, currency: 'USD', pending: 0, coupons: 0, credits: 0 }));
+  let lastKnown = null;
+  return onSnapshot(
+    doc(db, 'wallets', uid),
+    (snap) => {
+      lastKnown = snap.exists() ? { id: snap.id, ...snap.data() } : { balance: 0, currency: 'USD', pending: 0, coupons: 0, credits: 0 };
+      callback(lastKnown);
+    },
+    () => {
+      // Never wipe a known balance to $0 on a transient subscription error —
+      // previously a cached balance (e.g. $111) flashed, then vanished.
+      if (!lastKnown) callback({ balance: 0, currency: 'USD', pending: 0, coupons: 0, credits: 0 });
+    }
+  );
 };
 
 export const getTransactions = async (uid) => {
@@ -20,12 +30,18 @@ export const getTransactions = async (uid) => {
 
 export const subscribeToTransactions = (uid, callback) => {
   const q = query(collection(db, 'transactions'), where('uid', '==', uid), orderBy('createdAt', 'desc'));
+  let lastKnown = null;
   return onSnapshot(
     q,
     (snap) => {
-      callback(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      lastKnown = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      callback(lastKnown);
     },
-    () => callback([])
+    () => {
+      // Keep the last known list on transient errors so lifetime/withdrawal stats
+      // don't flash to empty.
+      if (!lastKnown) callback([]);
+    }
   );
 };
 
