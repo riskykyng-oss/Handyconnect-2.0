@@ -37,14 +37,22 @@ export default function DashboardHero({ greeting, name, stats = {} }) {
         </div>
 
         <form onSubmit={handleSubmit} role="search" aria-label="Search professionals, services, or jobs">
-          <div className="flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 shadow-lg">
+          <div className="flex items-center gap-2 rounded-full bg-white/95 py-1.5 pl-3 pr-1.5 shadow-lg">
             <Search className="h-4 w-4 shrink-0 text-black/40" aria-hidden="true" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search professionals, services, or jobs"
-              className="h-8 w-full min-w-0 bg-transparent text-sm text-black outline-none placeholder:text-black/40"
+              className="h-8 min-w-0 flex-1 bg-transparent text-sm text-black outline-none placeholder:text-black/40"
             />
+            <button
+              type="submit"
+              aria-label="Search professionals"
+              className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-hc-brand px-3.5 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+            >
+              <Search className="h-3.5 w-3.5" />
+              Search
+            </button>
           </div>
         </form>
 

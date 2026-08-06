@@ -26,7 +26,7 @@ export const quickActions = [
     icon: MapPin,
     description: 'See who is near you right now.',
     color: 'green',
-    route: '/client/explore',
+    route: '/client/map',
   },
   {
     id: 'community',
