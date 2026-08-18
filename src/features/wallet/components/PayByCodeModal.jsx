@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { KeyRound, Loader2, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react';
+import { KeyRound, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { WalletModal } from '@/features/wallet/components/WalletModal';
 import SecurityGate from '@/features/wallet/components/SecurityGate';
 import PaymentSuccessScreen from '@/features/payments/components/PaymentSuccessScreen';
+import FlutterwaveCheckout from '@/components/FlutterwaveCheckout';
 import { getPaymentByCode, confirmPayment } from '@/services/paymentService';
-import { securityRequired } from '@/services/securityService';
 import { useAuth } from '@/features/auth/context/AuthContext';
 
 export default function PayByCodeModal({ open, onClose }) {
@@ -42,14 +42,6 @@ export default function PayByCodeModal({ open, onClose }) {
     } finally {
       setBusy(false);
     }
-  };
-
-  const handleConfirmClick = () => {
-    if (securityRequired(currentUser.uid)) {
-      setGateOpen(true);
-      return;
-    }
-    handleConfirm();
   };
 
   return (
@@ -94,14 +86,22 @@ export default function PayByCodeModal({ open, onClose }) {
             <div className="flex justify-between"><dt className="text-gray-400">Pay to</dt><dd className="font-bold text-hc-ink dark:text-white">{payment.recipientName}</dd></div>
             <div className="flex justify-between"><dt className="text-gray-400">Job</dt><dd className="truncate font-bold text-hc-ink dark:text-white">{payment.jobTitle}</dd></div>
           </dl>
-          <button
-            onClick={handleConfirmClick}
-            disabled={busy}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
-          >
-            {busy ? <Loader2 size={15} className="animate-spin" /> : <ShieldCheck size={15} />}
-            {busy ? 'Processing...' : `Pay $${Number(payment.amount).toFixed(2)}`}
-          </button>
+
+          <div className="mt-5">
+            {busy ? (
+              <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white">
+                <Loader2 size={15} className="animate-spin" /> Processing...
+              </div>
+            ) : (
+              <FlutterwaveCheckout
+                amount={payment.amount}
+                payerEmail={currentUser.email}
+                payerName={currentUser.displayName || currentUser.name || 'Client'}
+                onSuccess={handleConfirm}
+                onError={() => setBusy(false)}
+              />
+            )}
+          </div>
           <button onClick={() => setStep('enter')} className="mt-2 w-full rounded-xl px-4 py-2 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
             Enter another code
           </button>

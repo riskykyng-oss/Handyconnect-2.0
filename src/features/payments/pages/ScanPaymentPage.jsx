@@ -6,8 +6,8 @@ import { useAuth } from '@/features/auth/context/AuthContext';
 import PaymentScanner from '@/features/payments/components/PaymentScanner';
 import SecurityGate from '@/features/wallet/components/SecurityGate';
 import PaymentSuccessScreen from '@/features/payments/components/PaymentSuccessScreen';
+import FlutterwaveCheckout from '@/components/FlutterwaveCheckout';
 import { decodePaymentToken, getPayment, getPaymentByCode, confirmPayment } from '@/services/paymentService';
-import { securityRequired } from '@/services/securityService';
 
 export default function ScanPaymentPage() {
   const navigate = useNavigate();
@@ -77,14 +77,6 @@ export default function ScanPaymentPage() {
     }
   };
 
-  const handleConfirmClick = () => {
-    if (securityRequired(currentUser.uid)) {
-      setGateOpen(true);
-      return;
-    }
-    handleConfirm();
-  };
-
   return (
     <div className="min-h-full pb-24 lg:pb-0">
       <div className="mb-5 flex items-center gap-3">
@@ -150,7 +142,7 @@ export default function ScanPaymentPage() {
           <div className="mt-5 rounded-xl bg-gray-100/70 p-5 text-center dark:bg-gray-800/60">
             <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount due</p>
             <p className="mt-1 font-display text-4xl font-semibold tracking-tight text-hc-ink dark:text-white">${Number(payment.amount).toFixed(2)}</p>
-            <p className="mt-1 text-xs text-gray-400">USD · HandyConnect Balance</p>
+            <p className="mt-1 text-xs text-gray-400">USD · PayPal Sandbox</p>
           </div>
 
           {errorMsg && (
@@ -159,14 +151,21 @@ export default function ScanPaymentPage() {
             </p>
           )}
 
-          <button
-            onClick={handleConfirmClick}
-            disabled={busy}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong disabled:opacity-50"
-          >
-            {busy ? <Loader2 size={15} className="animate-spin" /> : <ShieldCheck size={15} />}
-            {busy ? 'Processing...' : `Pay $${Number(payment.amount).toFixed(2)}`}
-          </button>
+          <div className="mt-5">
+            {busy ? (
+              <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white">
+                <Loader2 size={15} className="animate-spin" /> Processing...
+              </div>
+            ) : (
+              <FlutterwaveCheckout
+                amount={payment.amount}
+                payerEmail={currentUser.email}
+                payerName={currentUser.displayName || currentUser.name || 'Client'}
+                onSuccess={handleConfirm}
+                onError={() => setBusy(false)}
+              />
+            )}
+          </div>
           <button
             onClick={() => setPhase('scan')}
             className="mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
