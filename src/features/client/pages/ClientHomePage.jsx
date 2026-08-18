@@ -12,6 +12,7 @@ import ProCard from '../components/ProCard';
 import JobCard from '../components/JobCard';
 import CommunityPreview from '../components/CommunityPreview';
 import PostJobModal from '../components/PostJobModal';
+import WalletCard from '../components/WalletCard';
 import { SectionHeader } from '../components/DashboardUI';
 import { quickActions } from '@/constants/quickActions';
 
@@ -81,6 +82,11 @@ export default function ClientHomePage() {
               />
             ))}
           </div>
+        </section>
+
+        {/* Wallet */}
+        <section aria-label="Wallet" className="lg:hidden">
+          <WalletCard />
         </section>
 
         {/* Recommended Professionals */}
