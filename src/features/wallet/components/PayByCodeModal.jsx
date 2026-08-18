@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { KeyRound, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { WalletModal } from '@/features/wallet/components/WalletModal';
-import SecurityGate from '@/features/wallet/components/SecurityGate';
 import PaymentSuccessScreen from '@/features/payments/components/PaymentSuccessScreen';
-import FlutterwaveCheckout from '@/components/FlutterwaveCheckout';
+import EcoCashCheckout from '@/components/EcoCashCheckout';
 import { getPaymentByCode, confirmPayment } from '@/services/paymentService';
 import { useAuth } from '@/features/auth/context/AuthContext';
 
@@ -15,7 +14,6 @@ export default function PayByCodeModal({ open, onClose }) {
   const [payment, setPayment] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [gateOpen, setGateOpen] = useState(false);
 
   const handleLookup = async () => {
     if (!code.trim() || busy) return;
@@ -88,35 +86,16 @@ export default function PayByCodeModal({ open, onClose }) {
           </dl>
 
           <div className="mt-5">
-            {busy ? (
-              <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white">
-                <Loader2 size={15} className="animate-spin" /> Processing...
-              </div>
-            ) : (
-              <FlutterwaveCheckout
-                amount={payment.amount}
-                payerEmail={currentUser.email}
-                payerName={currentUser.displayName || currentUser.name || 'Client'}
-                onSuccess={handleConfirm}
-                onError={() => setBusy(false)}
-              />
-            )}
+            <EcoCashCheckout
+              amount={payment.amount}
+              recipientName={payment.recipientName}
+              onSuccess={handleConfirm}
+            />
           </div>
           <button onClick={() => setStep('enter')} className="mt-2 w-full rounded-xl px-4 py-2 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
             Enter another code
           </button>
         </div>
-      )}
-
-      {gateOpen && (
-        <SecurityGate
-          uid={currentUser.uid}
-          onClose={() => setGateOpen(false)}
-          onVerified={() => {
-            setGateOpen(false);
-            handleConfirm();
-          }}
-        />
       )}
     </WalletModal>
   );

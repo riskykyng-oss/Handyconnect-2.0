@@ -4,9 +4,8 @@ import { toast } from 'react-hot-toast';
 import { ArrowLeft, ScanLine, Loader2, AlertCircle, KeyRound, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import PaymentScanner from '@/features/payments/components/PaymentScanner';
-import SecurityGate from '@/features/wallet/components/SecurityGate';
 import PaymentSuccessScreen from '@/features/payments/components/PaymentSuccessScreen';
-import FlutterwaveCheckout from '@/components/FlutterwaveCheckout';
+import EcoCashCheckout from '@/components/EcoCashCheckout';
 import { decodePaymentToken, getPayment, getPaymentByCode, confirmPayment } from '@/services/paymentService';
 
 export default function ScanPaymentPage() {
@@ -18,7 +17,6 @@ export default function ScanPaymentPage() {
   const [codeInput, setCodeInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [gateOpen, setGateOpen] = useState(false);
 
   const resolvePayment = async (payment) => {
     if (payment?.status === 'completed') {
@@ -142,7 +140,7 @@ export default function ScanPaymentPage() {
           <div className="mt-5 rounded-xl bg-gray-100/70 p-5 text-center dark:bg-gray-800/60">
             <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount due</p>
             <p className="mt-1 font-display text-4xl font-semibold tracking-tight text-hc-ink dark:text-white">${Number(payment.amount).toFixed(2)}</p>
-            <p className="mt-1 text-xs text-gray-400">USD · PayPal Sandbox</p>
+            <p className="mt-1 text-xs text-gray-400">USD · EcoCash</p>
           </div>
 
           {errorMsg && (
@@ -152,19 +150,11 @@ export default function ScanPaymentPage() {
           )}
 
           <div className="mt-5">
-            {busy ? (
-              <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white">
-                <Loader2 size={15} className="animate-spin" /> Processing...
-              </div>
-            ) : (
-              <FlutterwaveCheckout
-                amount={payment.amount}
-                payerEmail={currentUser.email}
-                payerName={currentUser.displayName || currentUser.name || 'Client'}
-                onSuccess={handleConfirm}
-                onError={() => setBusy(false)}
-              />
-            )}
+            <EcoCashCheckout
+              amount={payment.amount}
+              recipientName={payment.recipientName}
+              onSuccess={handleConfirm}
+            />
           </div>
           <button
             onClick={() => setPhase('scan')}
@@ -191,17 +181,6 @@ export default function ScanPaymentPage() {
             Try again
           </button>
         </div>
-      )}
-
-      {gateOpen && (
-        <SecurityGate
-          uid={currentUser.uid}
-          onClose={() => setGateOpen(false)}
-          onVerified={() => {
-            setGateOpen(false);
-            handleConfirm();
-          }}
-        />
       )}
     </div>
   );
