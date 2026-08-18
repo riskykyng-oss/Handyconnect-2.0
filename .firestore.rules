@@ -1,0 +1,295 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: is the requesting user authenticated?
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Helper: does the authenticated user have a specific role?
+    function hasRole(role) {
+      return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+
+    // Helper: is the user an admin?
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    // Helper: does the document belong to the requesting user?
+    function isOwner(field) {
+      return isAuth() && request.resource.data[field] == request.auth.uid;
+    }
+
+    // Helper: is the document's uid field equal to the requesting user?
+    function isDocOwner() {
+      return isAuth() && resource.data.uid == request.auth.uid;
+    }
+
+    // ─── USERS ───
+    match /users/{userId} {
+      // Anyone authenticated can read any user profile (needed for chat, profiles, etc.)
+      allow read: if isAuth();
+
+      // Users can create their own document; admins can create any.
+      allow create: if isAuth() && (request.auth.uid == userId || isAdmin());
+
+      // Users can update their own profile; admins can update anyone (role, suspension, verified).
+      allow update: if isAuth() && (request.auth.uid == userId || isAdmin());
+
+      // Only the user themselves can delete their account; admins can also delete.
+      allow delete: if isAuth() && (request.auth.uid == userId || isAdmin());
+
+      // Subcollection: portfolio items
+      match /portfolio/{itemId} {
+        allow read: if isAuth();
+        allow create: if isAuth() && request.resource.data.authorId == request.auth.uid;
+        allow update: if isAuth() && resource.data.authorId == request.auth.uid;
+        allow delete: if isAuth() && resource.data.authorId == request.auth.uid;
+      }
+    }
+
+    // ─── JOBS ───
+    match /jobs/{jobId} {
+      // Any authenticated user can read jobs (clients see own, handymen see open pool).
+      allow read: if isAuth();
+
+      // Clients create jobs; the clientId must match the creator.
+      allow create: if isAuth() && request.resource.data.clientId == request.auth.uid;
+
+      // The client who owns the job, the assigned handyman, or an admin can update.
+      allow update: if isAuth() && (
+        resource.data.clientId == request.auth.uid ||
+        resource.data.handymanId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Only the client who posted or an admin can delete/cancel.
+      allow delete: if isAuth() && (
+        resource.data.clientId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Subcollection: job messages (chat within a job)
+      match /messages/{messageId} {
+        allow read: if isAuth();
+        allow create: if isAuth() && request.resource.data.senderId == request.auth.uid;
+        allow update: if isAuth();
+      }
+    }
+
+    // ─── WALLETS ───
+    match /wallets/{userId} {
+      // Only the wallet owner can read their own wallet; admins can read all.
+      allow read: if isAuth() && (request.auth.uid == userId || isAdmin());
+
+      // Wallets are managed server-side via transactions, but the frontend does
+      // initial create and increment. Only the owner or admin can write.
+      allow write: if isAuth() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // ─── TRANSACTIONS ───
+    match /transactions/{transactionId} {
+      // Only the owner of the transaction can read it.
+      allow read: if isAuth() && resource.data.uid == request.auth.uid;
+
+      // Transactions are written inside runTransaction from the frontend.
+      // The uid field must match the authenticated user.
+      allow create: if isAuth() && request.resource.data.uid == request.auth.uid;
+
+      // No updates or deletes allowed — transactions are immutable.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ─── PAYMENTS ───
+    match /payments/{paymentId} {
+      // Payer, recipient, or admin can read.
+      allow read: if isAuth() && (
+        resource.data.payerId == request.auth.uid ||
+        resource.data.recipientId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Anyone authenticated can create a payment request (handyman requests payment).
+      allow create: if isAuth();
+
+      // The payer (who scanned the code) or admin can update status.
+      allow update: if isAuth() && (
+        resource.data.payerId == request.auth.uid ||
+        resource.data.recipientId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // No delete — payments are financial records.
+      allow delete: if false;
+    }
+
+    // ─── PAYOUTS ───
+    match /payouts/{payoutId} {
+      // The handyman who received the payout or admin can read.
+      allow read: if isAuth() && (
+        resource.data.handymanId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Payouts are created inside runTransaction from the frontend.
+      // Only the system (via authenticated handyman) or admin can create.
+      allow create: if isAuth() && (
+        request.resource.data.handymanId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // No update or delete — payouts are immutable.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ─── CONVERSATIONS ───
+    match /conversations/{convId} {
+      // Only participants of the conversation can read it.
+      allow read: if isAuth() && request.auth.uid in resource.data.participants;
+
+      // Any authenticated user can create a conversation.
+      allow create: if isAuth() && request.auth.uid in request.resource.data.participants;
+
+      // Only participants can update (unread counts, last message, etc.).
+      allow update: if isAuth() && request.auth.uid in resource.data.participants;
+
+      // Only a participant can delete (leave conversation).
+      allow delete: if isAuth() && request.auth.uid in resource.data.participants;
+
+      // Subcollection: direct messages
+      match /messages/{messageId} {
+        // Only participants of the parent conversation can read messages.
+        allow read: if isAuth();
+        allow create: if isAuth() && request.resource.data.senderId == request.auth.uid;
+        allow update: if isAuth();
+      }
+    }
+
+    // ─── NOTIFICATIONS ───
+    match /notifications/{notificationId} {
+      // Only the recipient can read their notifications.
+      allow read: if isAuth() && resource.data.toUid == request.auth.uid;
+
+      // Anyone authenticated can create (system sends notifications).
+      allow create: if isAuth();
+
+      // The recipient or admin can mark as read.
+      allow update: if isAuth() && (
+        resource.data.toUid == request.auth.uid ||
+        isAdmin()
+      );
+
+      // No delete — notifications are kept for audit.
+      allow delete: if false;
+    }
+
+    // ─── POSTS (Community) ───
+    match /posts/{postId} {
+      // Anyone authenticated can read community posts.
+      allow read: if isAuth();
+
+      // The author can create posts.
+      allow create: if isAuth() && request.resource.data.authorId == request.auth.uid;
+
+      // The author or admin can update posts.
+      allow update: if isAuth() && (
+        resource.data.authorId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // The author or admin can delete posts.
+      allow delete: if isAuth() && (
+        resource.data.authorId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Subcollection: comments
+      match /comments/{commentId} {
+        allow read: if isAuth();
+        allow create: if isAuth() && request.resource.data.authorId == request.auth.uid;
+        allow update: if isAuth() && resource.data.authorId == request.auth.uid;
+        allow delete: if isAuth() && (
+          resource.data.authorId == request.auth.uid ||
+          isAdmin()
+        );
+      }
+    }
+
+    // ─── REVIEWS ───
+    match /reviews/{reviewId} {
+      // Anyone authenticated can read reviews (needed for pro profiles).
+      allow read: if isAuth();
+
+      // Only the client who booked the handyman can create a review.
+      allow create: if isAuth() && request.resource.data.clientId == request.auth.uid;
+
+      // No update or delete — reviews are immutable.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ─── FOLLOWS ───
+    match /follows/{followId} {
+      // Anyone authenticated can read follow relationships.
+      allow read: if isAuth();
+
+      // Users can follow/unfollow — the followerId must match the creator.
+      allow create: if isAuth() && request.resource.data.followerId == request.auth.uid;
+      allow delete: if isAuth() && resource.data.followerId == request.auth.uid;
+
+      // No update needed.
+      allow update: if false;
+    }
+
+    // ─── GROUPS ───
+    match /groups/{groupId} {
+      // Anyone authenticated can read groups.
+      allow read: if isAuth();
+
+      // The creator becomes the owner.
+      allow create: if isAuth() && request.resource.data.ownerId == request.auth.uid;
+
+      // Owner or admin can update group settings.
+      allow update: if isAuth() && (
+        resource.data.ownerId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Owner or admin can delete groups.
+      allow delete: if isAuth() && (
+        resource.data.ownerId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // ─── STORIES ───
+    match /stories/{storyId} {
+      // Anyone authenticated can read stories.
+      allow read: if isAuth();
+
+      // The author can create their own story.
+      allow create: if isAuth() && request.resource.data.authorId == request.auth.uid;
+
+      // Anyone authenticated can update (for marking as seen).
+      allow update: if isAuth();
+
+      // The author or admin can delete stories.
+      allow delete: if isAuth() && (
+        resource.data.authorId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // ─── REPORTS (Admin) ───
+    match /reports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if isAuth();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

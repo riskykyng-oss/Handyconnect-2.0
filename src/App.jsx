@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Layouts & Protection (eager — needed on every screen)
 import AuthLayout from '@/app/layouts/AuthLayout';
@@ -68,8 +69,9 @@ function App() {
         exit={{ opacity: 0, y: -4 }} 
         transition={{ duration: .18, ease: 'easeOut' }}
       >
-        <Suspense fallback={<PageFallback />}>
-          <Routes location={location}>
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+            <Routes location={location}>
             {/* Landing Page Route */}
             <Route path="/" element={<LandingPage />} />
 
@@ -151,6 +153,7 @@ function App() {
             </Route>
           </Routes>
         </Suspense>
+        </ErrorBoundary>
       </motion.div>
     </AnimatePresence>
   );
