@@ -1,0 +1,18 @@
+{
+  "name": "HandyConnect",
+  "short_name": "HandyConnect",
+  "description": "Zimbabwe's trusted handyman marketplace — find and hire skilled professionals near you.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#F97316",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
