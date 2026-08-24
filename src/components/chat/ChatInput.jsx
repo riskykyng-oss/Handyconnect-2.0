@@ -43,7 +43,7 @@ export default function ChatInput({ onSend, loading }) {
         <div className="mb-2 flex items-center gap-2 rounded-xl bg-gray-50 px-3 py-2 text-xs text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
           {file.type.startsWith('image/') ? '📷' : file.type.startsWith('audio/') ? '🎤' : '📎'}
           <span className="flex-1 truncate">{file.name}</span>
-          <button type="button" onClick={() => setFile(null)} className="shrink-0 text-gray-400 hover:text-red-500">
+          <button type="button" aria-label="Remove attachment" onClick={() => setFile(null)} className="shrink-0 text-gray-400 hover:text-red-500">
             <X size={16} />
           </button>
         </div>
@@ -78,6 +78,7 @@ export default function ChatInput({ onSend, loading }) {
         />
         <button
           type="submit"
+          aria-label="Send message"
           disabled={(!text.trim() && !file && !locationMode) || loading}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-hc-brand text-white shadow-sm transition-all hover:bg-hc-brand-strong disabled:opacity-50"
         >

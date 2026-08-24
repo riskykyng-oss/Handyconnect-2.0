@@ -56,8 +56,9 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
         />
         
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+          <label htmlFor="post-job-desc" className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
           <textarea
+            id="post-job-desc"
             className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-base text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-[#F97316] focus:border-transparent outline-none transition-all resize-none"
             rows="3"
             placeholder="Describe the problem in detail..."
@@ -68,9 +69,10 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
         </div>
 
           <div className="relative">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Budget</label>
+            <label htmlFor="post-job-budget" className="block text-sm font-semibold text-gray-700 mb-2">Budget</label>
             <div>
               <input
+                id="post-job-budget"
                 type="number"
                 min="0"
                 placeholder="e.g., 50"

@@ -21,6 +21,52 @@ export const JobCardSkeleton = () => (
   </div>
 );
 
+// Skeleton for professional/explore cards (avatar + name + role + buttons)
+export const ProCardSkeleton = () => (
+  <div className="flex flex-col rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+    <div className="flex items-start gap-3">
+      <Skeleton className="h-12 w-12 rounded-full shrink-0" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <Skeleton className="h-4 w-2/3" />
+        <Skeleton className="h-3 w-1/2" />
+      </div>
+    </div>
+    <div className="mt-3 flex gap-2 border-t border-black/[0.07] pt-3">
+      <Skeleton className="h-8 flex-1 rounded-lg" />
+      <Skeleton className="h-8 flex-1 rounded-lg" />
+    </div>
+  </div>
+);
+
+// Skeleton for stat cards (icon + value + label)
+export const StatCardSkeleton = () => (
+  <div className="rounded-2xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+    <div className="flex items-center gap-3">
+      <Skeleton className="h-11 w-11 rounded-xl shrink-0" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-3 w-1/2" />
+        <Skeleton className="h-5 w-1/3" />
+      </div>
+    </div>
+  </div>
+);
+
+// Skeleton for table rows (admin lists)
+export const TableSkeleton = ({ rows = 5 }) => (
+  <div className="space-y-3">
+    {Array.from({ length: rows }).map((_, i) => (
+      <div key={i} className="flex items-center gap-4 rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+        <div className="flex-1 space-y-2">
+          <Skeleton className="h-4 w-1/3" />
+          <Skeleton className="h-3 w-1/2" />
+        </div>
+        <Skeleton className="h-6 w-16 rounded-full shrink-0" />
+      </div>
+    ))}
+  </div>
+);
+
 // A themed page shell used as the Suspense fallback during route transitions.
 // Mirrors the app layout so navigation never flashes a blank/dark page.
 export const PageSkeleton = () => (

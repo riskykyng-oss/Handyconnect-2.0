@@ -226,6 +226,7 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
         <button
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
+          aria-label={expanded ? 'Collapse job details' : 'Expand job details'}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-black/[0.08] bg-white text-gray-500 transition-colors hover:bg-gray-100"
         >
           <ChevronDown size={16} className={clsx('transition-transform', expanded && 'rotate-180')} />
@@ -324,6 +325,8 @@ export default function HandymanJobCard({ job, client, userLocation, onStart, on
               </div>
               <input
                 type="range"
+                aria-label="Update job progress percentage"
+                aria-valuetext={`${progressValue}%`}
                 min="0"
                 max="100"
                 step="5"

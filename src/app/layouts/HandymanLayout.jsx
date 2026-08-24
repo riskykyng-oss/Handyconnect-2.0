@@ -153,7 +153,7 @@ export default function HandymanLayout() {
 
               <div className="flex-1" />
 
-              <button className="relative flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100">
+              <button aria-label={`Notifications${unread > 0 ? `, ${unread} unread` : ''}`} className="relative flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100">
                 <Bell size={17} />
                 {unread > 0 && (
                   <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">

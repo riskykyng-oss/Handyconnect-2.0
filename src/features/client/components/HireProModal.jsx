@@ -136,8 +136,9 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                   />
 
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">Describe the work</label>
+                    <label htmlFor="hire-desc" className="mb-2 block text-sm font-semibold text-gray-700">Describe the work</label>
                     <textarea
+                      id="hire-desc"
                       rows="3"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
@@ -154,8 +155,9 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-gray-700">Preferred date</label>
+                      <label htmlFor="hire-date" className="mb-2 block text-sm font-semibold text-gray-700">Preferred date</label>
                       <input
+                        id="hire-date"
                         type="date"
                         value={preferredDate}
                         min={new Date().toISOString().split('T')[0]}
@@ -164,10 +166,11 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                       />
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-gray-700">Estimated budget</label>
+                      <label htmlFor="hire-budget" className="mb-2 block text-sm font-semibold text-gray-700">Estimated budget</label>
                       <div className="relative">
                         <DollarSign size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
+                          id="hire-budget"
                           type="number"
                           min="0"
                           placeholder="e.g., 50"

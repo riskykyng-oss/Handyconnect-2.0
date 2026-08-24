@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Plus, Briefcase } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { subscribeProfessionals } from '@/services/userService';
-import { JobCardSkeleton } from '@/components/ui/Skeleton';
+import { JobCardSkeleton, ProCardSkeleton } from '@/components/ui/Skeleton';
 import useClientJobs from '@/hooks/useClientJobs';
 import { JOB_CATEGORIES } from '@/constants/categories';
 import DashboardHero from '../components/DashboardHero';
@@ -33,8 +33,15 @@ export default function ClientHomePage() {
   const { jobs, loading: loadingJobs, postJob } = useClientJobs();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pros, setPros] = useState([]);
+  const [loadingPros, setLoadingPros] = useState(true);
 
-  useEffect(() => subscribeProfessionals((users) => setPros(users.filter((u) => u.id !== currentUser?.uid))), [currentUser]);
+  useEffect(() => {
+    const unsub = subscribeProfessionals((users) => {
+      setPros(users.filter((u) => u.id !== currentUser?.uid));
+      setLoadingPros(false);
+    });
+    return unsub;
+  }, [currentUser]);
 
   const topPros = prosFromUsers(pros).slice(0, 8);
 
@@ -92,7 +99,11 @@ export default function ClientHomePage() {
         {/* Recommended Professionals */}
         <section aria-label="Recommended professionals">
           <SectionHeader title="Recommended Professionals" actionLabel="Find more" onAction={() => navigate('/client/explore')} />
-          {topPros.length === 0 ? (
+          {loadingPros ? (
+            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+              {Array.from({ length: 4 }).map((_, i) => <ProCardSkeleton key={i} />)}
+            </div>
+          ) : topPros.length === 0 ? (
             <div className="rounded-xl border border-dashed border-hc-hairline bg-white p-10 text-center shadow-sm">
               <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-500">
                 <Briefcase size={26} />

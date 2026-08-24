@@ -293,6 +293,8 @@ export default function ClientLayout() {
 
               <div className="relative" ref={profileRef}>
                 <button
+                  aria-label="Open account menu"
+                  aria-expanded={profileOpen}
                   onClick={() => setProfileOpen((o) => !o)}
                   className="flex items-center gap-1.5 rounded-full pl-2 pr-3 py-1 transition-colors hover:bg-gray-100"
                 >

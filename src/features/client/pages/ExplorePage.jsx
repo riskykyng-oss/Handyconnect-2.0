@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, MapPin, Star, Wrench, Sparkles, BadgeCheck, X, Plus, Users, QrCode, AlertTriangle,
 } from 'lucide-react';
+import { ProCardSkeleton } from '@/components/ui/Skeleton';
 import { categoryIcons } from '@/constants/categories';
 import HireProModal from '../components/HireProModal';
 import PostJobModal from '../components/PostJobModal';
@@ -154,10 +155,17 @@ export default function ExplorePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hirePro, setHirePro] = useState(null);
   const [pros, setPros] = useState([]);
+  const [loadingPros, setLoadingPros] = useState(true);
   const [clientLoc, setClientLoc] = useState(null);
   const [showFAB, setShowFAB] = useState(false);
 
-  useEffect(() => subscribeProfessionals(setPros), []);
+  useEffect(() => {
+    const unsub = subscribeProfessionals((users) => {
+      setPros(users);
+      setLoadingPros(false);
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     if (!currentUser?.uid) return;
@@ -311,7 +319,11 @@ export default function ExplorePage() {
             </span>
           </div>
 
-          {results.length === 0 ? (
+          {loadingPros ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 min-[1300px]:grid-cols-3 min-[1600px]:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => <ProCardSkeleton key={i} />)}
+            </div>
+          ) : results.length === 0 ? (
             <EmptyState label="Try a different service, skill, or name." />
           ) : (
             <>

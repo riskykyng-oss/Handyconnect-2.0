@@ -7,6 +7,7 @@ import {
 import useClientJobs from '@/hooks/useClientJobs';
 import { timeAgo } from '@/utils/time';
 import { categoryIcons } from '@/constants/categories';
+import { JobCardSkeleton, StatCardSkeleton } from '@/components/ui/Skeleton';
 
 const jobTabs = [
   { id: 'open', label: 'Open' },
@@ -150,8 +151,11 @@ export default function ClientJobsPage() {
         {/* Job cards */}
         <div className="mt-5 flex flex-col gap-5">
           {loading ? (
-            <div className="rounded-2xl border border-hc-hairline bg-white p-10 text-center shadow-sm">
-              <p className="text-sm font-semibold text-hc-ink-3">Loading jobs...</p>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+              <JobCardSkeleton />
+              <JobCardSkeleton />
             </div>
           ) : filtered.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-hc-hairline bg-white p-12 text-center shadow-sm">

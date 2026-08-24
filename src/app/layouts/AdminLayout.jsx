@@ -38,7 +38,7 @@ export default function AdminLayout() {
           <span className="font-display font-extrabold text-xl">
             Handy<span className="text-[#F97316]">Connect</span>
           </span>
-          <button className="md:hidden text-white/70 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(false)}><X size={22} /></button>
+          <button aria-label="Close menu" className="md:hidden text-white/70 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(false)}><X size={22} /></button>
         </div>
 
         <div className="px-6 mb-6">
@@ -88,14 +88,15 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-black/[0.08] bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
-          <button className="md:hidden text-hc-ink dark:text-gray-100 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
+          <button aria-label="Open navigation menu" className="md:hidden text-hc-ink dark:text-gray-100 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
             <Menu size={22} />
           </button>
 
           <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-gray-100 rounded-full px-4 py-2.5">
             <Search size={17} className="text-hc-ink-3 dark:text-gray-400" />
             <input
-              type="text"
+              type="search"
+              aria-label="Search users, jobs, reports"
               placeholder="Search users, jobs, reports..."
               className="w-full bg-transparent outline-none text-sm text-hc-ink placeholder:text-hc-ink-3 dark:text-gray-100 dark:placeholder:text-gray-500"
             />
@@ -106,7 +107,7 @@ export default function AdminLayout() {
           </span>
 
           <div className="flex items-center gap-2 ml-auto">
-            <button className="relative w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+            <button aria-label="Notifications" className="relative w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
               <Bell size={19} className="text-hc-ink-2" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-hc-brand rounded-full" />
             </button>
