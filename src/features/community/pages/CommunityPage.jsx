@@ -263,10 +263,10 @@ export default function CommunityPage() {
                         <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-hc-hairline pt-2.5 text-xs font-medium text-hc-ink-3 dark:border-gray-700">
                           <Briefcase size={12} className="text-hc-brand" /> {p.jobs} {p.jobs === 1 ? 'job' : 'jobs'}
                         </div>
-                        <div className="mt-3 flex items-center gap-2">
+                        <div className="mt-3 flex items-center gap-2.5">
                           <button
                             onClick={() => navigate(`/pro/${p.id}`)}
-                            className="h-9 flex-1 rounded-xl bg-hc-brand text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                            className="h-10 flex-1 rounded-xl bg-hc-brand px-3 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
                           >
                             View Profile
                           </button>
@@ -274,13 +274,13 @@ export default function CommunityPage() {
                             onClick={() => authed(handleFollow)(p.id, isFollowing)}
                             aria-label={isFollowing ? 'Unfollow' : 'Follow'}
                             title={isFollowing ? 'Unfollow' : 'Follow'}
-                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors ${
                               isFollowing
                                 ? 'border-hc-brand bg-hc-tint text-hc-brand'
                                 : 'border-hc-hairline bg-white text-hc-ink-3 hover:border-hc-brand/40 hover:text-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400'
                             }`}
                           >
-                            <UserPlus size={14} />
+                            <UserPlus size={16} />
                           </button>
                         </div>
                       </div>
@@ -319,7 +319,7 @@ export default function CommunityPage() {
                   </p>
                   <Link
                     to="/auth/signup"
-                    className="inline-flex h-11 items-center gap-2 rounded-full bg-hc-brand px-7 text-[15px] font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
+                    className="inline-flex h-12 items-center gap-2 rounded-full bg-hc-brand px-8 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
                   >
                     Create free account
                   </Link>
@@ -330,7 +330,7 @@ export default function CommunityPage() {
             {/* Filters */}
             <div ref={feedRef} className="mb-5 scroll-mt-24">
               {query && (
-                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-hc-hairline bg-hc-tile px-3 py-1.5 text-xs font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
+                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-hc-hairline bg-hc-tile px-4 py-2 text-sm font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
                   <Hash size={12} /> {query}
                   <button onClick={() => setQuery('')} aria-label="Clear tag filter" className="rounded-full hover:bg-gray-200">
                     <X size={12} />
@@ -385,7 +385,7 @@ export default function CommunityPage() {
               {filtered.length > limit && (
                 <button
                   onClick={() => setLimit(limit + 5)}
-                  className={`h-12 w-full rounded-xl border border-hc-brand/30 bg-white text-[15px] font-semibold text-hc-brand shadow-sm transition-colors hover:bg-hc-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
+                  className={`h-14 w-full rounded-xl border border-hc-brand/30 bg-white px-5 text-base font-semibold text-hc-brand shadow-sm transition-colors hover:bg-hc-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
                 >
                   Load more posts
                 </button>
@@ -452,7 +452,7 @@ export default function CommunityPage() {
                         </button>
                         <button
                           onClick={() => authed(handleJoin)(g.id)}
-                          className="h-8 shrink-0 rounded-lg bg-hc-brand px-3 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                          className="h-10 shrink-0 rounded-xl bg-hc-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
                         >
                           Join
                         </button>

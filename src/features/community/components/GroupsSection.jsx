@@ -188,7 +188,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, activeG
           {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 dark:bg-red-500/10 dark:text-red-400">{error}</p>}
           <button
             disabled={posting}
-            className="w-full rounded-lg bg-hc-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-60"
+            className="w-full rounded-xl bg-hc-brand px-5 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-60"
           >
             {posting ? 'Creating…' : 'Create group'}
           </button>
