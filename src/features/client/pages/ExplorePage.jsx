@@ -422,7 +422,7 @@ export default function ExplorePage() {
 
       {tab === 'professionals' ? (
         <>
-          <div className="flex items-baseline justify-between">
+          <div className="flex items-baseline justify-between pt-4">
             <h2 className="text-lg font-semibold tracking-tight text-hc-ink">
               {selectedCategory ? `${selectedCategory} Professionals` : activeQuery ? `Results for "${activeQuery}"` : 'Professionals Near You'}
             </h2>
