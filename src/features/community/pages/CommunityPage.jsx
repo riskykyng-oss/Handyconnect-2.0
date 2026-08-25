@@ -35,7 +35,7 @@ const cardShadow = 'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.06
 function Widget({ icon, title, children }) {
   return (
     <div className={`rounded-xl border border-hc-hairline bg-white p-4 ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
-      <h3 className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-hc-caption dark:text-gray-400">
+      <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-hc-caption dark:text-gray-400">
         {icon} {title}
       </h3>
       {children}
@@ -202,16 +202,16 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-[100dvh] bg-hc-page">
-      <div className="mx-auto max-w-[960px] px-4 py-8 lg:py-10">
+      <div className="mx-auto max-w-[1200px] px-4 py-8 lg:py-10">
         {/* Header */}
         <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight text-hc-ink dark:text-gray-100">Community</h1>
-          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Connect, learn and showcase your work.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-hc-ink dark:text-gray-100">Community</h1>
+          <p className="mt-1.5 text-[15px] text-hc-caption dark:text-gray-400">Connect, learn and showcase your work.</p>
         </header>
 
         <div className="lg:flex lg:items-start lg:gap-6">
           {/* Center feed */}
-          <div className="min-w-0 lg:max-w-[640px] lg:flex-1">
+          <div className="min-w-0 lg:flex-1">
             {/* Stories */}
             {currentUser && (
               <div className={`mb-6 rounded-xl border border-hc-hairline bg-white p-5 ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
@@ -228,21 +228,21 @@ export default function CommunityPage() {
             {featuredPros.length > 0 && (
               <div className="mb-6">
                 <div className="mb-3 flex items-baseline justify-between">
-                  <h2 className="text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Featured This Week</h2>
-                  <span className="text-xs font-semibold text-hc-ink-3">{featuredPros.length} pros</span>
+                  <h2 className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">Featured This Week</h2>
+                  <span className="text-sm font-semibold text-hc-ink-3">{featuredPros.length} pros</span>
                 </div>
-                <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
+                <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide">
                   {featuredPros.map((p) => {
                     const isFollowing = following.has(p.id);
                     const isAvailable = p.available !== false;
                     return (
                       <div
                         key={p.id}
-                        className={`flex w-[176px] shrink-0 flex-col rounded-2xl border border-hc-hairline bg-white p-4 text-center ${cardShadow} transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800`}
+                        className={`flex w-[210px] shrink-0 flex-col rounded-2xl border border-hc-hairline bg-white p-5 text-center ${cardShadow} transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800`}
                       >
                         <div className="relative mx-auto">
                           {p.avatar ? (
-                            <img src={p.avatar} alt={p.name} className="h-14 w-14 rounded-full border-2 border-gray-100 object-cover dark:border-gray-700" />
+                            <img src={p.avatar} alt={p.name} className="h-16 w-16 rounded-full border-2 border-gray-100 object-cover dark:border-gray-700" />
                           ) : (
                             <ColoredAvatar id={p.id} name={p.name} size="lg" className="border-2 border-gray-100 dark:border-gray-700" />
                           )}
@@ -254,19 +254,19 @@ export default function CommunityPage() {
                             title={isAvailable ? 'Available for work' : 'Currently unavailable'}
                           />
                         </div>
-                        <p className="mt-2.5 truncate text-sm font-semibold text-hc-ink dark:text-gray-100">{p.name}</p>
-                        <p className="mt-0.5 truncate text-xs font-medium text-hc-ink-2">{p.trade}</p>
+                        <p className="mt-2.5 truncate text-[15px] font-semibold text-hc-ink dark:text-gray-100">{p.name}</p>
+                        <p className="mt-0.5 truncate text-sm font-medium text-hc-ink-2">{p.trade}</p>
                         <div className="mt-2 flex items-center justify-center gap-1.5">
                           <Stars value={p.rating} />
                           <span className="text-[11px] font-semibold text-hc-ink dark:text-gray-100">{p.rating ? p.rating.toFixed(1) : 'New'}</span>
                         </div>
-                        <div className="mt-3 flex items-center justify-center gap-1 border-t border-hc-hairline pt-2.5 text-[11px] font-medium text-hc-ink-3 dark:border-gray-700">
-                          <Briefcase size={11} className="text-hc-brand" /> {p.jobs} {p.jobs === 1 ? 'job' : 'jobs'}
+                        <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-hc-hairline pt-2.5 text-xs font-medium text-hc-ink-3 dark:border-gray-700">
+                          <Briefcase size={12} className="text-hc-brand" /> {p.jobs} {p.jobs === 1 ? 'job' : 'jobs'}
                         </div>
                         <div className="mt-3 flex items-center gap-2">
                           <button
                             onClick={() => navigate(`/pro/${p.id}`)}
-                            className="h-8 flex-1 rounded-lg bg-hc-brand text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                            className="h-9 flex-1 rounded-xl bg-hc-brand text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
                           >
                             View Profile
                           </button>
@@ -274,7 +274,7 @@ export default function CommunityPage() {
                             onClick={() => authed(handleFollow)(p.id, isFollowing)}
                             aria-label={isFollowing ? 'Unfollow' : 'Follow'}
                             title={isFollowing ? 'Unfollow' : 'Follow'}
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${
                               isFollowing
                                 ? 'border-hc-brand bg-hc-tint text-hc-brand'
                                 : 'border-hc-hairline bg-white text-hc-ink-3 hover:border-hc-brand/40 hover:text-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400'
@@ -310,16 +310,16 @@ export default function CommunityPage() {
               {currentUser ? (
                 <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={activeGroup} user={currentUser} />
               ) : (
-                <div className={`flex flex-col items-center gap-3 rounded-xl border border-hc-hairline bg-white p-6 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
-                  <p className="text-[15px] font-semibold tracking-tight text-hc-ink dark:text-gray-100">
+                <div className={`flex flex-col items-center gap-4 rounded-xl border border-hc-hairline bg-white p-8 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
+                  <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">
                     Join the conversation
                   </p>
-                  <p className="max-w-sm text-sm text-hc-caption dark:text-gray-400">
+                  <p className="max-w-sm text-[15px] text-hc-caption dark:text-gray-400">
                     Create a free account to share projects, ask questions and follow local pros.
                   </p>
                   <Link
                     to="/auth/signup"
-                    className="inline-flex h-10 items-center gap-2 rounded-full bg-hc-brand px-6 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
+                    className="inline-flex h-11 items-center gap-2 rounded-full bg-hc-brand px-7 text-[15px] font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
                   >
                     Create free account
                   </Link>
@@ -377,15 +377,15 @@ export default function CommunityPage() {
 
               {!filtered.length && (
                 <div className={`rounded-xl border border-hc-hairline bg-white p-10 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
-                  <p className="text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">No posts here yet</p>
-                  <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Be the first to share something with the community.</p>
+                  <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">No posts here yet</p>
+                  <p className="mt-1.5 text-sm text-hc-caption dark:text-gray-400">Be the first to share something with the community.</p>
                 </div>
               )}
 
               {filtered.length > limit && (
                 <button
                   onClick={() => setLimit(limit + 5)}
-                  className={`h-11 w-full rounded-xl border border-hc-brand/30 bg-white text-sm font-semibold text-hc-brand shadow-sm transition-colors hover:bg-hc-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
+                  className={`h-12 w-full rounded-xl border border-hc-brand/30 bg-white text-[15px] font-semibold text-hc-brand shadow-sm transition-colors hover:bg-hc-tint dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300`}
                 >
                   Load more posts
                 </button>
@@ -394,7 +394,7 @@ export default function CommunityPage() {
           </div>
 
           {/* Right sidebar (desktop) */}
-          <aside className="hidden lg:sticky lg:top-24 lg:block lg:w-[200px] lg:shrink-0 lg:space-y-5">
+          <aside className="hidden lg:sticky lg:top-24 lg:block lg:w-[280px] lg:shrink-0 lg:space-y-5">
             <Widget icon={<Flame size={13} className="text-hc-ink-3" />} title="Trending">
               {trendingPosts.length > 0 ? (
                 <div className="space-y-3">
@@ -406,9 +406,9 @@ export default function CommunityPage() {
                         onClick={() => { setFilter('all'); setQuery(''); feedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}
                         className="block w-full text-left transition-colors"
                       >
-                        <p className="text-[13px] font-medium leading-snug text-hc-ink">{p.text}</p>
-                        <p className="mt-1 flex items-center gap-1 text-[11px] text-hc-ink-3">
-                          <MessageCircle size={11} /> {replies} {replies === 1 ? 'reply' : 'replies'}
+                        <p className="text-sm font-medium leading-snug text-hc-ink">{p.text}</p>
+                        <p className="mt-1 flex items-center gap-1 text-xs text-hc-ink-3">
+                          <MessageCircle size={12} /> {replies} {replies === 1 ? 'reply' : 'replies'}
                           {p.hashtags?.length > 0 && <span> · {p.hashtags[0]}</span>}
                         </p>
                       </button>
@@ -427,7 +427,7 @@ export default function CommunityPage() {
                     <button
                       key={tag}
                       onClick={() => handleHashtag(tag)}
-                      className="rounded-lg bg-hc-tile px-2.5 py-1 text-xs font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
+                      className="rounded-lg bg-hc-tile px-3 py-1.5 text-sm font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
                     >
                       {tag} <span className="ml-0.5 text-[10px] font-semibold text-hc-ink-3">{count}</span>
                     </button>
@@ -447,12 +447,12 @@ export default function CommunityPage() {
                       <div key={g.id} className="flex items-center gap-2">
                         <ColoredAvatar id={g.id} name={g.name} size="sm" />
                         <button onClick={() => navigate(`/community/groups/${g.id}`)} className="min-w-0 flex-1 text-left">
-                          <span className="block break-words text-xs font-medium leading-snug text-hc-ink">{g.name}</span>
-                          <span className="mt-0.5 block text-[11px] text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
+                          <span className="block break-words text-sm font-medium leading-snug text-hc-ink">{g.name}</span>
+                          <span className="mt-0.5 block text-xs text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
                         </button>
                         <button
                           onClick={() => authed(handleJoin)(g.id)}
-                          className="h-7 shrink-0 rounded-lg bg-hc-brand px-2.5 text-[11px] font-medium text-white transition-colors hover:bg-hc-brand-strong"
+                          className="h-8 shrink-0 rounded-lg bg-hc-brand px-3 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
                         >
                           Join
                         </button>

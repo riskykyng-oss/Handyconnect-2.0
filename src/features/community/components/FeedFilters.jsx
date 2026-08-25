@@ -28,7 +28,7 @@ export default function FeedFilters({ role, active, onChange, activeSkill, onCle
           role="tab"
           aria-selected={active === f.id}
           onClick={() => onChange(f.id)}
-          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+          className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
             active === f.id ? 'bg-hc-brand text-white shadow-sm' : 'border border-hc-hairline bg-white text-hc-ink-2 hover:border-black/[0.15] hover:text-hc-ink dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
           }`}
         >

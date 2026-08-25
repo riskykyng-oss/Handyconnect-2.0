@@ -349,12 +349,12 @@ export default function PostCard({
         )}
 
         {/* Action bar */}
-        <div className="flex items-center gap-1 border-t border-hc-hairline px-2.5 py-2 sm:gap-1.5 sm:px-4 sm:py-2.5 dark:border-gray-700">
+        <div className="flex items-center gap-1 border-t border-hc-hairline px-4 py-3 sm:gap-2 sm:px-5 sm:py-3 dark:border-gray-700">
           {/* Reaction (tap to open picker) */}
           <div className="relative">
             <button
               onClick={() => setReactOpen((o) => !o)}
-              className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-semibold transition sm:gap-2 sm:px-3 ${
+              className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-semibold transition sm:gap-2.5 sm:px-4 ${
                 myReaction ? 'text-hc-ink' : 'text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               aria-haspopup="menu"
@@ -384,14 +384,14 @@ export default function PostCard({
 
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-2 sm:px-3"
+            className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-2.5 sm:px-4"
           >
-            <MessageCircle size={18} />
+            <MessageCircle size={20} />
             {post.commentCount || comments.length || 0}
           </button>
 
-          <button onClick={share} className="flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-2 sm:px-3">
-            {copied ? <Check size={18} className="text-emerald-500" /> : <Share2 size={18} />}
+          <button onClick={share} className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-2.5 sm:px-4">
+            {copied ? <Check size={20} className="text-emerald-500" /> : <Share2 size={20} />}
             {copied ? 'Copied' : 'Share'}
           </button>
 
@@ -399,11 +399,11 @@ export default function PostCard({
           <div className="relative ml-auto">
             <button
               onClick={() => setSaveOpen(!saveOpen)}
-              className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-semibold transition sm:gap-2 sm:px-3 ${
+              className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-semibold transition sm:gap-2.5 sm:px-4 ${
                 savedIn.length ? 'text-hc-ink hover:bg-gray-100 dark:hover:bg-gray-700' : 'text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
-              <Bookmark size={18} className={savedIn.length ? 'fill-current' : ''} />
+              <Bookmark size={20} className={savedIn.length ? 'fill-current' : ''} />
               Save
             </button>
             {saveOpen && (
@@ -434,24 +434,24 @@ export default function PostCard({
 
         {/* Role-aware CTA row */}
         {showCTA && (
-          <div className="flex items-stretch gap-2 border-t border-hc-hairline bg-hc-page/60 px-5 py-3.5 dark:border-gray-700 dark:bg-gray-700/40">
+          <div className="flex items-stretch gap-2.5 border-t border-hc-hairline bg-hc-page/60 px-5 py-4 dark:border-gray-700 dark:bg-gray-700/40">
             {viewerRole === 'client' && (
               <button
                 onClick={() => navigate('/client/home?post=1')}
-                className="h-10 min-w-0 flex-1 rounded-lg bg-hc-brand px-3.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                className="h-11 min-w-0 flex-1 rounded-xl bg-hc-brand px-4 text-[15px] font-semibold text-white transition-colors hover:bg-hc-brand-strong"
               >
                 <span className="block truncate">Hire {post.authorName.split(' ')[0]}</span>
               </button>
             )}
             <button
               onClick={() => navigate(`/${viewerRole === 'client' ? 'client' : 'handyman'}/chat/direct/${post.authorId}`)}
-              className="h-10 shrink-0 rounded-lg border border-hc-brand/25 bg-transparent px-3.5 text-sm font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="h-11 shrink-0 rounded-xl border border-hc-brand/25 bg-transparent px-4 text-[15px] font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Message
             </button>
             <button
               onClick={() => navigate(`/pro/${post.authorId}`)}
-              className="h-10 shrink-0 rounded-lg border border-hc-brand/25 bg-transparent px-3.5 text-sm font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="h-11 shrink-0 rounded-xl border border-hc-brand/25 bg-transparent px-4 text-[15px] font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {viewerRole === 'client' ? 'View Profile' : 'View Portfolio'}
             </button>
