@@ -205,113 +205,100 @@ export default function GroupPage() {
     setReporting(false);
   };
 
-  const renderStats = () => {
-    const stats = [
-      { label: 'Members', value: totalMembers, icon: Users },
-      { label: 'Posts', value: groupPosts.length, icon: MessageSquare },
-      { label: 'Created', value: formatDate(group?.createdAt).split(' ').slice(1).join(' ') || '', icon: Calendar },
-    ];
-    return (
-      <div className="grid grid-cols-3 gap-3">
-        {stats.map((s) => (
-          <div key={s.label} className="rounded-xl border border-hc-hairline bg-white p-4 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <s.icon size={18} className="mx-auto mb-1.5 text-hc-ink-3" />
-            <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">{s.value}</p>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-hc-ink-3">{s.label}</p>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const renderStats = () => (
+    <div className="flex items-center divide-x divide-hc-hairline rounded-lg border border-hc-hairline bg-white px-4 py-2 dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
+      <span className="flex items-center gap-1.5 pr-4 text-xs font-semibold text-hc-ink dark:text-gray-100">
+        <Users size={13} className="text-hc-ink-3" /> {totalMembers} members
+      </span>
+      <span className="flex items-center gap-1.5 px-4 text-xs font-semibold text-hc-ink dark:text-gray-100">
+        <MessageSquare size={13} className="text-hc-ink-3" /> {groupPosts.length} posts
+      </span>
+      <span className="flex items-center gap-1.5 pl-4 text-xs font-semibold text-hc-ink dark:text-gray-100">
+        <Calendar size={13} className="text-hc-ink-3" /> {formatDate(group?.createdAt).split(' ').slice(1).join(' ') || ''}
+      </span>
+    </div>
+  );
 
   const renderHome = () => (
-    <div className="grid items-start gap-6 lg:grid-cols-[1fr_280px]">
-      <div className="space-y-6">
-        {renderStats()}
+    <div className="space-y-4">
+      {renderStats()}
 
-        <div className="flex items-center gap-2 rounded-xl border border-hc-hairline bg-hc-tile px-4 py-3 text-xs font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-          <Megaphone size={15} />
-          Pinned announcements are coming soon — stay tuned for owner posts you can&apos;t miss.
-        </div>
-
-        <div>
-          <h3 className="mb-3 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Latest discussions</h3>
-          {groupPosts.length ? (
-            <div className="space-y-3">
-              {groupPosts.slice(0, 3).map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setTab('posts')}
-                  className="flex w-full items-start gap-3 rounded-xl border border-hc-hairline bg-white p-4 text-left shadow-sm transition-colors hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800"
-                >
-                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-hc-tile text-xs font-semibold text-hc-ink-3">
-                    {(p.authorName || '?').charAt(0)}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold text-hc-ink dark:text-gray-100">{p.authorName}</span>
-                    <span className="block truncate text-sm text-hc-ink-2">{p.text}</span>
-                    <span className="mt-0.5 block text-[10px] font-medium text-hc-ink-3">{timeAgo(p.createdAt)}</span>
-                  </span>
-                </button>
-              ))}
-              <button
-                onClick={() => setTab('posts')}
-                className="w-full rounded-xl border border-hc-hairline bg-white py-2.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-              >
-                See all {groupPosts.length} posts
-              </button>
-            </div>
-          ) : (
-            <div className="rounded-xl border border-hc-hairline bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <MessageSquare size={22} className="mx-auto mb-2 text-hc-ink-3" />
-              <p className="text-sm font-semibold text-hc-ink dark:text-gray-100">No discussions yet</p>
-              <p className="mt-1 text-xs text-hc-caption dark:text-gray-400">{joined ? 'Start the conversation — post something in this group.' : 'Join the group to take part in discussions.'}</p>
-            </div>
-          )}
-        </div>
+      <div className="flex items-center gap-2 rounded-lg bg-hc-tile px-3 py-2 text-[11px] font-semibold text-hc-ink-2 dark:bg-gray-800 dark:text-gray-300">
+        <Megaphone size={13} />
+        Pinned announcements coming soon.
       </div>
 
-      <aside className="space-y-6">
-        <div className="rounded-xl border border-hc-hairline bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <h4 className="mb-3 text-sm font-semibold tracking-tight text-hc-ink dark:text-gray-100">Top members</h4>
-          <div className="space-y-3">
-            {memberList.slice(0, 4).map((m) => (
-              <Link key={m.uid} to={`/pro/${m.uid}`} className="flex items-center gap-2">
+      <div>
+        <div className="mb-2 flex items-baseline justify-between">
+          <h3 className="text-sm font-semibold text-hc-ink dark:text-gray-100">Latest discussions</h3>
+          {groupPosts.length > 3 && (
+            <button onClick={() => setTab('posts')} className="text-[11px] font-semibold text-hc-brand hover:underline">
+              View all ({groupPosts.length})
+            </button>
+          )}
+        </div>
+        {groupPosts.length ? (
+          <div className="divide-y divide-hc-hairline rounded-lg border border-hc-hairline bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
+            {groupPosts.slice(0, 3).map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setTab('posts')}
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hc-tile text-[10px] font-semibold text-hc-ink-3">
+                  {(p.authorName || '?').charAt(0)}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-xs font-semibold text-hc-ink dark:text-gray-100">{p.authorName}</span>
+                  <span className="block truncate text-xs text-hc-ink-2">{p.text}</span>
+                </span>
+                <span className="shrink-0 text-[10px] text-hc-ink-3">{timeAgo(p.createdAt)}</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-dashed border-hc-hairline px-4 py-6 text-center dark:border-gray-700">
+            <p className="text-xs font-semibold text-hc-ink dark:text-gray-100">No discussions yet</p>
+            <p className="mt-0.5 text-[11px] text-hc-caption dark:text-gray-400">{joined ? 'Post something to start.' : 'Join the group to participate.'}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Top members — inline row */}
+      {memberList.length > 0 && (
+        <div>
+          <h3 className="mb-2 text-sm font-semibold text-hc-ink dark:text-gray-100">Members</h3>
+          <div className="flex items-center gap-3">
+            {memberList.slice(0, 5).map((m) => (
+              <Link key={m.uid} to={`/pro/${m.uid}`} className="flex flex-col items-center gap-1">
                 {m.profile.avatar ? (
-                  <img src={m.profile.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
+                  <img src={m.profile.avatar} alt="" className="h-9 w-9 rounded-full object-cover" />
                 ) : (
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-hc-tile text-xs font-semibold text-hc-ink-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hc-tile text-xs font-semibold text-hc-ink-3">
                     {(m.profile.name || '?').charAt(0)}
                   </span>
                 )}
-                <span className="min-w-0">
-                  <span className="block truncate text-xs font-semibold text-hc-ink dark:text-gray-100">{m.profile.name}</span>
-                  <span className="block truncate text-[10px] font-medium text-hc-ink-3">{m.profile.trade || 'Professional'}</span>
-                </span>
+                <span className="max-w-[64px] truncate text-[10px] font-medium text-hc-ink-2">{m.profile.name?.split(' ')[0]}</span>
               </Link>
             ))}
+            {memberList.length > 5 && (
+              <button onClick={() => setTab('members')} className="text-[10px] font-semibold text-hc-brand hover:underline">+{memberList.length - 5} more</button>
+            )}
           </div>
-          <button
-            onClick={() => setTab('members')}
-            className="mt-3 w-full rounded-lg bg-hc-tile py-2 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
-          >
-            View all members
-          </button>
         </div>
-      </aside>
+      )}
     </div>
   );
 
   const renderPosts = () => (
-    <div className="max-w-[860px] space-y-6">
+    <div className="max-w-[860px] space-y-4">
       {joined ? (
         <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={group} user={currentUser} />
       ) : (
-        <div className="rounded-xl border border-hc-hairline bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <p className="text-base font-semibold text-hc-ink dark:text-gray-100">Join the group to post</p>
-          <p className="mt-1.5 text-sm text-hc-caption dark:text-gray-400">Members can share work, ask questions and help each other out.</p>
-          <button onClick={handleJoin} className="mt-4 rounded-xl bg-hc-brand px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-hc-brand-strong">
-            Join group
+        <div className="flex items-center gap-3 rounded-lg border border-dashed border-hc-hairline px-4 py-3 dark:border-gray-700">
+          <p className="flex-1 text-xs font-semibold text-hc-ink dark:text-gray-100">Join the group to post.</p>
+          <button onClick={handleJoin} className="rounded-lg bg-hc-brand px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong">
+            Join
           </button>
         </div>
       )}
@@ -337,62 +324,63 @@ export default function GroupPage() {
           />
         ))
       ) : (
-        <div className="rounded-xl border border-hc-hairline bg-white p-10 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <MessageSquare size={24} className="mx-auto mb-2 text-hc-ink-3" />
-          <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">No posts yet</p>
-          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Be the first to share something in this group.</p>
+        <div className="rounded-lg border border-dashed border-hc-hairline px-4 py-6 text-center dark:border-gray-700">
+          <p className="text-xs font-semibold text-hc-ink dark:text-gray-100">No posts yet</p>
+          <p className="mt-0.5 text-[11px] text-hc-caption dark:text-gray-400">Be the first to share something.</p>
         </div>
       )}
     </div>
   );
 
   const renderMembers = () => (
-    <div className="max-w-[860px] space-y-3">
-      {memberList.map((m) => {
-        const badge = ROLE_BADGES[m.role];
-        return (
-          <div key={m.uid} className="flex items-center gap-3 rounded-xl border border-hc-hairline bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            {m.profile.avatar ? (
-              <img src={m.profile.avatar} alt="" className="h-11 w-11 rounded-full object-cover" />
-            ) : (
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-hc-tile text-base font-semibold text-hc-ink-3">
-                {(m.profile.name || '?').charAt(0)}
-              </span>
-            )}
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="truncate text-sm font-semibold text-hc-ink dark:text-gray-100">
-                  {m.profile.name} {m.me && <span className="font-medium text-hc-ink-3">(You)</span>}
-                </p>
-                {m.profile.verified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
-                {badge && (
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${badge.className}`}>{badge.label}</span>
-                )}
+    <div className="max-w-[860px]">
+      <div className="divide-y divide-hc-hairline rounded-lg border border-hc-hairline bg-white dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-800">
+        {memberList.map((m) => {
+          const badge = ROLE_BADGES[m.role];
+          return (
+            <div key={m.uid} className="flex items-center gap-2.5 px-3 py-2.5">
+              {m.profile.avatar ? (
+                <img src={m.profile.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
+              ) : (
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-hc-tile text-xs font-semibold text-hc-ink-3">
+                  {(m.profile.name || '?').charAt(0)}
+                </span>
+              )}
+              <div className="min-w-0 flex-1">
+                <span className="flex items-center gap-1.5">
+                  <span className="truncate text-xs font-semibold text-hc-ink dark:text-gray-100">
+                    {m.profile.name} {m.me && <span className="font-normal text-hc-ink-3">(You)</span>}
+                  </span>
+                  {m.profile.verified && <BadgeCheck size={12} className="shrink-0 fill-hc-brand text-white" />}
+                  {badge && (
+                    <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold ${badge.className}`}>{badge.label}</span>
+                  )}
+                </span>
+                <p className="truncate text-[11px] text-hc-ink-3">{m.profile.trade || 'Professional'}</p>
               </div>
-              <p className="truncate text-xs font-medium text-hc-ink-3">{m.profile.trade || 'Professional'}</p>
+              <Link
+                to={`/pro/${m.uid}`}
+                className="shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold text-hc-ink-3 transition-colors hover:bg-gray-100 hover:text-hc-ink dark:hover:bg-gray-700"
+              >
+                View
+              </Link>
             </div>
-            <Link
-              to={`/pro/${m.uid}`}
-              className="shrink-0 rounded-lg bg-hc-tile px-3 py-1.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
-            >
-              View profile
-            </Link>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 
   const renderAbout = () => (
-    <div className="max-w-[860px] space-y-6">
-      <div className="rounded-xl border border-hc-hairline bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <h3 className="mb-2 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">About this group</h3>
-        <p className="text-[15px] leading-relaxed text-hc-ink-2 dark:text-gray-300">{group.description || 'No description yet.'}</p>
+    <div className="max-w-[860px] space-y-4">
+      <div className="rounded-lg border border-hc-hairline bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <h3 className="mb-1.5 text-xs font-bold uppercase tracking-wider text-hc-ink-3">About</h3>
+        <p className="text-[13px] leading-relaxed text-hc-ink-2 dark:text-gray-300">{group.description || 'No description yet.'}</p>
       </div>
 
-      <div className="rounded-xl border border-hc-hairline bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <h3 className="mb-4 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Details</h3>
-        <dl className="grid gap-4 sm:grid-cols-2">
+      <div className="rounded-lg border border-hc-hairline bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-hc-ink-3">Details</h3>
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
           {[
             { label: 'Owner', value: group.createdByName || group.createdBy },
             { label: 'Category', value: group.category || 'Community' },
@@ -403,25 +391,25 @@ export default function GroupPage() {
           ].map((row) => (
             <div key={row.label}>
               <dt className="text-[10px] font-bold uppercase tracking-wider text-hc-ink-3">{row.label}</dt>
-              <dd className="mt-0.5 text-sm font-semibold text-hc-ink dark:text-gray-100">{row.value}</dd>
+              <dd className="mt-0.5 text-xs font-semibold text-hc-ink dark:text-gray-100">{row.value}</dd>
             </div>
           ))}
         </dl>
       </div>
 
-      <div className="rounded-xl border border-hc-hairline bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <h3 className="mb-3 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">Group rules</h3>
+      <div className="rounded-lg border border-hc-hairline bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-hc-ink-3">Group rules</h3>
         {group.rules?.length ? (
-          <ol className="space-y-2">
+          <ol className="space-y-1.5">
             {group.rules.map((rule, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm text-hc-ink-2 dark:text-gray-300">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-hc-tile text-[10px] font-semibold text-hc-ink-3">{i + 1}</span>
+              <li key={i} className="flex items-start gap-2 text-[13px] text-hc-ink-2 dark:text-gray-300">
+                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-hc-tile text-[9px] font-semibold text-hc-ink-3">{i + 1}</span>
                 {rule}
               </li>
             ))}
           </ol>
         ) : (
-          <p className="text-sm text-hc-caption dark:text-gray-400">No rules set yet.</p>
+          <p className="text-[11px] text-hc-caption dark:text-gray-400">No rules set.</p>
         )}
       </div>
     </div>
@@ -429,20 +417,20 @@ export default function GroupPage() {
 
   if (!loaded) {
     return (
-      <div className="mx-auto max-w-[1120px] px-4 py-16 text-center">
-        <p className="text-sm font-medium text-hc-ink-3">Loading group…</p>
+      <div className="mx-auto max-w-[1120px] px-4 py-10 text-center">
+        <p className="text-xs font-medium text-hc-ink-3">Loading group…</p>
       </div>
     );
   }
 
   if (!group) {
     return (
-      <div className="mx-auto max-w-[1120px] px-4 py-16">
-        <div className="rounded-xl border border-hc-hairline bg-white p-10 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">Group not found</p>
-          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">This group may have been removed.</p>
-          <Link to="/community" className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-hc-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong">
-            <ArrowLeft size={15} /> Back to Community
+      <div className="mx-auto max-w-[1120px] px-4 py-10">
+        <div className="rounded-lg border border-hc-hairline bg-white p-6 text-center dark:border-gray-700 dark:bg-gray-800">
+          <p className="text-sm font-semibold text-hc-ink dark:text-gray-100">Group not found</p>
+          <p className="mt-0.5 text-xs text-hc-caption dark:text-gray-400">This group may have been removed.</p>
+          <Link to="/community" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-hc-brand px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong">
+            <ArrowLeft size={12} /> Back
           </Link>
         </div>
       </div>
@@ -450,58 +438,58 @@ export default function GroupPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-8 lg:py-10">
-      <Link to="/community" className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:text-hc-ink dark:text-gray-300">
-        <ArrowLeft size={15} /> Back to Community
+    <div className="mx-auto max-w-[1400px] px-4 py-4 lg:py-6">
+      <Link to="/community" className="mb-3 inline-flex items-center gap-1 text-xs font-semibold text-hc-ink-2 transition-colors hover:text-hc-ink dark:text-gray-300">
+        <ArrowLeft size={13} /> Back to Community
       </Link>
 
       {/* Header */}
       <div className="overflow-hidden rounded-xl border border-hc-hairline bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
         {group.coverImage ? (
-          <img src={group.coverImage} alt="" className="h-48 w-full object-cover sm:h-56" />
+          <img src={group.coverImage} alt="" className="h-24 w-full object-cover sm:h-28" />
         ) : (
-          <div className="h-48 w-full bg-gradient-to-r from-hc-brand to-hc-brand-strong sm:h-56" />
+          <div className="h-24 w-full bg-gradient-to-r from-hc-brand to-hc-brand-strong sm:h-28" />
         )}
 
-        <div className="px-5 pb-6 sm:px-8">
-          <div className="-mt-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex items-end gap-4">
+        <div className="px-4 pb-4 sm:px-6">
+          <div className="-mt-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex items-end gap-3">
               {group.logo ? (
-                <img src={group.logo} alt="" className="h-20 w-20 rounded-2xl border-4 border-white object-cover shadow dark:border-gray-900" />
+                <img src={group.logo} alt="" className="h-14 w-14 rounded-xl border-2 border-white object-cover shadow dark:border-gray-900" />
               ) : (
-                <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-hc-tile text-3xl font-bold text-hc-ink-2 shadow dark:border-gray-900">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border-2 border-white bg-hc-tile text-xl font-bold text-hc-ink-2 shadow dark:border-gray-900">
                   {(group.name || 'G').charAt(0)}
                 </span>
               )}
               <div className="min-w-0 pb-0.5">
-                <h1 className="truncate text-3xl font-bold tracking-tight text-hc-ink dark:text-gray-100">{group.name}</h1>
-                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] font-medium text-gray-500 dark:text-gray-400">
+                <h1 className="truncate text-xl font-bold tracking-tight text-hc-ink dark:text-gray-100">{group.name}</h1>
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
                   {group.category && (
-                    <span className="flex items-center gap-1"><Hash size={12} /> {group.category}</span>
+                    <span className="flex items-center gap-0.5"><Hash size={11} /> {group.category}</span>
                   )}
                   {group.location && (
-                    <span className="flex items-center gap-1"><MapPin size={12} /> {group.location}</span>
+                    <span className="flex items-center gap-0.5"><MapPin size={11} /> {group.location}</span>
                   )}
-                  <span className="flex items-center gap-1"><VisibilityIcon size={12} /> {VISIBILITY_LABELS[group.visibility] || 'Public'}</span>
-                  <span className="flex items-center gap-1"><Users size={12} /> {totalMembers} members</span>
+                  <span className="flex items-center gap-0.5"><VisibilityIcon size={11} /> {VISIBILITY_LABELS[group.visibility] || 'Public'}</span>
+                  <span className="flex items-center gap-0.5"><Users size={11} /> {totalMembers}</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               {joined ? (
                 <>
                   {myRole === 'owner' && (
                     <button
                       onClick={() => setManageHint(true)}
-                      className="rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                      className="rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                     >
-                      Manage group
+                      Manage
                     </button>
                   )}
                   <button
                     onClick={handleLeave}
-                    className="rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                    className="rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                   >
                     Leave
                   </button>
@@ -509,44 +497,43 @@ export default function GroupPage() {
               ) : (
                 <button
                   onClick={handleJoin}
-                  className="flex items-center gap-2 rounded-xl bg-hc-brand px-5 py-2.5 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
+                  className="flex items-center gap-1.5 rounded-lg bg-hc-brand px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
                 >
-                  <Users size={15} /> Join group
+                  <Users size={13} /> Join
                 </button>
               )}
               <button
                 onClick={() => setInviteOpen(true)}
-                className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
-                <Mail size={15} /> Invite
+                <Mail size={13} /> Invite
               </button>
               <button
                 onClick={handleShare}
-                className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
-                <Share2 size={15} /> Share
+                <Share2 size={13} /> Share
               </button>
               <button
                 onClick={() => setReportOpen(true)}
                 title="Report group"
-                className="rounded-xl border border-hc-hairline bg-white p-2.5 text-hc-ink-3 shadow-sm transition-colors hover:bg-red-50 hover:text-red-500 dark:border-gray-700 dark:bg-gray-800"
+                className="rounded-lg border border-hc-hairline bg-white p-1.5 text-hc-ink-3 shadow-sm transition-colors hover:bg-red-50 hover:text-red-500 dark:border-gray-700 dark:bg-gray-800"
               >
-                <Flag size={15} />
+                <Flag size={13} />
               </button>
             </div>
           </div>
 
           {group.description && (
-            <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-hc-ink-2 dark:text-gray-300">
+            <p className="mt-2.5 max-w-2xl text-xs leading-relaxed text-hc-ink-2 dark:text-gray-300">
               {group.description}
-              <span className="ml-1 font-medium text-hc-ink-3">Created by {group.createdByName || 'a professional'} on {formatDate(group.createdAt)}.</span>
             </p>
           )}
 
           {manageHint && (
-            <div className="mt-3 flex items-center gap-2 rounded-xl bg-hc-tile px-3 py-2 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
-              <Shield size={13} />
-              Group management (edit details, promote admins, remove members) is coming soon.
+            <div className="mt-2 flex items-center gap-2 rounded-lg bg-hc-tile px-2.5 py-1.5 text-[11px] font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
+              <Shield size={12} />
+              Group management coming soon.
               <button onClick={() => setManageHint(false)} className="ml-auto text-hc-ink-3 hover:text-hc-ink-2">✕</button>
             </div>
           )}
@@ -656,28 +643,28 @@ export default function GroupPage() {
       )}
 
       {/* Tabs */}
-      <div className="mt-4 flex gap-1 overflow-x-auto rounded-xl border border-hc-hairline bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      <div className="mt-3 flex gap-1 overflow-x-auto rounded-lg border border-hc-hairline bg-white p-0.5 dark:border-gray-700 dark:bg-gray-800">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
               tab === t.id ? 'bg-hc-brand text-white shadow-sm' : 'text-hc-ink-2 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
             }`}
           >
-            <t.icon size={15} /> {t.label}
+            <t.icon size={13} /> {t.label}
             {t.id === 'members' && (
-              <span className={`rounded-full px-1.5 text-[10px] ${tab === t.id ? 'bg-white/20' : 'bg-hc-tile'}`}>{totalMembers}</span>
+              <span className={`rounded-full px-1 text-[9px] ${tab === t.id ? 'bg-white/20' : 'bg-hc-tile'}`}>{totalMembers}</span>
             )}
             {t.id === 'posts' && (
-              <span className={`rounded-full px-1.5 text-[10px] ${tab === t.id ? 'bg-white/20' : 'bg-hc-tile'}`}>{groupPosts.length}</span>
+              <span className={`rounded-full px-1 text-[9px] ${tab === t.id ? 'bg-white/20' : 'bg-hc-tile'}`}>{groupPosts.length}</span>
             )}
           </button>
         ))}
       </div>
 
       {/* Content */}
-      <div className="mt-6">
+      <div className="mt-4">
         {tab === 'home' && renderHome()}
         {tab === 'posts' && renderPosts()}
         {tab === 'members' && renderMembers()}
