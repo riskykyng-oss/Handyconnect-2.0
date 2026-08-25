@@ -83,7 +83,7 @@ export default function ProPortfolioPage() {
 
   return (
     <div className="min-h-[100dvh] bg-hc-page">
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-4 lg:pb-10">
+      <div className="px-4 pb-24 pt-4 lg:px-6 lg:pb-10">
         <button onClick={() => navigate(-1)} className="mb-3 inline-flex items-center gap-1 text-xs font-semibold text-hc-caption transition-colors hover:text-hc-ink">
           <ArrowLeft size={13} /> Back
         </button>

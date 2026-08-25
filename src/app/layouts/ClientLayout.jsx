@@ -372,7 +372,7 @@ export default function ClientLayout() {
 
           {/* Page Content + Right Sidebar */}
           <div className={`flex gap-6 px-4 lg:px-8 ${isChatPage ? 'py-0' : 'py-6 lg:py-8'}`}>
-            <div className={`min-w-0 flex-1 mx-auto lg:mx-0 ${isFullWidth ? 'max-w-none' : 'max-w-[820px]'}`}>
+            <div className={`min-w-0 flex-1 mx-auto lg:mx-0 ${isFullWidth ? 'max-w-none' : showRail ? 'max-w-[820px]' : 'max-w-[1200px]'}`}>
               <motion.div
                 key={location.pathname}
                 initial={{ opacity: 0, y: 8 }}
