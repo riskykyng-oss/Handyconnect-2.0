@@ -113,4 +113,4 @@ export const getJob = async (jobId) => { const snap = await getDoc(doc(db, 'jobs
 
 // Handyman declines a targeted request — job returns to the open pool.
 export const declineJob = async (jobId) => updateDoc(doc(db, 'jobs', jobId), { handymanId: deleteField() });
-export const estimatePrice = ({ category, urgency = 'standard' }) => { const base = { plumbing: 45, electrical: 55, cleaning: 25, carpentry: 40, painting: 35 }[category?.toLowerCase()] || 35; const multiplier = urgency === 'urgent' ? 1.4 : 1; return { low: Math.round(base * multiplier), high: Math.round(base * multiplier * 2.2), currency: 'USD' }; };
+export const estimatePrice = ({ category, urgency = 'standard' }) => { const base = { plumbing: 45, electrical: 55, cleaning: 25, carpentry: 40, painting: 35, roofing: 60, mechanic: 50, gardening: 30, moving: 45, construction: 70 }[category?.toLowerCase()] || 35; const multiplier = urgency === 'urgent' ? 1.4 : 1; return { low: Math.round(base * multiplier), high: Math.round(base * multiplier * 2.2), currency: 'USD' }; };
