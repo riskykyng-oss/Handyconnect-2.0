@@ -18,6 +18,26 @@ const PAGE_SIZE = 12;
 
 const filterOptions = ['All', 'Nearby', 'Verified', 'Top Rated', 'Available'];
 
+const CATEGORY_SYNONYMS = {
+  plumbing: ['plumber', 'plumbing', 'plumbers', 'pipe', 'pipes', 'fitter'],
+  electrical: ['electrician', 'electrical', 'electricians', 'wiring', 'sparky'],
+  painting: ['painter', 'painting', 'painters', 'decorator'],
+  carpentry: ['carpenter', 'carpentry', 'carpenters', 'woodwork', 'joiner'],
+  cleaning: ['cleaner', 'cleaning', 'cleaners', 'janitor', 'housekeeping'],
+  roofing: ['roofer', 'roofing', 'roofers', 'roof'],
+  mechanic: ['mechanic', 'mechanics', 'auto repair', 'motor'],
+  gardening: ['gardener', 'gardening', 'gardeners', 'landscaping', 'lawn'],
+  moving: ['mover', 'moving', 'movers', 'removals', 'haulage'],
+  construction: ['builder', 'construction', 'builders', 'bricklayer', 'masonry'],
+};
+
+const matchesCategory = (role, categoryKey) => {
+  const keywords = CATEGORY_SYNONYMS[categoryKey];
+  if (!keywords) return false;
+  const lower = role.toLowerCase();
+  return keywords.some((kw) => lower.includes(kw));
+};
+
 const cardFromUser = (u, clientLoc) => {
   const km = haversineKm(clientLoc, u.location);
   return {
@@ -184,7 +204,14 @@ export default function ExplorePage() {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     let list = cards;
-    if (q) list = list.filter((c) => `${c.name} ${c.role}`.toLowerCase().includes(q));
+    if (q) {
+      const catKey = selectedCategory?.toLowerCase();
+      if (catKey && CATEGORY_SYNONYMS[catKey]) {
+        list = list.filter((c) => matchesCategory(c.role, catKey));
+      } else {
+        list = list.filter((c) => `${c.name} ${c.role}`.toLowerCase().includes(q));
+      }
+    }
 
     switch (activeFilter) {
       case 'Verified':
@@ -219,15 +246,28 @@ export default function ExplorePage() {
   }, [cards, query, activeFilter, selectedCategory]);
 
   const services = useMemo(() => {
-    const map = new Map();
+    const catCounts = new Map();
     for (const c of cards) {
-      const name = c.role;
-      if (!name || name === 'Handyman') continue;
-      const entry = map.get(name) || { name, count: 0 };
-      entry.count += 1;
-      map.set(name, entry);
+      const role = c.role;
+      if (!role || role === 'Handyman') continue;
+      let matched = false;
+      for (const [cat] of Object.entries(CATEGORY_SYNONYMS)) {
+        if (matchesCategory(role, cat)) {
+          const key = cat.charAt(0).toUpperCase() + cat.slice(1);
+          const entry = catCounts.get(key) || { name: key, count: 0 };
+          entry.count += 1;
+          catCounts.set(key, entry);
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        const entry = catCounts.get(role) || { name: role, count: 0 };
+        entry.count += 1;
+        catCounts.set(role, entry);
+      }
     }
-    return [...map.values()].sort((a, b) => b.count - a.count);
+    return [...catCounts.values()].sort((a, b) => b.count - a.count);
   }, [cards]);
 
   const visible = results.slice(0, visibleCount);
