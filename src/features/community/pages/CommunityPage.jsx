@@ -394,65 +394,71 @@ export default function CommunityPage() {
           </div>
 
           {/* Right sidebar (desktop) */}
-          <aside className="hidden lg:sticky lg:top-24 lg:block lg:w-[280px] lg:shrink-0 lg:space-y-5">
-            <Widget icon={<Flame size={13} className="text-hc-ink-3" />} title="Trending">
+          <aside className="hidden lg:sticky lg:top-24 lg:block lg:w-[300px] lg:shrink-0 lg:space-y-4">
+            {/* Trending posts */}
+            <Widget icon={<Flame size={13} className="text-hc-brand" />} title="Trending">
               {trendingPosts.length > 0 ? (
-                <div className="space-y-3">
-                  {trendingPosts.map((p) => {
+                <div className="divide-y divide-hc-hairline">
+                  {trendingPosts.map((p, idx) => {
                     const replies = p.commentCount || 0;
+                    const reactions = reactionCount(p);
                     return (
                       <button
                         key={p.id}
                         onClick={() => { setFilter('all'); setQuery(''); feedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}
-                        className="block w-full text-left transition-colors"
+                        className={`block w-full text-left transition-colors hover:bg-hc-page/60 -mx-4 px-4 ${idx === 0 ? '-mt-4 pt-0 pb-3' : 'py-3'}`}
                       >
-                        <p className="text-sm font-medium leading-snug text-hc-ink">{p.text}</p>
-                        <p className="mt-1 flex items-center gap-1 text-xs text-hc-ink-3">
-                          <MessageCircle size={12} /> {replies} {replies === 1 ? 'reply' : 'replies'}
-                          {p.hashtags?.length > 0 && <span> · {p.hashtags[0]}</span>}
+                        <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-hc-ink">{p.text}</p>
+                        <p className="mt-1.5 flex items-center gap-2 text-[11px] text-hc-ink-3">
+                          <span className="flex items-center gap-0.5"><MessageCircle size={11} /> {replies}</span>
+                          {reactions > 0 && <span className="flex items-center gap-0.5">❤ {reactions}</span>}
+                          {p.hashtags?.[0] && <span className="rounded bg-hc-tile px-1.5 py-0.5 font-medium">{p.hashtags[0]}</span>}
                         </p>
                       </button>
                     );
                   })}
                 </div>
               ) : (
-                <p className="text-xs leading-5 text-hc-ink-3">Nothing trending yet — be the first to spark a conversation.</p>
+                <p className="py-2 text-xs text-hc-ink-3">Nothing trending yet.</p>
               )}
             </Widget>
 
-            <Widget icon={<Hash size={13} className="text-hc-ink-3" />} title="Trending tags">
+            {/* Trending tags */}
+            <Widget icon={<Hash size={13} className="text-hc-brand" />} title="Tags">
               {trendingTags.length > 0 ? (
                 <div className="flex flex-wrap gap-1.5">
                   {trendingTags.map(([tag, count]) => (
                     <button
                       key={tag}
                       onClick={() => handleHashtag(tag)}
-                      className="rounded-lg bg-hc-tile px-3 py-1.5 text-sm font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
+                      className="group flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-2.5 py-1.5 text-xs font-semibold text-hc-ink-2 transition-all hover:border-hc-brand/30 hover:bg-hc-tint"
                     >
-                      {tag} <span className="ml-0.5 text-[10px] font-semibold text-hc-ink-3">{count}</span>
+                      <span>{tag}</span>
+                      <span className="text-[10px] font-bold text-hc-ink-3 group-hover:text-hc-brand">{count}</span>
                     </button>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs leading-5 text-hc-ink-3">No trending tags yet — tag your post to start one.</p>
+                <p className="py-2 text-xs text-hc-ink-3">No trending tags yet.</p>
               )}
             </Widget>
 
-            <Widget icon={<Users size={13} className="text-hc-ink-3" />} title="Suggested groups">
+            {/* Suggested groups */}
+            <Widget icon={<Users size={13} className="text-hc-brand" />} title="Suggested groups">
               {suggestedGroups.length > 0 ? (
-                <div className="space-y-2">
+                <div className="divide-y divide-hc-hairline">
                   {suggestedGroups.map((g) => {
                     const count = memberCount(g);
                     return (
-                      <div key={g.id} className="flex items-center gap-2">
+                      <div key={g.id} className="flex items-center gap-2.5 py-2.5 first:pt-0 last:pb-0">
                         <ColoredAvatar id={g.id} name={g.name} size="sm" />
                         <button onClick={() => navigate(`/community/groups/${g.id}`)} className="min-w-0 flex-1 text-left">
-                          <span className="block break-words text-sm font-medium leading-snug text-hc-ink">{g.name}</span>
-                          <span className="mt-0.5 block text-xs text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
+                          <span className="block truncate text-[13px] font-semibold text-hc-ink">{g.name}</span>
+                          <span className="text-[11px] text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
                         </button>
                         <button
                           onClick={() => authed(handleJoin)(g.id)}
-                          className="h-10 shrink-0 rounded-xl bg-hc-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                          className="h-8 shrink-0 rounded-lg bg-hc-brand px-3 text-xs font-bold text-white transition-colors hover:bg-hc-brand-strong"
                         >
                           Join
                         </button>
@@ -461,7 +467,7 @@ export default function CommunityPage() {
                   })}
                 </div>
               ) : (
-                <p className="text-xs leading-5 text-hc-ink-3">You&apos;ve joined all the groups — check back later for new ones.</p>
+                <p className="py-2 text-xs text-hc-ink-3">You&apos;ve joined all groups.</p>
               )}
             </Widget>
           </aside>
