@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { X, Bell, Briefcase, Wallet, MessageCircle, Star, UserPlus } from 'lucide-react';
+import { X, Bell, Briefcase, Wallet, MessageCircle, Star, UserPlus, Flag } from 'lucide-react';
 import { markNotificationRead } from '@/services/notificationService';
 
 const typeConfig = {
@@ -8,6 +8,8 @@ const typeConfig = {
   message: { icon: MessageCircle, color: 'text-purple-600', bg: 'bg-purple-50' },
   follow: { icon: UserPlus, color: 'text-pink-600', bg: 'bg-pink-50' },
   review: { icon: Star, color: 'text-amber-500', bg: 'bg-amber-50' },
+  group_report: { icon: Flag, color: 'text-red-600', bg: 'bg-red-50' },
+  announcement: { icon: Bell, color: 'text-orange-600', bg: 'bg-orange-50' },
 };
 
 export default function NotificationPopup({ notifications }) {

@@ -1,6 +1,7 @@
-import { collection, addDoc, doc, query, onSnapshot, serverTimestamp, updateDoc, deleteField } from 'firebase/firestore';
+import { collection, addDoc, doc, query, onSnapshot, serverTimestamp, updateDoc, deleteField, where, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase/config';
 import { getUserProfile } from '@/services/userService';
+import { createNotification } from '@/services/notificationService';
 
 export const GROUP_LOCATIONS_OPTIONS = ['Harare', 'Bulawayo', 'Mutare', 'Gweru', 'Victoria Falls', 'Masvingo', 'Zimbabwe Wide'];
 export const GROUP_VISIBILITY_OPTIONS = [
@@ -84,4 +85,35 @@ export const roleOf = (group, uid) => {
   if (group.ownerId === uid) return 'owner';
   if (group.admins?.[uid]) return 'admin';
   return isMember(group, uid) ? 'member' : null;
+};
+
+export const reportGroup = async (groupId, reporterUid, reporterName, reason, details = '') => {
+  if (!reporterUid) throw new Error('You must be signed in to report.');
+  if (!reason?.trim()) throw new Error('Please select a reason.');
+
+  await addDoc(collection(db, 'reports'), {
+    type: 'group',
+    targetId: groupId,
+    reporterUid,
+    reporterName,
+    reason: reason.trim(),
+    details: details.trim(),
+    status: 'pending',
+    createdAt: serverTimestamp(),
+  });
+
+  const adminSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'admin')));
+  const adminUids = adminSnap.docs.map((d) => d.id);
+
+  await Promise.allSettled(
+    adminUids.map((adminUid) =>
+      createNotification(adminUid, reporterUid, 'group_report', {
+        title: 'Group Reported',
+        text: `${reporterName} reported a group: "${reason}"`,
+        groupId,
+        reason,
+        details,
+      })
+    )
+  );
 };

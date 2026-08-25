@@ -2,7 +2,7 @@ import useNotifications from '@/hooks/useNotifications';
 import { markNotificationRead, markAllNotificationsRead } from '@/services/notificationService';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { timeAgo } from '@/utils/time';
-import { Bell, Briefcase, Wallet, MessageCircle, Star, UserPlus, CheckCheck } from 'lucide-react';
+import { Bell, Briefcase, Wallet, MessageCircle, Star, UserPlus, CheckCheck, Flag } from 'lucide-react';
 
 const typeConfig = {
   job: { icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
@@ -10,6 +10,8 @@ const typeConfig = {
   message: { icon: MessageCircle, color: 'text-purple-600', bg: 'bg-purple-50' },
   follow: { icon: UserPlus, color: 'text-pink-600', bg: 'bg-pink-50' },
   review: { icon: Star, color: 'text-amber-500', bg: 'bg-amber-50' },
+  group_report: { icon: Flag, color: 'text-red-600', bg: 'bg-red-50' },
+  announcement: { icon: Bell, color: 'text-orange-600', bg: 'bg-orange-50' },
 };
 
 export default function NotificationsPage() {

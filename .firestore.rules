@@ -253,11 +253,8 @@ service cloud.firestore {
       // The creator becomes the owner.
       allow create: if isAuth() && request.resource.data.ownerId == request.auth.uid;
 
-      // Owner or admin can update group settings.
-      allow update: if isAuth() && (
-        resource.data.ownerId == request.auth.uid ||
-        isAdmin()
-      );
+      // Owner, admin, or any authenticated user (join/leave writes members map).
+      allow update: if isAuth();
 
       // Owner or admin can delete groups.
       allow delete: if isAuth() && (

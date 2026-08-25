@@ -2,12 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, BadgeCheck, Calendar, Flag, Globe, Hash, Lock, Mail, MapPin, Megaphone,
-  MessageSquare, Share2, Shield, Users,
+  MessageSquare, Share2, Shield, Users, X, Send, AlertTriangle, Link2, MessageCircle,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { createPost, reactToPost, subscribeToPosts, toggleSave, votePoll, updatePost, deletePost, updateComment, deleteComment } from '@/services/postService';
 import { followUser, unfollowUser, subscribeFollowing } from '@/services/followService';
-import { subscribeGroup, joinGroup, leaveGroup, memberCount, isMember, roleOf } from '@/services/groupService';
+import { subscribeGroup, joinGroup, leaveGroup, memberCount, isMember, roleOf, reportGroup } from '@/services/groupService';
 import { getUserProfile } from '@/services/userService';
 import { uploadFile } from '@/services/storageService';
 import CommunityComposer from '@/features/community/components/CommunityComposer';
@@ -49,7 +49,12 @@ export default function GroupPage() {
   const [posting, setPosting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [manageHint, setManageHint] = useState(false);
-  const [reportHint, setReportHint] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDetails, setReportDetails] = useState('');
+  const [reporting, setReporting] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   useEffect(
     () => subscribeGroup(groupId, (g) => { setGroup(g); setLoaded(true); }),
@@ -151,10 +156,53 @@ export default function GroupPage() {
   };
   const handleJoin = () => { if (currentUser) joinGroup(groupId, currentUser.uid).catch(() => {}); };
   const handleLeave = () => { if (currentUser) leaveGroup(groupId, currentUser.uid).catch(() => {}); };
-  const copyLink = () => {
-    if (navigator.clipboard) navigator.clipboard.writeText(window.location.href).catch(() => {});
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
+
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareText = `Join "${group?.name || 'this group'}" on HandyConnect`;
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: group?.name, text: shareText, url: shareUrl });
+      } catch { /* user cancelled */ }
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(shareUrl).catch(() => {});
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleInvite = async (method) => {
+    if (method === 'copy') {
+      if (navigator.clipboard) await navigator.clipboard.writeText(shareUrl).catch(() => {});
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } else if (method === 'whatsapp') {
+      window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+    } else if (method === 'sms') {
+      window.open(`sms:?body=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+    }
+    setInviteOpen(false);
+  };
+
+  const REPORT_REASONS = [
+    'Spam or fake content',
+    'Hate speech or harassment',
+    'Inappropriate content',
+    'Scam or fraud',
+    'Misleading information',
+    'Other',
+  ];
+
+  const handleReport = async () => {
+    if (!reportReason || !currentUser) return;
+    setReporting(true);
+    try {
+      await reportGroup(groupId, currentUser.uid, currentUser.displayName || currentUser.email, reportReason, reportDetails);
+      setReportSent(true);
+      setTimeout(() => { setReportOpen(false); setReportSent(false); setReportReason(''); setReportDetails(''); }, 2500);
+    } catch { /* silently fail */ }
+    setReporting(false);
   };
 
   const renderStats = () => {
@@ -467,19 +515,19 @@ export default function GroupPage() {
                 </button>
               )}
               <button
-                onClick={copyLink}
+                onClick={() => setInviteOpen(true)}
                 className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
                 <Mail size={15} /> Invite
               </button>
               <button
-                onClick={copyLink}
+                onClick={handleShare}
                 className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
                 <Share2 size={15} /> Share
               </button>
               <button
-                onClick={() => setReportHint(true)}
+                onClick={() => setReportOpen(true)}
                 title="Report group"
                 className="rounded-xl border border-hc-hairline bg-white p-2.5 text-hc-ink-3 shadow-sm transition-colors hover:bg-red-50 hover:text-red-500 dark:border-gray-700 dark:bg-gray-800"
               >
@@ -495,11 +543,6 @@ export default function GroupPage() {
             </p>
           )}
 
-          {copied && (
-            <p className="mt-3 inline-block rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
-              Invite link copied to clipboard.
-            </p>
-          )}
           {manageHint && (
             <div className="mt-3 flex items-center gap-2 rounded-xl bg-hc-tile px-3 py-2 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
               <Shield size={13} />
@@ -507,15 +550,110 @@ export default function GroupPage() {
               <button onClick={() => setManageHint(false)} className="ml-auto text-hc-ink-3 hover:text-hc-ink-2">✕</button>
             </div>
           )}
-          {reportHint && (
-            <div className="mt-3 flex items-center gap-2 rounded-xl bg-hc-tile px-3 py-2 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">
-              <Flag size={13} />
-              Reporting is coming soon — our team will review groups that break community guidelines.
-              <button onClick={() => setReportHint(false)} className="ml-auto text-hc-ink-3 hover:text-hc-ink-2">✕</button>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Invite Modal */}
+      {inviteOpen && (
+        <>
+          <button className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={() => setInviteOpen(false)} aria-label="Close" />
+          <div className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-md -translate-y-1/2 rounded-2xl border border-hc-hairline bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
+            <div className="mb-5 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-hc-ink dark:text-gray-100">Invite to group</h3>
+              <button onClick={() => setInviteOpen(false)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700"><X size={18} /></button>
+            </div>
+            <p className="mb-4 text-sm text-hc-caption dark:text-gray-400">Share this group with friends and colleagues.</p>
+            <div className="space-y-2.5">
+              <button onClick={() => handleInvite('copy')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <Link2 size={18} className="text-hc-brand" />
+                <div>
+                  <p className="font-semibold">Copy link</p>
+                  <p className="text-xs font-normal text-hc-caption">Copy the group URL to clipboard</p>
+                </div>
+              </button>
+              <button onClick={() => handleInvite('whatsapp')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <MessageCircle size={18} className="text-emerald-500" />
+                <div>
+                  <p className="font-semibold">WhatsApp</p>
+                  <p className="text-xs font-normal text-hc-caption">Share via WhatsApp message</p>
+                </div>
+              </button>
+              <button onClick={() => handleInvite('sms')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <Send size={18} className="text-blue-500" />
+                <div>
+                  <p className="font-semibold">Text message</p>
+                  <p className="text-xs font-normal text-hc-caption">Send an SMS with the invite link</p>
+                </div>
+              </button>
+            </div>
+            {copied && (
+              <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                Link copied!
+              </p>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Report Modal */}
+      {reportOpen && (
+        <>
+          <button className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={() => { setReportOpen(false); setReportSent(false); setReportReason(''); setReportDetails(''); }} aria-label="Close" />
+          <div className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-md -translate-y-1/2 rounded-2xl border border-hc-hairline bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
+            {reportSent ? (
+              <div className="py-8 text-center">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/20">
+                  <AlertTriangle size={24} className="text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <p className="text-lg font-bold text-hc-ink dark:text-gray-100">Report submitted</p>
+                <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Our team will review this group. Thank you for helping keep HandyConnect safe.</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-5 flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-hc-ink dark:text-gray-100">Report group</h3>
+                  <button onClick={() => setReportOpen(false)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700"><X size={18} /></button>
+                </div>
+                <p className="mb-4 text-sm text-hc-caption dark:text-gray-400">Why are you reporting this group? All reports are sent to the admin team.</p>
+                <div className="space-y-2">
+                  {REPORT_REASONS.map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => setReportReason(r)}
+                      className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-[15px] font-medium transition-colors ${
+                        reportReason === r
+                          ? 'border-hc-brand bg-hc-tint text-hc-brand'
+                          : 'border-hc-hairline bg-white text-hc-ink-2 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                      }`}
+                    >
+                      <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${reportReason === r ? 'border-hc-brand' : 'border-gray-300 dark:border-gray-600'}`}>
+                        {reportReason === r && <div className="h-2 w-2 rounded-full bg-hc-brand" />}
+                      </div>
+                      {r}
+                    </button>
+                  ))}
+                </div>
+                {reportReason && (
+                  <textarea
+                    value={reportDetails}
+                    onChange={(e) => setReportDetails(e.target.value)}
+                    placeholder="Add any extra details (optional)…"
+                    rows={3}
+                    className="mt-3 w-full rounded-xl border border-hc-hairline bg-white px-4 py-3 text-sm text-hc-ink outline-none transition-colors focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                  />
+                )}
+                <button
+                  onClick={handleReport}
+                  disabled={!reportReason || reporting}
+                  className="mt-4 w-full rounded-xl bg-red-600 px-4 py-3 text-[15px] font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                >
+                  {reporting ? 'Submitting…' : 'Submit report'}
+                </button>
+              </>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Tabs */}
       <div className="mt-4 flex gap-1 overflow-x-auto rounded-xl border border-hc-hairline bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-800">
