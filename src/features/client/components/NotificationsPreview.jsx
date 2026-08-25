@@ -21,7 +21,7 @@ export default function NotificationsPreview() {
       icon={Bell}
       title="Notifications"
       actionLabel="See all"
-      onAction={() => navigate('/notifications')}
+      onAction={() => navigate('/client/notifications')}
       badge={
         unreadCount > 0 ? (
           <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-hc-brand px-1.5 text-[10px] font-bold text-white">
