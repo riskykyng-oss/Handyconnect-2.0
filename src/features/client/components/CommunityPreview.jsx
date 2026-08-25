@@ -5,11 +5,11 @@ import { subscribeToPosts } from '@/services/postService';
 import { SectionHeader } from './DashboardUI';
 import { timeAgo } from './dashboardUtils';
 
-const TYPE_ACCENTS = {
-  question: 'from-blue-500 to-blue-600',
-  project: 'from-emerald-500 to-emerald-600',
-  tip: 'from-amber-500 to-amber-600',
-  default: 'from-orange-500 to-orange-600',
+const TYPE_STYLES = {
+  question: { gradient: 'from-hc-accent to-hc-accent-strong', bg: 'bg-hc-accent-tint', text: 'text-hc-accent', label: 'Question' },
+  project: { gradient: 'from-hc-brand to-hc-brand-strong', bg: 'bg-hc-tint', text: 'text-hc-brand', label: 'Project' },
+  tip: { gradient: 'from-amber-500 to-amber-600', bg: 'bg-amber-50', text: 'text-amber-600', label: 'Tip' },
+  default: { gradient: 'from-hc-brand to-hc-brand-strong', bg: 'bg-hc-tint', text: 'text-hc-brand', label: 'Post' },
 };
 
 export default function CommunityPreview() {
@@ -49,23 +49,23 @@ export default function CommunityPreview() {
       ) : (
         <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
           {posts.map((post) => {
-            const accent = TYPE_ACCENTS[post.type] || TYPE_ACCENTS.default;
+            const style = TYPE_STYLES[post.type] || TYPE_STYLES.default;
             return (
               <button
                 key={post.id}
                 onClick={() => navigate('/community')}
                 className="group flex w-[260px] shrink-0 flex-col overflow-hidden rounded-xl border border-black/[0.06] bg-white shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
               >
-                {/* Image or gradient header */}
+                {/* Image or type-colored header */}
                 {post.imageUrl ? (
                   <div className="relative h-36 overflow-hidden">
                     <img src={post.imageUrl} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   </div>
                 ) : (
-                  <div className={`relative h-20 bg-gradient-to-r ${accent}`}>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                      <MessagesSquare size={48} className="text-white" />
+                  <div className={`relative h-20 bg-gradient-to-r ${style.gradient}`}>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-15">
+                      <MessagesSquare size={44} className="text-white" />
                     </div>
                   </div>
                 )}
@@ -76,7 +76,7 @@ export default function CommunityPreview() {
                     {post.authorAvatar ? (
                       <img src={post.authorAvatar} alt="" className="h-6 w-6 shrink-0 rounded-full object-cover" />
                     ) : (
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[10px] font-bold text-orange-500">
+                      <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${style.bg} text-[10px] font-bold ${style.text}`}>
                         {(post.authorName || '?')[0]}
                       </span>
                     )}
@@ -101,7 +101,8 @@ export default function CommunityPreview() {
                       <MessageCircle size={12} /> {post.commentCount || 0}
                     </span>
                     {post.type && (
-                      <span className={`ml-auto rounded-full bg-gradient-to-r ${accent} px-2 py-0.5 text-[10px] font-bold text-white`}>
+                      <span className={`ml-auto rounded-full px-2 py-0.5 text-[10px] font-bold ${style.bg} ${style.text}`}>
+                        {style.label}
                         {post.type}
                       </span>
                     )}
