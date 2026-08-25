@@ -45,7 +45,6 @@ const cardFromUser = (u, clientLoc) => {
     id: u.id,
     name: u.displayName || u.email || 'Handyman',
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
-    skills: u.skills ? u.skills.split(',').map((s) => s.trim()).filter(Boolean) : [],
     rating: typeof u.rating === 'number' ? u.rating : null,
     reviewCount: typeof u.reviewCount === 'number' ? u.reviewCount : 0,
     jobs: u.jobs || 0,
@@ -59,6 +58,12 @@ const cardFromUser = (u, clientLoc) => {
 };
 
 const initials = (name) => name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?';
+
+const truncateLocation = (label) => {
+  if (!label) return null;
+  const parts = label.split(',').map((s) => s.trim());
+  return parts.length > 2 ? `${parts[0]}, ${parts[1]}` : label;
+};
 
 function Avatar({ pro, size = 'h-12 w-12' }) {
   return (
@@ -75,14 +80,13 @@ function Avatar({ pro, size = 'h-12 w-12' }) {
 }
 
 function ProCard({ pro, index, onView, onHire }) {
-  const hasSkills = pro.skills.length > 0;
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.03, 0.3) }}
       whileHover={{ y: -3 }}
-      className={`${cardClass} flex flex-col p-4 transition-shadow hover:shadow-md`}
+      className={`${cardClass} flex flex-col p-5 transition-shadow hover:shadow-md`}
     >
       <div className="flex items-start gap-3">
         <Avatar pro={pro} />
@@ -95,7 +99,7 @@ function ProCard({ pro, index, onView, onHire }) {
         </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-hc-ink-2">
+      <div className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-hc-ink-2">
         {pro.rating != null ? (
           <span className="flex items-center gap-1 font-bold text-hc-ink">
             <Star size={14} className="fill-amber-400 text-amber-400" /> {pro.rating.toFixed(1)}
@@ -105,40 +109,33 @@ function ProCard({ pro, index, onView, onHire }) {
           <span className="text-sm text-hc-caption">No reviews yet</span>
         )}
         {pro.distanceLabel && (
-          <span className="flex items-center gap-1 text-sm">
-            <MapPin size={13} className="text-gray-400" /> {pro.distanceLabel}
+          <span className="flex items-center gap-1 truncate text-sm" title={pro.distanceLabel}>
+            <MapPin size={13} className="shrink-0 text-gray-400" /> {truncateLocation(pro.distanceLabel)}
           </span>
         )}
       </div>
 
-      {pro.available && (
-        <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-emerald-600">
-          <span className="h-2 w-2 rounded-full bg-emerald-500" /> Available
-        </p>
-      )}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        {pro.available && (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Available
+          </span>
+        )}
+        {!pro.available && (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-semibold text-gray-500">
+            Offline
+          </span>
+        )}
+        {pro.jobs === 0 && pro.rating == null && (
+          <span className="inline-flex rounded-full bg-orange-50 px-2.5 py-1 text-[11px] font-semibold text-orange-600">New</span>
+        )}
+        {pro.jobs > 0 && (
+          <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-hc-caption">{pro.jobs} {pro.jobs === 1 ? 'job' : 'jobs'}</span>
+        )}
+      </div>
 
-      {hasSkills && (
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          {pro.skills.slice(0, 3).map((skill) => (
-            <span key={skill} className="rounded-full border border-black/[0.07] bg-gray-50 px-2.5 py-1 text-[11px] font-medium text-hc-ink-2">
-              {skill}
-            </span>
-          ))}
-          {pro.skills.length > 3 && (
-            <span className="rounded-full border border-black/[0.07] bg-gray-50 px-2.5 py-1 text-[11px] font-medium text-hc-caption">
-              +{pro.skills.length - 3}
-            </span>
-          )}
-        </div>
-      )}
-
-      <div className="mt-auto pt-3 border-t border-black/[0.07]">
-        {pro.jobs > 0 ? (
-          <p className="mb-3 text-sm text-hc-caption">{pro.jobs} {pro.jobs === 1 ? 'job' : 'jobs'} completed</p>
-        ) : pro.jobs === 0 && pro.rating == null ? (
-          <p className="mb-3 text-sm text-hc-caption">New professional</p>
-        ) : null}
-        <div className="grid grid-cols-2 gap-2">
+      <div className="mt-auto pt-4">
+        <div className="grid grid-cols-2 gap-2.5">
           <button
             onClick={onView}
             className="rounded-lg bg-hc-brand py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-hc-brand-strong"
@@ -373,7 +370,7 @@ export default function ExplorePage() {
       </div>
 
       {/* Category + Filter chips — single scrollable row */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
         {JOB_CATEGORIES.map((cat) => {
           const Icon = categoryIcons[cat] || Wrench;
           const active = selectedCategory?.toLowerCase() === cat.toLowerCase();
@@ -466,17 +463,17 @@ export default function ExplorePage() {
                   </button>
                 </div>
               ) : results.length > 0 && results.length <= 3 ? (
-                <div className={`${cardClass} flex items-center gap-4 p-5`}>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
-                    <Sparkles size={18} />
+                <div className={`${cardClass} flex items-center gap-5 p-6`}>
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+                    <Sparkles size={20} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-hc-ink">Not finding who you need?</p>
-                    <p className="text-xs text-hc-caption">Post a job and let verified professionals come to you.</p>
+                    <p className="text-[15px] font-semibold text-hc-ink">Not finding who you need?</p>
+                    <p className="mt-0.5 text-sm text-hc-caption">Post a job and let verified professionals come to you.</p>
                   </div>
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="shrink-0 rounded-lg bg-hc-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                    className="shrink-0 rounded-lg bg-hc-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
                   >
                     Post a Job
                   </button>
