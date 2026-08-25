@@ -204,6 +204,28 @@ export default function CommunityPage() {
         <div className="lg:flex lg:items-start lg:gap-6">
           {/* Center feed */}
           <div className="min-w-0 lg:flex-1">
+            {/* Composer / join prompt — top of feed */}
+            <div className="mb-6">
+              {currentUser ? (
+                <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={null} user={currentUser} />
+              ) : (
+                <div className={`flex flex-col items-center gap-4 rounded-xl border border-hc-hairline bg-white p-8 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
+                  <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">
+                    Join the conversation
+                  </p>
+                  <p className="max-w-sm text-[15px] text-hc-caption dark:text-gray-400">
+                    Create a free account to share projects, ask questions and follow local pros.
+                  </p>
+                  <Link
+                    to="/auth/signup"
+                    className="inline-flex h-12 items-center gap-2 rounded-full bg-hc-brand px-8 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
+                  >
+                    Create free account
+                  </Link>
+                </div>
+              )}
+            </div>
+
             {/* Stories */}
             {currentUser && (
               <div className={`mb-6 rounded-xl border border-hc-hairline bg-white p-5 ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
@@ -293,28 +315,6 @@ export default function CommunityPage() {
                 />
               </div>
             )}
-
-            {/* Composer / join prompt */}
-            <div className="mb-6">
-              {currentUser ? (
-                <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={null} user={currentUser} />
-              ) : (
-                <div className={`flex flex-col items-center gap-4 rounded-xl border border-hc-hairline bg-white p-8 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
-                  <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">
-                    Join the conversation
-                  </p>
-                  <p className="max-w-sm text-[15px] text-hc-caption dark:text-gray-400">
-                    Create a free account to share projects, ask questions and follow local pros.
-                  </p>
-                  <Link
-                    to="/auth/signup"
-                    className="inline-flex h-12 items-center gap-2 rounded-full bg-hc-brand px-8 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-hc-brand-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hc-brand/40 active:translate-y-0 active:scale-[0.98]"
-                  >
-                    Create free account
-                  </Link>
-                </div>
-              )}
-            </div>
 
             {/* Filters */}
             <div ref={feedRef} className="mb-5 scroll-mt-24">
