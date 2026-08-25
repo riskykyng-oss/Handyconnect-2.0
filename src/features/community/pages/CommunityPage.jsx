@@ -202,7 +202,7 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-[100dvh] bg-hc-page">
-      <div className="mx-auto max-w-[1200px] px-4 py-8 lg:py-10">
+      <div className="mx-auto max-w-[1400px] px-4 py-8 lg:py-10">
         {/* Header */}
         <header className="mb-6">
           <h1 className="text-3xl font-bold tracking-tight text-hc-ink dark:text-gray-100">Community</h1>

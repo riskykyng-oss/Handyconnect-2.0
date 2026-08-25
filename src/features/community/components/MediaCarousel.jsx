@@ -7,8 +7,8 @@ export default function MediaCarousel({ images = [], alt = 'Post media' }) {
 
   return (
     <div className="relative group">
-      <div className="relative max-h-[520px] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
-        <img src={images[index]} alt={`${alt} ${index + 1}`} className="max-h-[520px] w-full object-cover" />
+      <div className="relative max-h-[560px] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
+        <img src={images[index]} alt={`${alt} ${index + 1}`} className="max-h-[560px] w-full object-cover" />
         {images.length > 1 && (
           <>
             <button

@@ -255,14 +255,14 @@ export default function GroupPage() {
   );
 
   const renderPosts = () => (
-    <div className="max-w-[760px] space-y-6">
+    <div className="max-w-[860px] space-y-6">
       {joined ? (
         <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={group} user={currentUser} />
       ) : (
-        <div className="rounded-xl border border-hc-hairline bg-white p-6 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
-          <p className="text-sm font-semibold text-hc-ink dark:text-gray-100">Join the group to post</p>
-          <p className="mt-1 text-xs text-hc-caption dark:text-gray-400">Members can share work, ask questions and help each other out.</p>
-          <button onClick={handleJoin} className="mt-3 rounded-xl bg-hc-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong">
+        <div className="rounded-xl border border-hc-hairline bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <p className="text-base font-semibold text-hc-ink dark:text-gray-100">Join the group to post</p>
+          <p className="mt-1.5 text-sm text-hc-caption dark:text-gray-400">Members can share work, ask questions and help each other out.</p>
+          <button onClick={handleJoin} className="mt-4 rounded-xl bg-hc-brand px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-hc-brand-strong">
             Join group
           </button>
         </div>
@@ -299,7 +299,7 @@ export default function GroupPage() {
   );
 
   const renderMembers = () => (
-    <div className="max-w-[760px] space-y-3">
+    <div className="max-w-[860px] space-y-3">
       {memberList.map((m) => {
         const badge = ROLE_BADGES[m.role];
         return (
@@ -336,10 +336,10 @@ export default function GroupPage() {
   );
 
   const renderAbout = () => (
-    <div className="max-w-[760px] space-y-6">
+    <div className="max-w-[860px] space-y-6">
       <div className="rounded-xl border border-hc-hairline bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <h3 className="mb-2 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">About this group</h3>
-        <p className="text-sm leading-relaxed text-hc-ink-2 dark:text-gray-300">{group.description || 'No description yet.'}</p>
+        <p className="text-[15px] leading-relaxed text-hc-ink-2 dark:text-gray-300">{group.description || 'No description yet.'}</p>
       </div>
 
       <div className="rounded-xl border border-hc-hairline bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -402,7 +402,7 @@ export default function GroupPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1120px] px-4 py-8 lg:py-10">
+    <div className="mx-auto max-w-[1400px] px-4 py-8 lg:py-10">
       <Link to="/community" className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:text-hc-ink dark:text-gray-300">
         <ArrowLeft size={15} /> Back to Community
       </Link>
@@ -410,9 +410,9 @@ export default function GroupPage() {
       {/* Header */}
       <div className="overflow-hidden rounded-xl border border-hc-hairline bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
         {group.coverImage ? (
-          <img src={group.coverImage} alt="" className="h-36 w-full object-cover sm:h-44" />
+          <img src={group.coverImage} alt="" className="h-48 w-full object-cover sm:h-56" />
         ) : (
-          <div className="h-36 w-full bg-gradient-to-r from-hc-brand to-hc-brand-strong sm:h-44" />
+          <div className="h-48 w-full bg-gradient-to-r from-hc-brand to-hc-brand-strong sm:h-56" />
         )}
 
         <div className="px-5 pb-6 sm:px-8">
@@ -426,8 +426,8 @@ export default function GroupPage() {
                 </span>
               )}
               <div className="min-w-0 pb-0.5">
-                <h1 className="truncate text-2xl font-semibold tracking-tight text-hc-ink dark:text-gray-100">{group.name}</h1>
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-hc-caption dark:text-gray-400">
+                <h1 className="truncate text-3xl font-bold tracking-tight text-hc-ink dark:text-gray-100">{group.name}</h1>
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] font-medium text-gray-500 dark:text-gray-400">
                   {group.category && (
                     <span className="flex items-center gap-1"><Hash size={12} /> {group.category}</span>
                   )}
@@ -446,14 +446,14 @@ export default function GroupPage() {
                   {myRole === 'owner' && (
                     <button
                       onClick={() => setManageHint(true)}
-                      className="rounded-xl border border-hc-hairline bg-white px-4 py-2 text-sm font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                      className="rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                     >
                       Manage group
                     </button>
                   )}
                   <button
                     onClick={handleLeave}
-                    className="rounded-xl border border-hc-hairline bg-white px-4 py-2 text-sm font-semibold text-hc-ink-2 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                    className="rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                   >
                     Leave
                   </button>
@@ -461,27 +461,27 @@ export default function GroupPage() {
               ) : (
                 <button
                   onClick={handleJoin}
-                  className="flex items-center gap-2 rounded-xl bg-hc-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
+                  className="flex items-center gap-2 rounded-xl bg-hc-brand px-5 py-2.5 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
                 >
                   <Users size={15} /> Join group
                 </button>
               )}
               <button
                 onClick={copyLink}
-                className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-4 py-2 text-sm font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
-                <Mail size={14} /> Invite
+                <Mail size={15} /> Invite
               </button>
               <button
                 onClick={copyLink}
-                className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-4 py-2 text-sm font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex items-center gap-1.5 rounded-xl border border-hc-hairline bg-white px-5 py-2.5 text-[15px] font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
-                <Share2 size={14} /> Share
+                <Share2 size={15} /> Share
               </button>
               <button
                 onClick={() => setReportHint(true)}
                 title="Report group"
-                className="rounded-xl border border-hc-hairline bg-white p-2 text-hc-ink-3 shadow-sm transition-colors hover:bg-red-50 hover:text-red-500 dark:border-gray-700 dark:bg-gray-800"
+                className="rounded-xl border border-hc-hairline bg-white p-2.5 text-hc-ink-3 shadow-sm transition-colors hover:bg-red-50 hover:text-red-500 dark:border-gray-700 dark:bg-gray-800"
               >
                 <Flag size={15} />
               </button>
@@ -489,7 +489,7 @@ export default function GroupPage() {
           </div>
 
           {group.description && (
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-hc-ink-2 dark:text-gray-300">
+            <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-hc-ink-2 dark:text-gray-300">
               {group.description}
               <span className="ml-1 font-medium text-hc-ink-3">Created by {group.createdByName || 'a professional'} on {formatDate(group.createdAt)}.</span>
             </p>

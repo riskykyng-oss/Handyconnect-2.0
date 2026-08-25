@@ -175,28 +175,28 @@ export default function PostCard({
   const media = () => {
     if (post.beforeImage && post.afterImage) {
       return (
-        <div className="grid h-40 grid-cols-2 gap-1.5 overflow-hidden rounded-lg">
+        <div className="grid h-48 grid-cols-2 gap-2 overflow-hidden rounded-xl md:h-72">
           <div className="relative bg-hc-tile">
             <img src={post.beforeImage} alt="Before" loading="lazy" className="h-full w-full object-cover" />
-            <span className="absolute bottom-1.5 left-1.5 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">Before</span>
+            <span className="absolute bottom-2 left-2 rounded-lg bg-black/60 px-2 py-1 text-xs font-semibold text-white backdrop-blur-sm">Before</span>
           </div>
           <div className="relative bg-hc-tile">
             <img src={post.afterImage} alt="After" loading="lazy" className="h-full w-full object-cover" />
-            <span className="absolute bottom-1.5 left-1.5 rounded bg-emerald-700 px-1.5 py-0.5 text-[10px] font-semibold text-white">After</span>
+            <span className="absolute bottom-2 left-2 rounded-lg bg-emerald-700/90 px-2 py-1 text-xs font-semibold text-white backdrop-blur-sm">After</span>
           </div>
         </div>
       );
     }
     if (post.videoUrl) {
       return (
-        <div className="aspect-[4/3] max-h-[360px] w-full overflow-hidden bg-gray-100">
+        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl bg-gray-100">
           <video src={post.videoUrl} controls className="h-full w-full object-cover" />
         </div>
       );
     }
     if (post.media?.length > 1) {
       return (
-        <div className="aspect-[4/3] max-h-[360px] w-full overflow-hidden">
+        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl">
           <MediaCarousel images={post.media} alt={`${post.authorName}'s project`} />
         </div>
       );
@@ -204,7 +204,7 @@ export default function PostCard({
     const src = post.media?.[0] || post.imageUrl;
     if (src) {
       return (
-        <div className="aspect-[4/3] max-h-[360px] w-full overflow-hidden bg-gray-100">
+        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl bg-gray-100">
           <img src={src} alt="Post attachment" className="h-full w-full object-cover" />
         </div>
       );
@@ -232,7 +232,7 @@ export default function PostCard({
             <ColoredAvatar id={post.authorId} name={post.authorName} />
           )}
           <div className="min-w-0 flex-1">
-            <p className="flex items-center gap-1.5 text-[15px] font-medium tracking-tight text-hc-ink dark:text-gray-100">
+            <p className="flex items-center gap-1.5 text-[15px] font-semibold tracking-tight text-hc-ink dark:text-gray-100">
               {isPro ? (
                 <button type="button" onClick={goProfile} className="truncate hover:underline">{post.authorName}</button>
               ) : (
@@ -240,7 +240,7 @@ export default function PostCard({
               )}
               {post.authorVerified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
             </p>
-            <p className="mt-0.5 flex items-center gap-1 text-xs text-hc-ink-3 dark:text-gray-400">
+            <p className="mt-0.5 flex items-center gap-1 text-[13px] text-gray-500 dark:text-gray-400">
               <span className="truncate">{post.authorTrade || <span className="capitalize">{post.authorRole}</span>}</span>
               <span>&middot;</span>
               <span className="shrink-0">{timeAgo(post.createdAt)}</span>
@@ -328,16 +328,16 @@ export default function PostCard({
             </div>
           </div>
         ) : (
-          <div className="px-5 pb-4 text-[15px] leading-7 text-hc-ink-2 dark:text-gray-300">{renderText(post.text, onHashtag)}</div>
+          <div className="px-5 pb-4 text-base leading-7 text-hc-ink-2 dark:text-gray-300">{renderText(post.text, onHashtag)}</div>
         )}
 
         {!editing && (post.trade || TYPE_BADGES[post.type]) && (
           <div className="flex flex-wrap items-center gap-1.5 px-5 pb-3">
             {TYPE_BADGES[post.type] && (
-              <span className="rounded-full bg-hc-tint px-2.5 py-1 text-[11px] font-semibold text-hc-tint-text">{TYPE_BADGES[post.type]}</span>
+              <span className="rounded-full bg-hc-tint px-3 py-1 text-xs font-semibold text-hc-tint-text">{TYPE_BADGES[post.type]}</span>
             )}
             {post.trade && (
-              <span className="rounded-full bg-hc-tile px-2.5 py-1 text-[11px] font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">{post.trade}</span>
+              <span className="rounded-full bg-hc-tile px-3 py-1 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">{post.trade}</span>
             )}
           </div>
         )}
@@ -434,27 +434,29 @@ export default function PostCard({
 
         {/* Role-aware CTA row */}
         {showCTA && (
-          <div className="flex items-stretch gap-3 border-t border-hc-hairline bg-hc-page/60 px-6 py-4.5 dark:border-gray-700 dark:bg-gray-700/40">
+          <div className="space-y-2.5 border-t border-hc-hairline bg-hc-page/60 px-6 py-4 dark:border-gray-700 dark:bg-gray-700/40">
             {viewerRole === 'client' && (
               <button
                 onClick={() => navigate('/client/home?post=1')}
-                className="h-12 min-w-0 flex-1 rounded-xl bg-hc-brand px-5 text-[15px] font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                className="h-12 w-full rounded-xl bg-hc-brand px-5 text-[15px] font-bold text-white shadow-sm transition-all hover:bg-hc-brand-strong hover:shadow-md active:scale-[0.98]"
               >
                 <span className="block truncate">Hire {post.authorName.split(' ')[0]}</span>
               </button>
             )}
-            <button
-              onClick={() => navigate(`/${viewerRole === 'client' ? 'client' : 'handyman'}/chat/direct/${post.authorId}`)}
-              className="h-12 shrink-0 rounded-xl border border-hc-brand/25 bg-transparent px-5 text-[15px] font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-            >
-              Message
-            </button>
-            <button
-              onClick={() => navigate(`/pro/${post.authorId}`)}
-              className="h-12 shrink-0 rounded-xl border border-hc-brand/25 bg-transparent px-5 text-[15px] font-medium text-hc-brand transition-colors hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-            >
-              {viewerRole === 'client' ? 'View Profile' : 'View Portfolio'}
-            </button>
+            <div className="flex gap-2.5">
+              <button
+                onClick={() => navigate(`/${viewerRole === 'client' ? 'client' : 'handyman'}/chat/direct/${post.authorId}`)}
+                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-[13px] font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+              >
+                Message
+              </button>
+              <button
+                onClick={() => navigate(`/pro/${post.authorId}`)}
+                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-[13px] font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+              >
+                {viewerRole === 'client' ? 'View Profile' : 'View Portfolio'}
+              </button>
+            </div>
           </div>
         )}
 
