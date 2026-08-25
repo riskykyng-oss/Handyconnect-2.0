@@ -249,7 +249,7 @@ export default function ClientLayout() {
                       </div>
                     ))}
                   </div>
-                  <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+                  <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
                     View all notifications
                   </button>
                 </div>
@@ -333,7 +333,7 @@ export default function ClientLayout() {
                         </div>
                       ))}
                     </div>
-                    <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+                    <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
                       View all notifications
                     </button>
                   </div>
@@ -442,7 +442,7 @@ export default function ClientLayout() {
                 </div>
               ))}
             </div>
-            <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+            <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
               View all notifications
             </button>
           </div>

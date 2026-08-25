@@ -43,6 +43,7 @@ const GroupPage = lazy(() => import('@/features/community/pages/GroupPage'));
 const HandymanDashboardPage = lazy(() => import('@/features/handyman/pages/HandymanDashboardPage'));
 const PortfolioPage = lazy(() => import('@/features/handyman/pages/PortfolioPage'));
 const ProPortfolioPage = lazy(() => import('@/features/portfolio/pages/ProPortfolioPage'));
+const NotificationsPage = lazy(() => import('@/features/notifications/pages/NotificationsPage'));
 
 // Admin Pages
 const AdminDashboardPage = lazy(() => import('@/features/admin/pages/AdminDashboardPage'));
@@ -119,6 +120,7 @@ function App() {
                 <Route path="/client/chat/:jobId" element={<ChatPage />} />
                 <Route path="/client/chat/d/:convId" element={<ChatPage />} />
                 <Route path="/client/chat/direct/:otherId" element={<ChatPage />} />
+                <Route path="/client/notifications" element={<NotificationsPage />} />
               </Route>
             </Route>
 
@@ -136,6 +138,7 @@ function App() {
                 <Route path="/handyman/chat/:jobId" element={<ChatPage />} />
                 <Route path="/handyman/chat/d/:convId" element={<ChatPage />} />
                 <Route path="/handyman/chat/direct/:otherId" element={<ChatPage />} />
+                <Route path="/handyman/notifications" element={<NotificationsPage />} />
               </Route>
             </Route>
 

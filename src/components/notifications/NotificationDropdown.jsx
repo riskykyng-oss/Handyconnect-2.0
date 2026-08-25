@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/features/auth/context/AuthContext';
 import { markNotificationRead, markAllNotificationsRead } from '@/services/notificationService';
 import { timeAgo } from '@/utils/time';
 
-export default function NotificationDropdown({ notifications, unreadCount, open, onClose, currentUser }) {
+export default function NotificationDropdown({ notifications, unreadCount, open, onClose }) {
   const ref = useRef(null);
   const navigate = useNavigate();
+  const { currentUser, userRole } = useAuth();
 
   useEffect(() => {
     if (!open) return;
@@ -55,7 +57,7 @@ export default function NotificationDropdown({ notifications, unreadCount, open,
       <button
         onClick={() => {
           onClose();
-          const basePath = currentUser?.role === 'handyman' ? '/handyman' : '/client';
+          const basePath = userRole === 'handyman' ? '/handyman' : '/client';
           navigate(`${basePath}/notifications`);
         }}
         className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl"
