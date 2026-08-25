@@ -62,7 +62,7 @@ function PollBlock({ post, currentUserId, onVote }) {
               }`}
             >
               <div className="flex items-center justify-between gap-3">
-                <span className={`min-w-0 flex-1 truncate text-sm ${isMine || isLeading ? 'font-semibold text-hc-ink dark:text-gray-100' : 'font-medium text-hc-ink-2 dark:text-gray-300'}`}>
+                <span className={`min-w-0 flex-1 truncate text-base ${isMine || isLeading ? 'font-semibold text-hc-ink dark:text-gray-100' : 'font-medium text-hc-ink-2 dark:text-gray-300'}`}>
                   {opt.text}
                 </span>
                 <span className="shrink-0 text-xs font-semibold text-hc-caption dark:text-gray-400">{pct}%</span>
@@ -75,7 +75,7 @@ function PollBlock({ post, currentUserId, onVote }) {
           );
         })}
       </div>
-      <p className="mt-2 text-[11px] font-semibold text-hc-ink-3">{total} {total === 1 ? 'vote' : 'votes'}</p>
+        <p className="mt-2 text-xs font-semibold text-hc-ink-3">{total} {total === 1 ? 'vote' : 'votes'}</p>
     </div>
   );
 }
@@ -232,7 +232,7 @@ export default function PostCard({
             <ColoredAvatar id={post.authorId} name={post.authorName} />
           )}
           <div className="min-w-0 flex-1">
-            <p className="flex items-center gap-1.5 text-[15px] font-semibold tracking-tight text-hc-ink dark:text-gray-100">
+            <p className="flex items-center gap-1.5 text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">
               {isPro ? (
                 <button type="button" onClick={goProfile} className="truncate hover:underline">{post.authorName}</button>
               ) : (
@@ -240,7 +240,7 @@ export default function PostCard({
               )}
               {post.authorVerified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
             </p>
-            <p className="mt-0.5 flex items-center gap-1 text-[13px] text-gray-500 dark:text-gray-400">
+            <p className="mt-0.5 flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
               <span className="truncate">{post.authorTrade || <span className="capitalize">{post.authorRole}</span>}</span>
               <span>&middot;</span>
               <span className="shrink-0">{timeAgo(post.createdAt)}</span>
@@ -328,16 +328,16 @@ export default function PostCard({
             </div>
           </div>
         ) : (
-          <div className="px-5 pb-4 text-base leading-7 text-hc-ink-2 dark:text-gray-300">{renderText(post.text, onHashtag)}</div>
+          <div className="px-5 pb-4 text-lg leading-7 text-hc-ink-2 dark:text-gray-300">{renderText(post.text, onHashtag)}</div>
         )}
 
         {!editing && (post.trade || TYPE_BADGES[post.type]) && (
           <div className="flex flex-wrap items-center gap-1.5 px-5 pb-3">
             {TYPE_BADGES[post.type] && (
-              <span className="rounded-full bg-hc-tint px-3 py-1 text-xs font-semibold text-hc-tint-text">{TYPE_BADGES[post.type]}</span>
+              <span className="rounded-full bg-hc-tint px-3 py-1 text-[13px] font-semibold text-hc-tint-text">{TYPE_BADGES[post.type]}</span>
             )}
             {post.trade && (
-              <span className="rounded-full bg-hc-tile px-3 py-1 text-xs font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">{post.trade}</span>
+              <span className="rounded-full bg-hc-tile px-3 py-1 text-[13px] font-semibold text-hc-ink-2 dark:bg-gray-700 dark:text-gray-300">{post.trade}</span>
             )}
           </div>
         )}
@@ -354,7 +354,7 @@ export default function PostCard({
           <div className="relative">
             <button
               onClick={() => setReactOpen((o) => !o)}
-              className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-[15px] font-semibold transition sm:gap-3 sm:px-5 ${
+              className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold transition sm:gap-3 sm:px-5 ${
                 myReaction ? 'text-hc-ink' : 'text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               aria-haspopup="menu"
@@ -384,13 +384,13 @@ export default function PostCard({
 
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-[15px] font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-3 sm:px-5"
+            className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-3 sm:px-5"
           >
             <MessageCircle size={20} />
             {post.commentCount || comments.length || 0}
           </button>
 
-          <button onClick={share} className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-[15px] font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-3 sm:px-5">
+          <button onClick={share} className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-3 sm:px-5">
             {copied ? <Check size={20} className="text-emerald-500" /> : <Share2 size={20} />}
             {copied ? 'Copied' : 'Share'}
           </button>
@@ -399,7 +399,7 @@ export default function PostCard({
           <div className="relative ml-auto">
             <button
               onClick={() => setSaveOpen(!saveOpen)}
-              className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-[15px] font-semibold transition sm:gap-3 sm:px-5 ${
+              className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold transition sm:gap-3 sm:px-5 ${
                 savedIn.length ? 'text-hc-ink hover:bg-gray-100 dark:hover:bg-gray-700' : 'text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
@@ -438,7 +438,7 @@ export default function PostCard({
             {viewerRole === 'client' && (
               <button
                 onClick={() => navigate('/client/home?post=1')}
-                className="h-12 w-full rounded-xl bg-hc-brand px-5 text-[15px] font-bold text-white shadow-sm transition-all hover:bg-hc-brand-strong hover:shadow-md active:scale-[0.98]"
+                className="h-12 w-full rounded-xl bg-hc-brand px-5 text-base font-bold text-white shadow-sm transition-all hover:bg-hc-brand-strong hover:shadow-md active:scale-[0.98]"
               >
                 <span className="block truncate">Hire {post.authorName.split(' ')[0]}</span>
               </button>
@@ -446,13 +446,13 @@ export default function PostCard({
             <div className="flex gap-2.5">
               <button
                 onClick={() => navigate(`/${viewerRole === 'client' ? 'client' : 'handyman'}/chat/direct/${post.authorId}`)}
-                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-[13px] font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
               >
                 Message
               </button>
               <button
                 onClick={() => navigate(`/pro/${post.authorId}`)}
-                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-[13px] font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
               >
                 {viewerRole === 'client' ? 'View Profile' : 'View Portfolio'}
               </button>
@@ -465,11 +465,11 @@ export default function PostCard({
           <div className="border-t border-hc-hairline px-5 py-5 dark:border-gray-700">
             <div className="max-h-56 space-y-4 overflow-y-auto">
               {topComments.map((item) => (
-                <div key={item.id} className="rounded-xl bg-hc-page p-3 text-sm dark:bg-gray-700">
+                <div key={item.id} className="rounded-xl bg-hc-page p-3 text-base dark:bg-gray-700">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-hc-ink dark:text-gray-100">{item.authorName}</span>
-                    <span className="text-xs text-hc-ink-3">{timeAgo(item.createdAt)}</span>
-                    <button onClick={() => setReplyTo(replyTo?.id === item.id ? null : { id: item.id, name: item.authorName })} className="ml-auto text-xs font-semibold text-hc-brand hover:text-hc-brand-strong">
+                    <span className="text-sm text-hc-ink-3">{timeAgo(item.createdAt)}</span>
+                    <button onClick={() => setReplyTo(replyTo?.id === item.id ? null : { id: item.id, name: item.authorName })} className="ml-auto text-sm font-semibold text-hc-brand hover:text-hc-brand-strong">
                       Reply
                     </button>
                     {item.authorId === currentUserId && (
@@ -508,8 +508,8 @@ export default function PostCard({
                   {repliesFor(item.id).map((reply) => (
                     <div key={reply.id} className="mt-2 rounded-lg bg-white p-2.5 pl-4 dark:bg-gray-800">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-hc-ink dark:text-gray-100">{reply.authorName}</span>
-                        <span className="text-[10px] text-hc-ink-3">{timeAgo(reply.createdAt)}</span>
+                        <span className="text-sm font-semibold text-hc-ink dark:text-gray-100">{reply.authorName}</span>
+                        <span className="text-xs text-hc-ink-3">{timeAgo(reply.createdAt)}</span>
                         {reply.authorId === currentUserId && (
                           <button
                             onClick={() => onDeleteComment?.(post.id, reply.id).catch(() => {})}
@@ -520,16 +520,16 @@ export default function PostCard({
                           </button>
                         )}
                       </div>
-                      <p className="mt-0.5 text-sm text-hc-ink-2 dark:text-gray-300">{reply.text}</p>
+                      <p className="mt-0.5 text-base text-hc-ink-2 dark:text-gray-300">{reply.text}</p>
                     </div>
                   ))}
                 </div>
               ))}
-              {!topComments.length && <p className="py-2 text-center text-xs text-hc-ink-3">No comments yet. Start the conversation.</p>}
+              {!topComments.length && <p className="py-2 text-center text-sm text-hc-ink-3">No comments yet. Start the conversation.</p>}
             </div>
 
             {replyTo && (
-              <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-hc-ink-2">
+              <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-hc-ink-2">
                 Replying to {replyTo.name}
                 <button onClick={() => setReplyTo(null)} className="text-hc-ink-3 hover:text-hc-ink-2">✕</button>
               </p>
@@ -539,7 +539,7 @@ export default function PostCard({
               <input
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="min-w-0 flex-1 rounded-xl border border-black/[0.12] bg-white px-3 py-2 text-sm outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                className="min-w-0 flex-1 rounded-xl border border-black/[0.12] bg-white px-3 py-2 text-base outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                 placeholder={replyTo ? `Reply to ${replyTo.name}...` : 'Write a comment...'}
               />
               <button className="shrink-0 rounded-xl bg-hc-brand p-3 text-white transition-colors hover:bg-hc-brand-strong" aria-label="Post comment">

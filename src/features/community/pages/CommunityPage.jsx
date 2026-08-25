@@ -246,13 +246,13 @@ export default function CommunityPage() {
                             title={isAvailable ? 'Available for work' : 'Currently unavailable'}
                           />
                         </div>
-                        <p className="mt-2.5 truncate text-[15px] font-semibold text-hc-ink dark:text-gray-100">{p.name}</p>
+                        <p className="mt-2.5 truncate text-base font-semibold text-hc-ink dark:text-gray-100">{p.name}</p>
                         <p className="mt-0.5 truncate text-sm font-medium text-hc-ink-2">{p.trade}</p>
                         <div className="mt-2 flex items-center justify-center gap-1.5">
                           <Stars value={p.rating} />
-                          <span className="text-[11px] font-semibold text-hc-ink dark:text-gray-100">{p.rating ? p.rating.toFixed(1) : 'New'}</span>
+                          <span className="text-xs font-semibold text-hc-ink dark:text-gray-100">{p.rating ? p.rating.toFixed(1) : 'New'}</span>
                         </div>
-                        <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-hc-hairline pt-2.5 text-xs font-medium text-hc-ink-3 dark:border-gray-700">
+                        <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-hc-hairline pt-2.5 text-sm font-medium text-hc-ink-3 dark:border-gray-700">
                           <Briefcase size={12} className="text-hc-brand" /> {p.jobs} {p.jobs === 1 ? 'job' : 'jobs'}
                         </div>
                         <div className="mt-3 flex items-center gap-2.5">
@@ -366,8 +366,8 @@ export default function CommunityPage() {
 
               {!filtered.length && (
                 <div className={`rounded-xl border border-hc-hairline bg-white p-10 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
-                  <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">No posts here yet</p>
-                  <p className="mt-1.5 text-sm text-hc-caption dark:text-gray-400">Be the first to share something with the community.</p>
+                  <p className="text-xl font-semibold tracking-tight text-hc-ink dark:text-gray-100">No posts here yet</p>
+                  <p className="mt-1.5 text-base text-hc-caption dark:text-gray-400">Be the first to share something with the community.</p>
                 </div>
               )}
 
