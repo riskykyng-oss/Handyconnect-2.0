@@ -14,6 +14,7 @@ import RailRecentMessages from '@/features/client/components/RailRecentMessages'
 import RailWeeklySummary from '@/features/client/components/RailWeeklySummary';
 import useUnreadCount from '@/hooks/useUnreadCount';
 import useNotifications from '@/hooks/useNotifications';
+import NotificationPopup from '@/components/notifications/NotificationPopup';
 import { markAllNotificationsRead, markNotificationRead } from '@/services/notificationService';
 import { timeAgo } from '@/utils/time';
 import { motion } from 'framer-motion';
@@ -163,6 +164,7 @@ export default function ClientLayout() {
 
   return (
     <div className="flex min-h-screen justify-center bg-hc-page font-sans text-hc-ink">
+      <NotificationPopup notifications={notifications} />
       <div className="flex w-full max-w-[1500px]">
         {/* Sidebar (Desktop >=1024px) — 280px */}
         <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-hc-hairline bg-hc-tile lg:flex">
@@ -206,6 +208,53 @@ export default function ClientLayout() {
               </span>
             </Link>
             <div className="flex-1" />
+            <div className="relative" ref={notifRef}>
+              <button
+                aria-label="Notifications"
+                onClick={() => setNotifOpen((o) => !o)}
+                className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+              >
+                <Bell size={20} className="text-hc-ink-2" />
+                {!!unreadCount && (
+                  <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+              {notifOpen && (
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-hc-hairline bg-white py-3 shadow-lg z-50">
+                  <div className="flex items-center justify-between px-4 pb-2 border-b border-hc-hairline">
+                    <p className="text-xs font-bold text-hc-ink">Notifications</p>
+                    {unreadCount > 0 && (
+                      <button onClick={() => markAllNotificationsRead(currentUser.uid)} className="text-[10px] font-semibold text-hc-brand hover:underline">
+                        Mark all read
+                      </button>
+                    )}
+                  </div>
+                  <div className="px-2 pt-2 space-y-1 max-h-80 overflow-y-auto">
+                    {!notifications.length && (
+                      <p className="py-6 text-center text-xs text-hc-ink-3">No notifications yet</p>
+                    )}
+                    {notifications.slice(0, 8).map((n) => (
+                      <div
+                        key={n.id}
+                        onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
+                        className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
+                      >
+                        <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-hc-hairline' : 'bg-hc-brand'}`} />
+                        <div className="min-w-0">
+                          <p className="text-sm text-hc-ink-2">{n.data?.text || n.type}</p>
+                          <p className="text-[10px] text-hc-ink-3">{timeAgo(n.createdAt)}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+                    View all notifications
+                  </button>
+                </div>
+              )}
+            </div>
             <button
               aria-label="Messages"
               onClick={() => navigate('/client/messages')}
@@ -350,6 +399,55 @@ export default function ClientLayout() {
 
       {/* Mobile Bottom Navigation (<768px) */}
       {!isChatThread && <MobileBottomNav />}
+
+      {/* Mobile-only floating notification bell */}
+      <div className="fixed right-4 top-4 z-40 md:hidden" ref={notifRef}>
+        <button
+          aria-label="Notifications"
+          onClick={() => setNotifOpen((o) => !o)}
+          className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-lg border border-hc-hairline transition-colors hover:bg-gray-50"
+        >
+          <Bell size={18} className="text-hc-ink-2" />
+          {!!unreadCount && (
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </span>
+          )}
+        </button>
+        {notifOpen && (
+          <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-hc-hairline bg-white py-3 shadow-lg z-50">
+            <div className="flex items-center justify-between px-4 pb-2 border-b border-hc-hairline">
+              <p className="text-xs font-bold text-hc-ink">Notifications</p>
+              {unreadCount > 0 && (
+                <button onClick={() => markAllNotificationsRead(currentUser.uid)} className="text-[10px] font-semibold text-hc-brand hover:underline">
+                  Mark all read
+                </button>
+              )}
+            </div>
+            <div className="px-2 pt-2 space-y-1 max-h-80 overflow-y-auto">
+              {!notifications.length && (
+                <p className="py-6 text-center text-xs text-hc-ink-3">No notifications yet</p>
+              )}
+              {notifications.slice(0, 8).map((n) => (
+                <div
+                  key={n.id}
+                  onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
+                  className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
+                >
+                  <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-hc-hairline' : 'bg-hc-brand'}`} />
+                  <div className="min-w-0">
+                    <p className="text-sm text-hc-ink-2">{n.data?.text || n.type}</p>
+                    <p className="text-[10px] text-hc-ink-3">{timeAgo(n.createdAt)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setNotifOpen(false)} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+              View all notifications
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

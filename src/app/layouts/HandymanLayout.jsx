@@ -3,6 +3,9 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { Briefcase, ClipboardCheck, Wallet, Users, UserCircle, LogOut, Bell, Home, MessageSquare, Images, Menu, X } from 'lucide-react';
 import useUnreadCount from '@/hooks/useUnreadCount';
+import useNotifications from '@/hooks/useNotifications';
+import NotificationPopup from '@/components/notifications/NotificationPopup';
+import NotificationDropdown from '@/components/notifications/NotificationDropdown';
 
 const nav = [
   { name: 'Dashboard', path: '/handyman/dashboard', icon: Home },
@@ -99,10 +102,13 @@ export default function HandymanLayout() {
   const isChatPage = pathname.startsWith('/handyman/chat') || pathname === '/handyman/messages';
   const isChatThread = pathname.startsWith('/handyman/chat');
   const unread = useUnreadCount();
+  const { notifications, unreadCount } = useNotifications();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen justify-center bg-hc-page font-sans text-hc-ink">
+      <NotificationPopup notifications={notifications} />
       <div className="flex w-full max-w-[1500px]">
         {/* Desktop sidebar (>=1024px) — 280px */}
         <aside className="sticky top-0 hidden h-screen w-[280px] shrink-0 flex-col border-r border-hc-hairline bg-hc-tile lg:flex">
@@ -153,14 +159,27 @@ export default function HandymanLayout() {
 
               <div className="flex-1" />
 
-              <button aria-label={`Notifications${unread > 0 ? `, ${unread} unread` : ''}`} className="relative flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100">
-                <Bell size={17} />
-                {unread > 0 && (
-                  <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
-                    {unread > 99 ? '99+' : unread}
-                  </span>
-                )}
-              </button>
+              <div className="relative">
+                <button
+                  aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+                  onClick={() => setNotifOpen((o) => !o)}
+                  className="relative flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100"
+                >
+                  <Bell size={17} />
+                  {unreadCount > 0 && (
+                    <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-hc-brand px-1 text-[9px] font-bold text-white">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+                <NotificationDropdown
+                  notifications={notifications}
+                  unreadCount={unreadCount}
+                  open={notifOpen}
+                  onClose={() => setNotifOpen(false)}
+                  currentUser={currentUser}
+                />
+              </div>
               <div className="hidden items-center gap-2 lg:flex">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-600">
                   {currentUser?.email?.[0]?.toUpperCase() || 'H'}
