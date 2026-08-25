@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, MapPin, Star, Wrench, Sparkles, BadgeCheck, X, Plus, Users, QrCode, AlertTriangle,
+  MapIcon,
 } from 'lucide-react';
 import { ProCardSkeleton } from '@/components/ui/Skeleton';
 import { categoryIcons, JOB_CATEGORIES } from '@/constants/categories';
@@ -44,24 +45,29 @@ const cardFromUser = (u, clientLoc) => {
     id: u.id,
     name: u.displayName || u.email || 'Handyman',
     role: u.trade || (u.skills && u.skills.split(',')[0]) || 'Handyman',
+    skills: u.skills ? u.skills.split(',').map((s) => s.trim()).filter(Boolean) : [],
     rating: typeof u.rating === 'number' ? u.rating : null,
+    reviewCount: typeof u.reviewCount === 'number' ? u.reviewCount : 0,
     jobs: u.jobs || 0,
     image: u.photoURL || null,
     available: u.available !== false,
     verified: !!u.verified,
+    priceRange: u.priceRange || null,
     distanceLabel: formatDistance(km) || (u.address || null),
     distanceKm: km,
   };
 };
 
+const initials = (name) => name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?';
+
 function Avatar({ pro, size = 'h-12 w-12' }) {
   return (
-    <div className={`${size} shrink-0 overflow-hidden rounded-full bg-gray-100 ring-2 ring-gray-100`}>
+    <div className={`${size} shrink-0 overflow-hidden rounded-full bg-orange-50 ring-2 ring-orange-100`}>
       {pro.image ? (
         <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
       ) : (
-        <span className="flex h-full w-full items-center justify-center text-sm font-bold text-gray-500">
-          {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || '?'}
+        <span className="flex h-full w-full items-center justify-center text-sm font-bold text-orange-500">
+          {initials(pro.name)}
         </span>
       )}
     </div>
@@ -69,6 +75,7 @@ function Avatar({ pro, size = 'h-12 w-12' }) {
 }
 
 function ProCard({ pro, index, onView, onHire }) {
+  const hasSkills = pro.skills.length > 0;
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -80,52 +87,71 @@ function ProCard({ pro, index, onView, onHire }) {
       <div className="flex items-start gap-3">
         <Avatar pro={pro} />
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1 truncate text-sm font-semibold text-hc-ink">
+          <p className="flex items-center gap-1 truncate text-[15px] font-semibold text-hc-ink">
             {pro.name}
-            {pro.verified && <BadgeCheck size={14} className="shrink-0 fill-hc-accent text-white" />}
+            {pro.verified && <BadgeCheck size={15} className="shrink-0 fill-orange-500 text-white" />}
           </p>
-          <p className="mt-0.5 truncate text-xs text-hc-caption">{pro.role}</p>
+          <p className="mt-0.5 truncate text-sm text-hc-caption">{pro.role}</p>
         </div>
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-hc-ink-2">
-        {pro.rating != null && (
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-hc-ink-2">
+        {pro.rating != null ? (
           <span className="flex items-center gap-1 font-bold text-hc-ink">
-            <Star size={12} className="fill-amber-400 text-amber-400" /> {pro.rating.toFixed(1)}
+            <Star size={14} className="fill-amber-400 text-amber-400" /> {pro.rating.toFixed(1)}
+            <span className="font-normal text-hc-caption">({pro.reviewCount})</span>
           </span>
-        )}
-        {pro.jobs > 0 && (
-          <span className="text-hc-caption">{pro.jobs} {pro.jobs === 1 ? 'job' : 'jobs'}</span>
-        )}
-        {pro.jobs === 0 && pro.rating == null && (
-          <span className="rounded-full bg-black/[0.06] px-2 py-0.5 text-[10px] font-semibold text-hc-ink-2">New Professional</span>
+        ) : (
+          <span className="text-sm text-hc-caption">No reviews yet</span>
         )}
         {pro.distanceLabel && (
-          <span className="flex items-center gap-1">
-            <MapPin size={11} className="text-gray-400" /> {pro.distanceLabel}
+          <span className="flex items-center gap-1 text-sm">
+            <MapPin size={13} className="text-gray-400" /> {pro.distanceLabel}
           </span>
         )}
       </div>
 
       {pro.available && (
-        <p className="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
+        <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-emerald-600">
           <span className="h-2 w-2 rounded-full bg-emerald-500" /> Available
         </p>
       )}
 
-      <div className="mt-3 grid grid-cols-2 gap-2 border-t border-black/[0.07] pt-3">
-        <button
-          onClick={onView}
-          className="rounded-lg border border-black/[0.08] bg-white py-2.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:border-hc-brand hover:text-hc-brand"
-        >
-          View Profile
-        </button>
-        <button
-          onClick={onHire}
-          className="rounded-lg bg-hc-brand py-2.5 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong"
-        >
-          Hire
-        </button>
+      {hasSkills && (
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {pro.skills.slice(0, 3).map((skill) => (
+            <span key={skill} className="rounded-full border border-black/[0.07] bg-gray-50 px-2.5 py-1 text-[11px] font-medium text-hc-ink-2">
+              {skill}
+            </span>
+          ))}
+          {pro.skills.length > 3 && (
+            <span className="rounded-full border border-black/[0.07] bg-gray-50 px-2.5 py-1 text-[11px] font-medium text-hc-caption">
+              +{pro.skills.length - 3}
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className="mt-auto pt-3 border-t border-black/[0.07]">
+        {pro.jobs > 0 ? (
+          <p className="mb-3 text-sm text-hc-caption">{pro.jobs} {pro.jobs === 1 ? 'job' : 'jobs'} completed</p>
+        ) : pro.jobs === 0 && pro.rating == null ? (
+          <p className="mb-3 text-sm text-hc-caption">New professional</p>
+        ) : null}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={onView}
+            className="rounded-lg bg-hc-brand py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+          >
+            View Profile
+          </button>
+          <button
+            onClick={onHire}
+            className="rounded-lg border border-black/[0.08] bg-white py-2.5 text-[13px] font-semibold text-hc-ink-2 transition-colors hover:border-hc-brand hover:text-hc-brand"
+          >
+            Request Quote
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -139,7 +165,7 @@ function ServiceCard({ service, onClick }) {
       onClick={onClick}
       className={`${cardClass} flex items-center gap-3 p-4 text-left transition-shadow hover:shadow-md`}
     >
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
         <Icon size={20} />
       </div>
       <div className="min-w-0 flex-1">
@@ -152,7 +178,7 @@ function ServiceCard({ service, onClick }) {
   );
 }
 
-function EmptyState({ label }) {
+function EmptyState({ label, onPostJob }) {
   return (
     <div className={`${cardClass} p-10 text-center`}>
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">
@@ -160,6 +186,14 @@ function EmptyState({ label }) {
       </div>
       <p className="mt-3 text-sm font-semibold text-hc-ink">No professionals found</p>
       <p className="mt-1 text-xs text-hc-caption">{label}</p>
+      {onPostJob && (
+        <button
+          onClick={onPostJob}
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-hc-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+        >
+          <Plus size={14} /> Post a job instead
+        </button>
+      )}
     </div>
   );
 }
@@ -294,7 +328,7 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="space-y-8 pb-24 lg:pb-0">
+    <div className="space-y-6 rounded-2xl bg-hc-page p-4 lg:p-6 pb-24 lg:pb-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-hc-ink">Explore Professionals</h1>
@@ -302,17 +336,25 @@ export default function ExplorePage() {
             <MapPin size={14} className="text-hc-ink-3" /> Harare, Zimbabwe
           </p>
         </div>
-        <button
-          onClick={() => pickFilter(activeFilter === 'Recommended' ? 'All' : 'Recommended')}
-          className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
-            activeFilter === 'Recommended'
-              ? 'bg-gray-900 text-white shadow-sm'
-              : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
-          }`}
-        >
-          <Sparkles size={13} className={activeFilter === 'Recommended' ? 'text-white' : 'text-gray-400'} />
-          Recommended for you
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate('/client/map')}
+            className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3.5 py-2 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100 hover:text-hc-ink"
+          >
+            <MapIcon size={13} /> Map View
+          </button>
+          <button
+            onClick={() => pickFilter(activeFilter === 'Recommended' ? 'All' : 'Recommended')}
+            className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
+              activeFilter === 'Recommended'
+                ? 'bg-gray-900 text-white shadow-sm'
+                : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+            }`}
+          >
+            <Sparkles size={13} className={activeFilter === 'Recommended' ? 'text-white' : 'text-gray-400'} />
+            Recommended
+          </button>
+        </div>
       </div>
 
       <div className="flex items-center gap-2 rounded-xl border border-black/[0.07] bg-white px-4 py-3 shadow-sm focus-within:border-hc-brand focus-within:ring-2 focus-within:ring-hc-brand/10">
@@ -330,6 +372,7 @@ export default function ExplorePage() {
         )}
       </div>
 
+      {/* Category + Filter chips — single scrollable row */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
         {JOB_CATEGORIES.map((cat) => {
           const Icon = categoryIcons[cat] || Wrench;
@@ -349,26 +392,24 @@ export default function ExplorePage() {
             </button>
           );
         })}
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        <span className="w-px shrink-0 bg-black/[0.08]" />
         {filterOptions.map((f) => (
           <button
             key={f}
             onClick={() => pickFilter(f)}
             className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
-              activeFilter === f
+              activeFilter === f && !selectedCategory
                 ? 'bg-gray-900 text-white shadow-sm'
                 : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
             }`}
           >
-            {f === 'All' && activeFilter !== 'All' && <X size={12} />}
             {f}
           </button>
         ))}
       </div>
 
-      <div className="flex w-52 items-center rounded-xl bg-gray-100 p-1">
+      {/* Tab toggle */}
+      <div className="flex w-48 items-center rounded-xl bg-gray-100 p-1">
         {['professionals', 'services'].map((t) => (
           <button
             key={t}
@@ -394,14 +435,17 @@ export default function ExplorePage() {
           </div>
 
           {loadingPros ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 min-[1300px]:grid-cols-3 min-[1600px]:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => <ProCardSkeleton key={i} />)}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => <ProCardSkeleton key={i} />)}
             </div>
           ) : results.length === 0 ? (
-            <EmptyState label="Try a different service, skill, or name." />
+            <EmptyState
+              label="Try a different service, skill, or name."
+              onPostJob={() => setIsModalOpen(true)}
+            />
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 min-[1300px]:grid-cols-3 min-[1600px]:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {visible.map((pro, i) => (
                   <ProCard
                     key={pro.id || i}
@@ -412,7 +456,7 @@ export default function ExplorePage() {
                   />
                 ))}
               </div>
-              {results.length > visibleCount && (
+              {results.length > visibleCount ? (
                 <div className="flex justify-center pt-2">
                   <button
                     onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
@@ -421,7 +465,23 @@ export default function ExplorePage() {
                     Load more ({results.length - visibleCount} remaining)
                   </button>
                 </div>
-              )}
+              ) : results.length > 0 && results.length <= 3 ? (
+                <div className={`${cardClass} flex items-center gap-4 p-5`}>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+                    <Sparkles size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-hc-ink">Not finding who you need?</p>
+                    <p className="text-xs text-hc-caption">Post a job and let verified professionals come to you.</p>
+                  </div>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="shrink-0 rounded-lg bg-hc-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                  >
+                    Post a Job
+                  </button>
+                </div>
+              ) : null}
             </>
           )}
         </>
@@ -434,7 +494,7 @@ export default function ExplorePage() {
           {services.length === 0 ? (
             <EmptyState label="Services will appear here as professionals join." />
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((s) => (
                 <ServiceCard key={s.name} service={s} onClick={() => pickService(s.name)} />
               ))}
