@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getUserDocument } from '@/firebase/firestore';
 import AuthShell, {
   TextField,
   AuthButton,
@@ -39,8 +40,13 @@ export default function LoginPage() {
     if (Object.keys(errs).length > 0) return;
     setLoading(true);
     try {
-      await login(email, password);
-      navigate('/auth/select-role');
+      const user = await login(email, password);
+      const doc = await getUserDocument(user.uid);
+      const role = doc?.role;
+      if (role === 'client') navigate('/client/home', { replace: true });
+      else if (role === 'handyman') navigate('/handyman/dashboard', { replace: true });
+      else if (role === 'admin') navigate('/admin/dashboard', { replace: true });
+      else navigate('/auth/select-role', { replace: true });
     } catch {
       setError('Invalid credentials. Please try again.');
     } finally {

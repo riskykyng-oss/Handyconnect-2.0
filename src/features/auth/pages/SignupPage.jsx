@@ -10,6 +10,7 @@ import AuthShell, {
   SocialButtons,
   FormAlert,
 } from '../components/AuthShell';
+import RecaptchaWidget from '../components/RecaptchaWidget';
 import { Check, Shield, ArrowRight } from 'lucide-react';
 
 const requirements = [
@@ -37,6 +38,7 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const strength = useMemo(() => {
     const passed = requirements.filter((r) => r.test(password)).length;
@@ -58,6 +60,7 @@ export default function SignupPage() {
     else if (strength.pct < 50) errs.password = 'Password is too weak.';
     if (password !== confirmPassword) errs.confirm = 'Passwords do not match.';
     if (!agreed) errs.agreed = 'You must agree to the terms.';
+    if (!captchaToken) errs.captcha = 'Please verify you are not a robot.';
     return errs;
   };
 
@@ -247,6 +250,17 @@ export default function SignupPage() {
             </a>
           </AuthCheckbox>
           {errors.agreed && <p className="mt-1 text-xs text-red-600">{errors.agreed}</p>}
+        </div>
+
+        <div className="pt-1">
+          <RecaptchaWidget
+            onVerify={(token) => {
+              setCaptchaToken(token);
+              setErrors((p) => ({ ...p, captcha: '' }));
+            }}
+            onExpire={() => setCaptchaToken(null)}
+          />
+          {errors.captcha && <p className="mt-1 text-xs text-red-600">{errors.captcha}</p>}
         </div>
 
         <AuthButton loading={loading}>Create account</AuthButton>

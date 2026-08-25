@@ -45,7 +45,7 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
   };
 
   return (
-    <Modal open={isOpen} onClose={handleClose} title="Post a New Job" className="max-w-md">
+    <Modal open={isOpen} onClose={handleClose} title="Request a Service" className="max-w-md">
       <form onSubmit={handleSubmit} className="space-y-5 pt-2">
         <Input
           label="Job Title"
@@ -100,7 +100,7 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
             Cancel
           </Button>
           <Button type="submit" className="flex-1" disabled={loading}>
-            {loading ? 'Posting...' : 'Post Job'}
+            {loading ? 'Sending...' : 'Request Service'}
           </Button>
         </div>
       </form>

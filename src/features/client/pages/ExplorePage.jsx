@@ -379,7 +379,7 @@ export default function ExplorePage() {
               className="mb-3 flex flex-col items-end gap-2"
             >
               {[
-                { label: 'Post Job', icon: Plus, action: () => setIsModalOpen(true), color: 'bg-hc-brand' },
+                { label: 'Request Service', icon: Plus, action: () => setIsModalOpen(true), color: 'bg-hc-brand' },
                 { label: 'Ask Community', icon: Users, action: () => navigate('/community') },
                 { label: 'Scan QR', icon: QrCode, action: () => navigate('/client/wallet') },
                 { label: 'Report Issue', icon: AlertTriangle, action: () => navigate('/client/help') },

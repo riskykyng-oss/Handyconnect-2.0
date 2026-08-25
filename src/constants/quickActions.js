@@ -5,7 +5,7 @@ import {
 export const quickActions = [
   {
     id: 'post-job',
-    label: 'Post Job',
+    label: 'Request Service',
     icon: Plus,
     description: 'Create a new service request.',
     color: 'orange',

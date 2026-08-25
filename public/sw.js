@@ -1,8 +1,6 @@
 const CACHE_NAME = 'hc-v1';
-const PRECACHE = ['/', '/index.html'];
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(PRECACHE)));
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
@@ -18,25 +16,34 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const { request } = e;
   if (request.method !== 'GET') return;
+  if (request.url.includes('localhost:')) return;
 
-  // SPA navigation: network-first, fallback to cached index.html
   if (request.mode === 'navigate') {
     e.respondWith(
-      fetch(request).catch(() => caches.match('/index.html'))
+      fetch(request)
+        .then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(request).then((c) => c || caches.match('/')))
     );
     return;
   }
 
-  // Static assets: cache-first
   e.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
-      return fetch(request).then((res) => {
-        if (!res || res.status !== 200 || res.type !== 'basic') return res;
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then((c) => c.put(request, clone));
-        return res;
-      });
+      return fetch(request)
+        .then((res) => {
+          if (!res || res.status !== 200 || res.type !== 'basic') return res;
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(request, clone));
+          return res;
+        })
+        .catch(() => new Response('', { status: 408, statusText: 'Offline' }));
     })
   );
 });
