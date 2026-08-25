@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
-  ArrowLeft, BadgeCheck, MapPin, Star, Loader2, Briefcase, Images,
+  ArrowLeft, BadgeCheck, MapPin, Star, Loader2, Briefcase,
   MessageCircle, Zap, Phone, Clock, ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/AuthContext';
@@ -17,15 +17,6 @@ function Stars({ value }) {
         <Star key={i} size={13} className={i <= Math.round(value || 0) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'} />
       ))}
     </span>
-  );
-}
-
-function SectionTitle({ title, hint }) {
-  return (
-    <div className="mb-3 flex items-end justify-between">
-      <h2 className="text-lg font-semibold tracking-tight text-hc-ink">{title}</h2>
-      {hint && <span className="text-xs text-hc-caption">{hint}</span>}
-    </div>
   );
 }
 
@@ -91,209 +82,210 @@ export default function ProPortfolioPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-24 pt-5 lg:pb-10">
-      <button onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-hc-caption transition-colors hover:text-hc-ink">
-        <ArrowLeft size={16} /> Back
-      </button>
+    <div className="min-h-[100dvh] bg-hc-page">
+      <div className="mx-auto max-w-6xl px-4 pb-24 pt-4 lg:pb-10">
+        <button onClick={() => navigate(-1)} className="mb-3 inline-flex items-center gap-1 text-xs font-semibold text-hc-caption transition-colors hover:text-hc-ink">
+          <ArrowLeft size={13} /> Back
+        </button>
 
-      {/* Pro header */}
-      <div className="mb-6 overflow-hidden rounded-xl border border-black/[0.07] bg-white shadow-sm">
-        <div className="h-24 bg-gray-100" />
-        <div className="px-5 pb-5 sm:px-7">
-          <div className="-mt-10 flex flex-col gap-4">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div className="flex items-end gap-4">
-                {pro.avatar ? (
-                  <img src={pro.avatar} alt={pro.name} className="h-20 w-20 rounded-2xl border-4 border-white bg-white object-cover shadow-sm" />
-                ) : (
-                  <div className="grid h-20 w-20 place-items-center rounded-2xl border-4 border-white bg-black/[0.06] text-lg font-bold text-hc-ink-2 shadow-sm">
-                    {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
-                  </div>
-                )}
-                <div className="mb-0.5">
-                  <p className="flex items-center gap-1.5 text-xl font-semibold tracking-tight text-hc-ink">
-                    {pro.name}
-                    {pro.verified && <BadgeCheck size={18} className="fill-emerald-500 text-white" />}
-                  </p>
-                  <p className="text-sm font-semibold text-hc-ink-2">{pro.trade}</p>
-                  {avgRating != null && (
-                    <p className="mt-0.5 flex items-center gap-1.5">
-                      <Stars value={avgRating} />
-                      <span className="text-xs font-bold text-hc-ink">{avgRating}</span>
-                      <span className="text-[11px] text-hc-caption">({reviews.length || pro.jobs || 0} reviews)</span>
-                    </p>
+        <div className="flex flex-col gap-5 lg:flex-row">
+          {/* Main column */}
+          <div className="min-w-0 flex-1 space-y-5">
+            {/* Pro header card */}
+            <div className="overflow-hidden rounded-xl border border-hc-hairline bg-white shadow-sm">
+              <div className="h-24 bg-gradient-to-r from-gray-100 to-gray-50" />
+              <div className="px-5 pb-5 sm:px-6">
+                <div className="-mt-10 flex items-end gap-4">
+                  {pro.avatar ? (
+                    <img src={pro.avatar} alt={pro.name} className="h-16 w-16 rounded-xl border-2 border-white bg-white object-cover shadow-sm" />
+                  ) : (
+                    <div className="grid h-16 w-16 place-items-center rounded-xl border-2 border-white bg-gray-100 text-lg font-bold text-hc-ink-2 shadow-sm">
+                      {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
+                    </div>
                   )}
+                  <div className="min-w-0 pb-0.5">
+                    <p className="flex items-center gap-1.5 text-lg font-bold tracking-tight text-hc-ink">
+                      {pro.name}
+                      {pro.verified && <BadgeCheck size={16} className="fill-hc-brand text-white" />}
+                    </p>
+                    <p className="text-xs font-semibold text-hc-ink-2">{pro.trade}</p>
+                    {avgRating != null && (
+                      <p className="mt-0.5 flex items-center gap-1">
+                        <Stars value={avgRating} />
+                        <span className="text-[11px] font-bold text-hc-ink">{avgRating}</span>
+                        <span className="text-[10px] text-hc-caption">({reviews.length || pro.jobs || 0})</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-hc-hairline pt-3 text-xs font-semibold text-hc-ink-2">
+                  {pro.jobs != null && (
+                    <span className="flex items-center gap-1"><Briefcase size={12} className="text-gray-400" /> {pro.jobs} jobs</span>
+                  )}
+                  <span className="flex items-center gap-1"><MapPin size={12} className="text-gray-400" /> {pro.area || 'Harare'}</span>
+                  <span className="flex items-center gap-1">
+                    <Clock size={12} className={pro.available ? 'text-emerald-500' : 'text-gray-400'} />
+                    <span className={pro.available ? 'text-emerald-600' : 'text-hc-caption'}>{pro.available ? 'Available' : 'Busy'}</span>
+                  </span>
                 </div>
               </div>
+            </div>
 
-              {userRole === 'client' && (
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => navigate(`/client/chat/direct/${pro.id}`)}
-                    className="flex items-center gap-1.5 rounded-xl border border-black/[0.08] bg-white px-4 py-2.5 text-sm font-bold text-hc-ink-2 transition-colors hover:bg-gray-100"
-                  >
-                    <MessageCircle size={16} /> Chat
-                  </button>
-                  <button
-                    onClick={() => openHire('quote')}
-                    className="flex items-center gap-1.5 rounded-xl border border-black/[0.08] bg-white px-4 py-2.5 text-sm font-bold text-hc-ink-2 transition-colors hover:bg-gray-100"
-                  >
-                    <Zap size={16} /> Request Quote
-                  </button>
+            {/* About */}
+            {pro.bio && (
+              <div className="rounded-xl border border-hc-hairline bg-white p-5 shadow-sm">
+                <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-hc-ink-3">About</h2>
+                <p className="text-[13px] leading-relaxed text-hc-ink-2 whitespace-pre-wrap">{pro.bio}</p>
+              </div>
+            )}
+
+            {/* Skills */}
+            {skills.length > 0 && (
+              <div className="rounded-xl border border-hc-hairline bg-white p-5 shadow-sm">
+                <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-hc-ink-3">Skills</h2>
+                <div className="flex flex-wrap gap-1.5">
+                  {skills.map((s) => (
+                    <span key={s} className="rounded-full bg-hc-tile px-3 py-1 text-xs font-semibold text-hc-ink-2">{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Availability */}
+            <div className="rounded-xl border border-hc-hairline bg-white p-5 shadow-sm">
+              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-hc-ink-3">Availability</h2>
+              <div className="flex flex-wrap gap-2">
+                {['Today', 'Tomorrow', 'This Weekend'].map((d) => (
+                  <span key={d} className="flex items-center gap-2 rounded-lg border border-hc-hairline px-3 py-2 text-xs font-semibold text-hc-ink-2">
+                    <span className={`h-2 w-2 rounded-full ${pro.available ? 'bg-emerald-500' : 'bg-gray-300'}`} />
+                    {d}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Reviews */}
+            <div className="rounded-xl border border-hc-hairline bg-white p-5 shadow-sm">
+              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-hc-ink-3">Reviews</h2>
+              {reviews.length === 0 ? (
+                <p className="py-4 text-center text-xs text-hc-caption">No reviews yet.</p>
+              ) : (
+                <div className="divide-y divide-hc-hairline">
+                  {reviews.map((r) => (
+                    <div key={r.id} className="flex items-start gap-2.5 py-3 first:pt-0 last:pb-0">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-white">
+                        {(r.clientName || 'C')[0]}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-bold text-hc-ink">{r.clientName}</p>
+                          <Stars value={r.rating} />
+                        </div>
+                        {r.comment && <p className="mt-1 text-[13px] leading-relaxed text-hc-ink-2">{r.comment}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Portfolio */}
+            <div className="rounded-xl border border-hc-hairline bg-white p-5 shadow-sm">
+              <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-hc-ink-3">Portfolio</h2>
+              {items.length === 0 ? (
+                <p className="py-4 text-center text-xs text-hc-caption">
+                  {isOwn ? 'Your portfolio is empty — add projects to showcase your work.' : `${firstName} hasn't added projects yet.`}
+                </p>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {items.map((item) => <PortfolioCard key={item.id} item={item} />)}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sticky right sidebar */}
+          {userRole === 'client' && (
+            <aside className="w-full shrink-0 lg:w-[280px]">
+              <div className="lg:sticky lg:top-6 space-y-4">
+                {/* Action card */}
+                <div className="rounded-xl border border-hc-hairline bg-white p-4 shadow-sm">
                   <button
                     onClick={() => openHire('hire')}
-                    className="flex items-center gap-1.5 rounded-xl bg-hc-brand px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-hc-brand-strong hover:shadow-md active:scale-[0.98]"
                   >
-                    <Briefcase size={16} /> Hire Now
+                    <Briefcase size={16} /> Hire {firstName}
                   </button>
+                  <div className="mt-2.5 grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => navigate(`/client/chat/direct/${pro.id}`)}
+                      className="flex items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-50"
+                    >
+                      <MessageCircle size={14} /> Chat
+                    </button>
+                    <button
+                      onClick={() => openHire('quote')}
+                      className="flex items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-50"
+                    >
+                      <Zap size={14} /> Quote
+                    </button>
+                  </div>
                   {pro.phone && (
                     <a
                       href={`tel:${pro.phone}`}
-                      className="flex items-center gap-1.5 rounded-xl border border-black/[0.08] bg-white px-4 py-2.5 text-sm font-bold text-hc-ink-2 transition-colors hover:bg-gray-100"
+                      className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-50"
                     >
-                      <Phone size={16} /> Call
+                      <Phone size={14} /> Call
                     </a>
                   )}
                 </div>
-              )}
-              {isOwn && (
-                <button onClick={() => navigate('/handyman/portfolio')} className="rounded-xl border border-black/[0.08] bg-white px-4 py-2.5 text-sm font-bold text-hc-ink-2 transition-colors hover:bg-gray-100">
-                  Manage portfolio
-                </button>
-              )}
-            </div>
 
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2 border-t border-black/[0.07] pt-4 text-sm">
-              {pro.jobs != null && (
-                <span className="flex items-center gap-1.5 font-semibold text-hc-ink-2">
-                  <Briefcase size={14} className="text-gray-400" /> {pro.jobs} jobs completed
-                </span>
-              )}
-              <span className="flex items-center gap-1.5 font-semibold text-hc-ink-2">
-                <MapPin size={14} className="text-gray-400" /> {pro.area || 'Harare'}
-              </span>
-              <span className="flex items-center gap-1.5 font-semibold">
-                <Clock size={14} className={pro.available ? 'text-emerald-500' : 'text-gray-400'} />
-                <span className={pro.available ? 'text-emerald-600' : 'text-hc-caption'}>
-                  {pro.available ? 'Available Today' : 'Currently Busy'}
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* About */}
-      {pro.bio && (
-        <div className="mb-6">
-          <SectionTitle title="About" />
-          <p className="rounded-xl border border-black/[0.07] bg-white p-5 text-sm leading-relaxed text-hc-ink-2 shadow-sm whitespace-pre-wrap">{pro.bio}</p>
-        </div>
-      )}
-
-      {/* Skills */}
-      {skills.length > 0 && (
-        <div className="mb-6">
-          <SectionTitle title="Skills" hint={`${skills.length} skills`} />
-          <div className="flex flex-wrap gap-2">
-            {skills.map((s) => (
-              <span key={s} className="rounded-full border border-black/[0.08] bg-black/[0.06] px-3.5 py-1.5 text-xs font-bold text-hc-ink-2">
-                {s}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Availability */}
-      <div className="mb-6">
-        <SectionTitle title="Availability" />
-        <div className="flex flex-wrap gap-2">
-          {['Today', 'Tomorrow', 'This Weekend'].map((d) => (
-            <span key={d} className="flex items-center gap-2 rounded-xl border border-black/[0.07] bg-white px-4 py-2.5 text-sm font-semibold text-hc-ink-2 shadow-sm">
-              <span className={`h-2.5 w-2.5 rounded-full ${pro.available ? 'bg-emerald-500' : 'bg-gray-300'}`} />
-              {d}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Reviews */}
-      <div className="mb-6">
-        <SectionTitle title="Reviews" hint={reviews.length ? 'Newest first' : undefined} />
-        {reviews.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-black/[0.12] bg-white p-8 text-center">
-            <Star className="mx-auto mb-2 h-8 w-8 text-hc-ink-3" />
-            <p className="text-sm font-semibold text-hc-caption">No reviews yet</p>
-            <p className="mt-1 text-xs text-hc-caption">Reviews from completed jobs will appear here.</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {reviews.map((r) => (
-              <div key={r.id} className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="flex items-center gap-2 text-sm font-bold text-hc-ink">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-white">
-                      {(r.clientName || 'C')[0]}
-                    </span>
-                    {r.clientName}
-                  </p>
-                  <Stars value={r.rating} />
+                {/* Quick info card */}
+                <div className="rounded-xl border border-hc-hairline bg-white p-4 shadow-sm">
+                  <div className="space-y-3 text-xs">
+                    <div className="flex items-center gap-2">
+                      <Clock size={14} className={pro.available ? 'text-emerald-500' : 'text-gray-400'} />
+                      <span className="font-semibold text-hc-ink-2">{pro.available ? 'Available Today' : 'Currently Busy'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin size={14} className="text-gray-400" />
+                      <span className="font-semibold text-hc-ink-2">{pro.area || 'Harare'}</span>
+                    </div>
+                    {pro.jobs != null && (
+                      <div className="flex items-center gap-2">
+                        <Briefcase size={14} className="text-gray-400" />
+                        <span className="font-semibold text-hc-ink-2">{pro.jobs} jobs completed</span>
+                      </div>
+                    )}
+                  </div>
+                  {pro.verified && (
+                    <div className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 dark:bg-emerald-500/10">
+                      <ShieldCheck size={14} className="shrink-0 text-emerald-600" />
+                      <p className="text-[11px] font-bold text-emerald-700">Verified professional</p>
+                    </div>
+                  )}
                 </div>
-                {r.comment && <p className="text-sm leading-relaxed text-hc-ink-2">{r.comment}</p>}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Portfolio */}
-      <div>
-        <SectionTitle title="Portfolio" hint={`${items.length} ${items.length === 1 ? 'project' : 'projects'}`} />
-        {items.length === 0 ? (
-          <div className="rounded-xl border border-black/[0.07] bg-white p-10 text-center shadow-sm">
-            <Images size={30} className="mx-auto text-hc-ink-3" />
-            <p className="mt-3 text-lg font-semibold tracking-tight text-hc-ink">No projects yet</p>
-            <p className="mt-1 text-sm text-hc-caption">
-              {isOwn ? 'Your public portfolio is empty — clients can see exactly what you publish here.' : `${firstName} hasn't added portfolio projects yet. Check back soon.`}
-            </p>
-            {isOwn && (
-              <button onClick={() => navigate('/handyman/portfolio')} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-hc-brand px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong">
-                <Briefcase size={15} /> Add your first project
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item) => <PortfolioCard key={item.id} item={item} />)}
-          </div>
-        )}
-      </div>
-
-      {/* Verified note */}
-      {pro.verified && (
-        <div className="mt-8 flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 p-5">
-          <ShieldCheck size={18} className="shrink-0 text-emerald-600" />
-          <p className="text-sm font-semibold text-emerald-700">Verified professional — identity and background confirmed.</p>
+            </aside>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Mobile sticky action bar */}
       {userRole === 'client' && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/[0.07] bg-white/95 px-4 py-3 backdrop-blur-xl md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-hc-hairline bg-white/95 px-4 py-3 backdrop-blur-xl md:hidden">
           <div className="mx-auto flex max-w-lg gap-3">
             <button
               onClick={() => navigate(`/client/chat/direct/${pro.id}`)}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] py-3 text-sm font-bold text-hc-ink-2 transition-colors hover:bg-gray-100"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-hc-hairline py-3 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-100"
             >
-              <MessageCircle size={16} /> Message
+              <MessageCircle size={15} /> Message
             </button>
             <button
               onClick={() => openHire('hire')}
-              className="flex flex-[2] items-center justify-center gap-1.5 rounded-xl bg-hc-brand py-3 text-sm font-bold text-white shadow-lg shadow-hc-brand/30 transition-colors hover:bg-hc-brand-strong"
+              className="flex flex-[2] items-center justify-center gap-1.5 rounded-xl bg-hc-brand py-3 text-xs font-bold text-white shadow-lg shadow-hc-brand/30 transition-colors hover:bg-hc-brand-strong"
             >
-              <Briefcase size={16} /> Hire {firstName}
+              <Briefcase size={15} /> Hire {firstName}
             </button>
           </div>
         </div>
