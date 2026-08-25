@@ -325,7 +325,7 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="space-y-6 bg-hc-page -mx-4 px-4 py-6 lg:-mx-8 lg:px-8 lg:py-8 pb-24 lg:pb-8">
+    <div className="space-y-6 bg-hc-page -mx-4 px-4 py-6 lg:-mx-8 lg:px-8 lg:py-8 pb-24 lg:pb-8 min-h-[calc(100vh-64px)]">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-hc-ink">Explore Professionals</h1>
