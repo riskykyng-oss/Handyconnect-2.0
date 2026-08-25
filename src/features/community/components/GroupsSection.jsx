@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BadgeCheck, Image as ImageIcon, MessageCircle, Plus, Sparkles, Users, X } from 'lucide-react';
+import { BadgeCheck, Image as ImageIcon, Plus, Sparkles, Users, X } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import ColoredAvatar from '@/components/ui/ColoredAvatar';
 import { memberCount, joinGroup, leaveGroup, isMember, GROUP_LOCATIONS_OPTIONS, GROUP_VISIBILITY_OPTIONS } from '@/services/groupService';
@@ -8,11 +8,9 @@ import { getUserProfile } from '@/services/userService';
 import { uploadFile } from '@/services/storageService';
 import { JOB_CATEGORIES } from '@/constants/categories';
 
-const VISIBILITY_LABELS = { public: 'Public', private: 'Private', invite: 'Invite only' };
-
 const cardShadow = 'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.06)]';
 
-export default function GroupsSection({ groups, currentUserId, userRole, activeGroupId, onSelect, onCreate, latestPosts = {} }) {
+export default function GroupsSection({ groups, currentUserId, userRole, onCreate }) {
   const navigate = useNavigate();
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState(null);
@@ -204,65 +202,26 @@ export default function GroupsSection({ groups, currentUserId, userRole, activeG
           You haven&apos;t joined any groups yet. Pick one below or create the first trade community.
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
           {joinedGroups.map((g) => {
-            const active = activeGroupId === g.id;
-            const joined = isMember(g, currentUserId);
-            const latest = latestPosts[g.id];
             const count = memberCount(g);
             return (
-              <div
-                key={g.id}
-                className={`overflow-hidden rounded-xl border bg-white transition-colors ${cardShadow} ${active ? 'border-gray-900 ring-2 ring-gray-300 dark:border-gray-200 dark:ring-gray-600' : 'border-hc-hairline dark:border-gray-700 dark:bg-gray-800'}`}
-              >
-                <button onClick={() => navigate(`/community/groups/${g.id}`)} className="relative block h-10 w-full overflow-hidden text-left">
-                  {g.coverImage ? (
-                    <img src={g.coverImage} alt="" className="h-10 w-full object-cover" />
-                  ) : (
-                    <div className="h-10 w-full bg-gradient-to-r from-hc-brand to-hc-brand-strong" />
-                  )}
+              <div key={g.id} className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                {g.logo ? (
+                  <img src={g.logo} alt="" className="h-8 w-8 shrink-0 rounded-lg object-cover" />
+                ) : (
+                  <ColoredAvatar id={g.id} name={g.name} size="sm" />
+                )}
+                <button onClick={() => navigate(`/community/groups/${g.id}`)} className="min-w-0 flex-1 text-left">
+                  <span className="block truncate text-xs font-medium text-hc-ink dark:text-gray-100">{g.name}</span>
+                  <span className="block text-[11px] text-hc-ink-3">{count} {count === 1 ? 'member' : 'members'}</span>
                 </button>
-                <div className="relative px-3 pb-3 pt-6">
-                  <span className="absolute -top-4 left-3 grid h-8 w-8 place-items-center overflow-hidden rounded-lg ring-2 ring-white">
-                    {g.logo ? (
-                      <img src={g.logo} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <ColoredAvatar id={g.id} name={g.name} className="h-full w-full rounded-lg" />
-                    )}
-                  </span>
-                  <p className="truncate text-sm font-medium text-hc-ink">{g.name}</p>
-                  <p className="mt-0.5 truncate text-[11px] text-hc-ink-3">
-                    {g.category || 'Community'} · {count} {count === 1 ? 'member' : 'members'} · {VISIBILITY_LABELS[g.visibility] || 'Public'}
-                  </p>
-                  {latest && (
-                    <p className="mt-2 flex items-start gap-1 truncate rounded-lg bg-hc-tile px-2 py-1.5 text-[11px] text-hc-ink-2 dark:bg-gray-700/60 dark:text-gray-300">
-                      <MessageCircle size={11} className="mt-0.5 shrink-0 text-hc-ink-3" />
-                      <span className="truncate">{latest.text}</span>
-                      {latest.commentCount > 0 && (
-                        <span className="shrink-0 text-hc-ink-3">· {latest.commentCount} {latest.commentCount === 1 ? 'reply' : 'replies'}</span>
-                      )}
-                    </p>
-                  )}
-                  <div className="mt-2.5 flex gap-1.5">
-                    <button
-                      onClick={() => toggleJoin(g)}
-                      className={`h-8 flex-1 rounded-lg text-xs font-medium transition-colors ${
-                        joined ? 'bg-gray-100 text-hc-ink-2 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300' : 'bg-hc-brand text-white hover:bg-hc-brand-strong'
-                      }`}
-                    >
-                      {joined ? 'Joined' : 'Join'}
-                    </button>
-                    <button
-                      onClick={() => onSelect(active ? null : g.id)}
-                      title={active ? 'Stop filtering by this group' : 'Show this group\'s posts in the feed'}
-                      className={`h-8 flex-1 rounded-lg text-xs font-medium transition-colors ${
-                        active ? 'bg-hc-ink text-white' : 'border border-hc-brand/30 bg-transparent text-hc-brand hover:bg-hc-tint dark:border-gray-600 dark:text-gray-300'
-                      }`}
-                    >
-                      {active ? 'Feed on' : 'Feed'}
-                    </button>
-                  </div>
-                </div>
+                <button
+                  onClick={() => toggleJoin(g)}
+                  className="h-7 shrink-0 rounded-lg bg-gray-100 px-2.5 text-[11px] font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
+                >
+                  Leave
+                </button>
               </div>
             );
           })}
@@ -299,15 +258,6 @@ export default function GroupsSection({ groups, currentUserId, userRole, activeG
             })}
           </div>
         </div>
-      )}
-
-      {activeGroupId && (
-        <button
-          onClick={() => onSelect(null)}
-          className="mt-3 flex items-center gap-1 text-xs font-semibold text-hc-ink-2 hover:underline"
-        >
-          <X size={12} /> Showing posts from this group only
-        </button>
       )}
     </Card>
   );

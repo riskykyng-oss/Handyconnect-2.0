@@ -57,7 +57,6 @@ export default function CommunityPage() {
   const [skillFilter, setSkillFilter] = useState(null);
   const [query, setQuery] = useState('');
   const [groups, setGroups] = useState([]);
-  const [activeGroupId, setActiveGroupId] = useState(null);
   const [limit, setLimit] = useState(5);
   const [stories, setStories] = useState([]);
   const [composerOpen, setComposerOpen] = useState(false);
@@ -71,10 +70,7 @@ export default function CommunityPage() {
   useEffect(() => (currentUser ? subscribeFollowing(currentUser.uid, setFollowing) : undefined), [currentUser]);
   useEffect(() => (currentUser ? subscribeStories(userRole, currentUser.uid, setStories) : undefined), [userRole, currentUser]);
 
-  const activeGroup = groups.find((g) => g.id === activeGroupId) || null;
-
   const filtered = posts.filter((p) => {
-    if (activeGroupId && p.groupId !== activeGroupId) return false;
     if (query) {
       const q = query.toLowerCase().replace(/^#/, '');
       const hit =
@@ -128,10 +124,6 @@ export default function CommunityPage() {
   // Suggested groups the user hasn't joined yet (distinct from the joined grid in GroupsSection).
   const suggestedGroups = groups.filter((g) => !isMember(g, currentUser?.uid)).slice(0, 4);
 
-  // Latest post per group (for group cards).
-  const groupLastPosts = {};
-  posts.forEach((p) => { if (p.groupId && !groupLastPosts[p.groupId]) groupLastPosts[p.groupId] = p; });
-
   const handlePost = async (data) => {
     setPosting(true);
     try {
@@ -155,7 +147,7 @@ export default function CommunityPage() {
           beforeImage,
           afterImage,
           poll: data.poll,
-          groupId: activeGroupId,
+          groupId: null,
         }
       );
     } finally {
@@ -297,10 +289,7 @@ export default function CommunityPage() {
                   groups={groups}
                   currentUserId={currentUser.uid}
                   userRole={userRole}
-                  activeGroupId={activeGroupId}
-                  onSelect={setActiveGroupId}
                   onCreate={handleCreateGroup}
-                  latestPosts={groupLastPosts}
                 />
               </div>
             )}
@@ -308,7 +297,7 @@ export default function CommunityPage() {
             {/* Composer / join prompt */}
             <div className="mb-6">
               {currentUser ? (
-                <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={activeGroup} user={currentUser} />
+                <CommunityComposer role={userRole} posting={posting} onSubmit={handlePost} group={null} user={currentUser} />
               ) : (
                 <div className={`flex flex-col items-center gap-4 rounded-xl border border-hc-hairline bg-white p-8 text-center ${cardShadow} dark:border-gray-700 dark:bg-gray-800`}>
                   <p className="text-lg font-semibold tracking-tight text-hc-ink dark:text-gray-100">
