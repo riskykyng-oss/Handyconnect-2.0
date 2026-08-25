@@ -158,6 +158,7 @@ export default function ExplorePage() {
   const [loadingPros, setLoadingPros] = useState(true);
   const [clientLoc, setClientLoc] = useState(null);
   const [showFAB, setShowFAB] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     const unsub = subscribeProfessionals((users) => {
@@ -200,13 +201,22 @@ export default function ExplorePage() {
     }
 
     list = [...list];
-    if (activeFilter === 'Nearby') {
+    if (selectedCategory) {
+      list.sort((a, b) => {
+        if (a.available !== b.available) return a.available ? -1 : 1;
+        const aKm = a.distanceKm ?? Infinity;
+        const bKm = b.distanceKm ?? Infinity;
+        if (aKm !== bKm) return aKm - bKm;
+        if (a.verified !== b.verified) return a.verified ? -1 : 1;
+        return (b.rating ?? -1) - (a.rating ?? -1);
+      });
+    } else if (activeFilter === 'Nearby') {
       list.sort((a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity));
     } else if (activeFilter === 'Top Rated' || activeFilter === 'Recommended') {
       list.sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1));
     }
     return list;
-  }, [cards, query, activeFilter]);
+  }, [cards, query, activeFilter, selectedCategory]);
 
   const services = useMemo(() => {
     const map = new Map();
@@ -225,16 +235,19 @@ export default function ExplorePage() {
 
   const pickFilter = (f) => {
     setActiveFilter(f);
+    setSelectedCategory(null);
     setVisibleCount(PAGE_SIZE);
   };
 
   const onQueryChange = (value) => {
     setQuery(value);
+    setSelectedCategory(null);
     setVisibleCount(PAGE_SIZE);
   };
 
   const pickService = (name) => {
     setQuery(name);
+    setSelectedCategory(name);
     setTab('professionals');
     setActiveFilter('All');
     setVisibleCount(PAGE_SIZE);
@@ -312,7 +325,7 @@ export default function ExplorePage() {
         <>
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold tracking-tight text-hc-ink">
-              {activeQuery ? `Results for "${activeQuery}"` : 'Professionals Near You'}
+              {selectedCategory ? `${selectedCategory} Professionals` : activeQuery ? `Results for "${activeQuery}"` : 'Professionals Near You'}
             </h2>
             <span className="text-xs font-semibold text-hc-caption">
               {results.length} {results.length === 1 ? 'professional' : 'professionals'}
