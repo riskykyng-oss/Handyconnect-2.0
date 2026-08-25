@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { MapPin, Info, AlertTriangle } from 'lucide-react';
@@ -7,7 +6,6 @@ import { JOB_CATEGORIES } from '@/constants/categories';
 import { estimatePrice } from '@/services/jobService';
 
 export default function PostJobModal({ isOpen, onClose, onSave }) {
-  const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [budget, setBudget] = useState('');
@@ -31,7 +29,6 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
   }, [budget, priceGuide]);
 
   const resetForm = () => {
-    setTitle('');
     setCategory('');
     setDescription('');
     setBudget('');
@@ -50,7 +47,7 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
     setLoading(true);
     try {
       await onSave({
-        title: title.trim(),
+        title: category,
         category: category || null,
         description: description.trim(),
         budget: Number(budget),
@@ -97,14 +94,6 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
             </div>
           </div>
         )}
-
-        <Input
-          label="Job Title"
-          placeholder="e.g., Leaking kitchen sink"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
 
         <div>
           <label htmlFor="post-job-desc" className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
