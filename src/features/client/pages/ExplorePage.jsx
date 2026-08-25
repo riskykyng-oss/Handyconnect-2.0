@@ -5,7 +5,7 @@ import {
   Search, MapPin, Star, Wrench, Sparkles, BadgeCheck, X, Plus, Users, QrCode, AlertTriangle,
 } from 'lucide-react';
 import { ProCardSkeleton } from '@/components/ui/Skeleton';
-import { categoryIcons } from '@/constants/categories';
+import { categoryIcons, JOB_CATEGORIES } from '@/constants/categories';
 import HireProModal from '../components/HireProModal';
 import PostJobModal from '../components/PostJobModal';
 import { subscribeProfessionals, getUserProfile } from '@/services/userService';
@@ -328,6 +328,27 @@ export default function ExplorePage() {
             <X size={15} />
           </button>
         )}
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        {JOB_CATEGORIES.map((cat) => {
+          const Icon = categoryIcons[cat] || Wrench;
+          const active = selectedCategory?.toLowerCase() === cat.toLowerCase();
+          return (
+            <button
+              key={cat}
+              onClick={() => active ? onQueryChange('') : pickService(cat)}
+              className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
+                active
+                  ? 'bg-gray-900 text-white shadow-sm'
+                  : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+              }`}
+            >
+              <Icon size={13} />
+              {cat}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
