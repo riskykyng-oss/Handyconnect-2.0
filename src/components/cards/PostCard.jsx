@@ -255,7 +255,7 @@ export default function PostCard({
           {showFollow && (
             <button
               onClick={() => onToggleFollow(post.authorId, isFollowing)}
-              className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors ${
+              className={`shrink-0 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors ${
                 isFollowing ? 'bg-hc-tile text-hc-ink-2 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300' : 'bg-hc-brand text-white hover:bg-hc-brand-strong'
               }`}
             >

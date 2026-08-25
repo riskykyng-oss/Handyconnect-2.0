@@ -266,7 +266,7 @@ export default function CommunityPage() {
                         <div className="mt-3 flex items-center gap-2.5">
                           <button
                             onClick={() => navigate(`/pro/${p.id}`)}
-                            className="h-10 flex-1 rounded-xl bg-hc-brand px-3 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong"
+                            className="h-11 flex-1 rounded-xl bg-hc-brand px-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong"
                           >
                             View Profile
                           </button>
@@ -274,13 +274,13 @@ export default function CommunityPage() {
                             onClick={() => authed(handleFollow)(p.id, isFollowing)}
                             aria-label={isFollowing ? 'Unfollow' : 'Follow'}
                             title={isFollowing ? 'Unfollow' : 'Follow'}
-                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors ${
                               isFollowing
                                 ? 'border-hc-brand bg-hc-tint text-hc-brand'
                                 : 'border-hc-hairline bg-white text-hc-ink-3 hover:border-hc-brand/40 hover:text-hc-brand dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400'
                             }`}
                           >
-                            <UserPlus size={16} />
+                            <UserPlus size={18} />
                           </button>
                         </div>
                       </div>
