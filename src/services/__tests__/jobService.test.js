@@ -50,6 +50,8 @@ import {
   getAssignedJobs,
   getHandymanJobs,
   estimatePrice,
+  submitQuote,
+  acceptQuote,
 } from '@/services/jobService';
 
 beforeEach(() => {
@@ -152,5 +154,101 @@ describe('estimatePrice', () => {
 
   it('handles missing category', () => {
     expect(estimatePrice({}).low).toBe(35);
+  });
+});
+
+describe('submitQuote', () => {
+  it('appends a quote with pending status to the job', async () => {
+    mocks.mockUpdateDoc.mockResolvedValue(undefined);
+
+    await submitQuote('job_001', {
+      handymanId: 'h1',
+      handymanName: 'John',
+      price: 50,
+      message: 'I can fix it',
+    }, 'client1');
+
+    expect(mocks.mockUpdateDoc).toHaveBeenCalled();
+    const [ref, data] = mocks.mockUpdateDoc.mock.calls[0];
+    expect(ref.path).toContain('job_001');
+
+    const quoteArg = mocks.mockArrayUnion.mock.calls[0][0];
+    expect(quoteArg.handymanId).toBe('h1');
+    expect(quoteArg.price).toBe(50);
+    expect(quoteArg.status).toBe('pending');
+  });
+
+  it('notifies the client when clientUid is provided', async () => {
+    mocks.mockUpdateDoc.mockResolvedValue(undefined);
+
+    await submitQuote('job_001', {
+      handymanId: 'h1',
+      handymanName: 'John',
+      price: 50,
+      message: '',
+      jobTitle: 'Fix tap',
+    }, 'client1');
+
+    expect(mocks.mockCreateNotification).toHaveBeenCalledWith(
+      'client1',
+      'h1',
+      'quote',
+      expect.objectContaining({ text: expect.stringContaining('John') })
+    );
+  });
+
+  it('does not notify when clientUid is omitted', async () => {
+    mocks.mockUpdateDoc.mockResolvedValue(undefined);
+    mocks.mockCreateNotification.mockClear();
+
+    await submitQuote('job_001', {
+      handymanId: 'h1',
+      handymanName: 'John',
+      price: 50,
+      message: '',
+    });
+
+    expect(mocks.mockCreateNotification).not.toHaveBeenCalled();
+  });
+});
+
+describe('acceptQuote', () => {
+  it('marks the chosen quote as accepted and assigns the job', async () => {
+    const existingQuotes = [
+      { handymanId: 'h1', price: 50, status: 'pending', createdAt: { seconds: 100 } },
+      { handymanId: 'h2', price: 60, status: 'pending', createdAt: { seconds: 200 } },
+    ];
+    mocks.mockGetDoc.mockResolvedValue({
+      exists: () => true,
+      data: () => ({ quotes: existingQuotes, clientId: 'client1', title: 'Fix tap' }),
+    });
+    mocks.mockUpdateDoc.mockResolvedValue(undefined);
+
+    await acceptQuote('job_001', { handymanId: 'h1', price: 50, createdAt: { seconds: 100 } });
+
+    const [, data] = mocks.mockUpdateDoc.mock.calls[0];
+    expect(data.status).toBe('assigned');
+    expect(data.handymanId).toBe('h1');
+
+    const updatedQuotes = data.quotes;
+    expect(updatedQuotes[0].status).toBe('accepted');
+    expect(updatedQuotes[1].status).toBe('rejected');
+  });
+
+  it('notifies the winning handyman', async () => {
+    mocks.mockGetDoc.mockResolvedValue({
+      exists: () => true,
+      data: () => ({ quotes: [{ handymanId: 'h1', price: 50, status: 'pending', createdAt: { seconds: 100 } }], clientId: 'client1', title: 'Fix tap' }),
+    });
+    mocks.mockUpdateDoc.mockResolvedValue(undefined);
+
+    await acceptQuote('job_001', { handymanId: 'h1', price: 50, createdAt: { seconds: 100 } });
+
+    expect(mocks.mockCreateNotification).toHaveBeenCalledWith(
+      'h1',
+      'client1',
+      'job',
+      expect.objectContaining({ text: expect.stringContaining('accepted') })
+    );
   });
 });
