@@ -38,7 +38,7 @@ export default function FeedFilters({ role, active, onChange, activeSkill, onCle
       {activeSkill && (
         <button
           onClick={onClearSkill}
-          className="inline-flex items-center gap-1.5 rounded-full border border-hc-hairline bg-hc-tile px-4 py-2 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+          className="inline-flex items-center gap-1.5 rounded-full border border-hc-hairline bg-hc-tile px-4 py-2 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
         >
           #{activeSkill} <X size={12} />
         </button>

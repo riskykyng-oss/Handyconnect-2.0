@@ -49,7 +49,7 @@ export default function WalletCard() {
           ))}
         </div>
 
-        <p className="mt-3 rounded-lg bg-gray-50 px-3 py-2 text-center text-xs font-medium text-hc-ink-2">
+        <p className="mt-3 rounded-lg bg-hc-page px-3 py-2 text-center text-xs font-medium text-hc-ink-2">
           {balance > 0 ? 'Funds are ready for your next job.' : 'Add funds to get started'}
         </p>
       </div>

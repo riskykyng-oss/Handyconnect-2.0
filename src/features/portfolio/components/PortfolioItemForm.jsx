@@ -5,7 +5,7 @@ import { JOB_CATEGORIES } from '@/constants/categories';
 
 const MAX_PHOTOS = 4;
 
-const inputClass = 'w-full rounded-xl border border-black/[0.08] bg-gray-50 px-3 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white';
+const inputClass = 'w-full rounded-xl border border-black/[0.08] bg-hc-page px-3 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white';
 
 export default function PortfolioItemForm({ uid, initial, saving, onCancel, onSubmit }) {
   const [title, setTitle] = useState(initial?.title || '');
@@ -67,7 +67,7 @@ export default function PortfolioItemForm({ uid, initial, saving, onCancel, onSu
           {initial ? 'Edit project' : 'Add a project to your portfolio'}
         </h2>
         {onCancel && (
-          <button type="button" onClick={onCancel} className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600" aria-label="Cancel">
+          <button type="button" onClick={onCancel} className="rounded-lg p-1.5 text-hc-ink-3 transition-colors hover:bg-hc-hairline hover:text-hc-accent-strong" aria-label="Cancel">
             <X size={16} />
           </button>
         )}
@@ -111,13 +111,13 @@ export default function PortfolioItemForm({ uid, initial, saving, onCancel, onSu
             {existingImages.map((src, i) => (
               <div key={`e${i}`} className="relative">
                 <img src={src} alt="" className="h-20 w-20 rounded-xl object-cover" />
-                <button type="button" onClick={() => removeExisting(i)} className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900/70 text-white transition-colors hover:bg-gray-900"><X size={11} /></button>
+                <button type="button" onClick={() => removeExisting(i)} className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-hc-ink/70 text-white transition-colors hover:bg-hc-ink"><X size={11} /></button>
               </div>
             ))}
             {newImages.map((file, i) => (
               <div key={`n${i}`} className="relative">
                 <img src={URL.createObjectURL(file)} alt="" className="h-20 w-20 rounded-xl object-cover" />
-                <button type="button" onClick={() => removeNew(i)} className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900/70 text-white transition-colors hover:bg-gray-900"><X size={11} /></button>
+                <button type="button" onClick={() => removeNew(i)} className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-hc-ink/70 text-white transition-colors hover:bg-hc-ink"><X size={11} /></button>
               </div>
             ))}
             {photosLeft > 0 && (
@@ -145,7 +145,7 @@ export default function PortfolioItemForm({ uid, initial, saving, onCancel, onSu
         </div>
 
         <label className="flex w-fit cursor-pointer items-center gap-2 text-sm font-semibold text-hc-ink-2">
-          <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="h-4 w-4 rounded border-gray-300 accent-hc-brand" />
+          <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="h-4 w-4 rounded border-hc-ink-4 accent-hc-brand" />
           Feature this project
         </label>
 
@@ -153,7 +153,7 @@ export default function PortfolioItemForm({ uid, initial, saving, onCancel, onSu
 
         <div className="flex justify-end gap-2 pt-1">
           {onCancel && (
-            <button type="button" onClick={onCancel} className="rounded-xl border border-black/[0.08] px-4 py-2 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100">
+            <button type="button" onClick={onCancel} className="rounded-xl border border-black/[0.08] px-4 py-2 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-hc-hairline">
               Cancel
             </button>
           )}

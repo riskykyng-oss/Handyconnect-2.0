@@ -105,7 +105,7 @@ export default function ClientHomePage() {
             </div>
           ) : topPros.length === 0 ? (
             <div className="rounded-xl border border-dashed border-hc-hairline bg-white p-10 text-center shadow-sm">
-              <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-500">
+              <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-hc-page text-hc-ink-2">
                 <Briefcase size={26} />
               </span>
               <p className="text-[15px] font-medium text-hc-ink-2">No professionals yet</p>
@@ -134,7 +134,7 @@ export default function ClientHomePage() {
             </div>
           ) : jobs.length === 0 ? (
             <div className="rounded-xl border border-dashed border-hc-hairline bg-white p-10 text-center shadow-sm">
-              <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-500">
+              <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-hc-page text-hc-ink-2">
                 <Briefcase size={26} />
               </span>
               <p className="text-[15px] font-medium text-hc-ink-2">No active jobs</p>

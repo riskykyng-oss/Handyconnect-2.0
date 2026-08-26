@@ -66,7 +66,7 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-gray-950/50"
+            className="absolute inset-0 bg-hc-ink/50"
             onClick={handleClose}
             aria-label="Close"
           />
@@ -75,10 +75,10 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="relative z-10 max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl border border-gray-200 bg-white shadow-2xl sm:rounded-2xl"
+            className="relative z-10 max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl border border-hc-hairline bg-white shadow-2xl sm:rounded-2xl"
           >
             <div className="flex justify-center pt-3 pb-1">
-              <div className="h-1 w-10 rounded-full bg-gray-300" />
+              <div className="h-1 w-10 rounded-full bg-hc-ink-4" />
             </div>
 
             {done ? (
@@ -102,7 +102,7 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
             ) : (
               <form onSubmit={handleSubmit} className="px-6 pb-6 pt-2">
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-black/[0.06] bg-gray-100">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-black/[0.06] bg-hc-page">
                     {pro.avatar ? (
                       <img src={pro.avatar} alt={pro.name} className="h-full w-full object-cover" />
                     ) : (
@@ -114,14 +114,14 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                   <div className="min-w-0">
                     <p className="flex items-center gap-1.5 text-base font-semibold tracking-tight text-hc-ink">
                       {isQuote ? `Request Quote from ${pro.name.split(' ')[0]}` : `Hire ${pro.name.split(' ')[0]}`}
-                      {pro.verified && <BadgeCheck size={15} className="fill-orange-500 text-white" />}
+                      {pro.verified && <BadgeCheck size={15} className="fill-hc-brand text-white" />}
                     </p>
                     <p className="text-xs text-hc-ink-3">{pro.trade}</p>
                   </div>
                 </div>
 
                 {isQuote && (
-                  <div className="mb-4 rounded-xl bg-gray-50 border border-black/[0.06] px-4 py-3 text-xs font-semibold text-hc-ink-2">
+                  <div className="mb-4 rounded-xl bg-hc-page border border-black/[0.06] px-4 py-3 text-xs font-semibold text-hc-ink-2">
                     No commitment — you&apos;ll review their quote before approving.
                   </div>
                 )}
@@ -136,39 +136,39 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                   />
 
                   <div>
-                    <label htmlFor="hire-desc" className="mb-2 block text-sm font-semibold text-gray-700">Describe the work</label>
+                    <label htmlFor="hire-desc" className="mb-2 block text-sm font-semibold text-hc-ink">Describe the work</label>
                     <textarea
                       id="hire-desc"
                       rows="3"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="What needs to be done? Include details..."
-                      className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-base text-gray-900 outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 placeholder:text-gray-400"
+                      className="w-full resize-none rounded-2xl border border-hc-hairline bg-hc-page px-4 py-3.5 text-base text-hc-ink outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10 placeholder:text-hc-ink-3"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">Location</label>
+                    <label className="mb-2 block text-sm font-semibold text-hc-ink">Location</label>
                     <LocationPicker initialLocation={jobLocation} onLocationChange={setJobLocation} />
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label htmlFor="hire-date" className="mb-2 block text-sm font-semibold text-gray-700">Preferred date</label>
+                      <label htmlFor="hire-date" className="mb-2 block text-sm font-semibold text-hc-ink">Preferred date</label>
                       <input
                         id="hire-date"
                         type="date"
                         value={preferredDate}
                         min={new Date().toISOString().split('T')[0]}
                         onChange={(e) => setPreferredDate(e.target.value)}
-                        className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10"
+                        className="w-full rounded-2xl border border-hc-hairline bg-hc-page px-4 py-3 text-sm text-hc-ink outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10"
                       />
                     </div>
                     <div>
-                      <label htmlFor="hire-budget" className="mb-2 block text-sm font-semibold text-gray-700">Estimated budget</label>
+                      <label htmlFor="hire-budget" className="mb-2 block text-sm font-semibold text-hc-ink">Estimated budget</label>
                       <div className="relative">
-                        <DollarSign size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <DollarSign size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-hc-ink-3" />
                         <input
                           id="hire-budget"
                           type="number"
@@ -176,14 +176,14 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                           placeholder="e.g., 50"
                           value={budget}
                           onChange={(e) => setBudget(e.target.value)}
-                          className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3.5 pl-9 pr-4 text-base text-gray-900 outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10"
+                          className="w-full rounded-2xl border border-hc-hairline bg-hc-page py-3.5 pl-9 pr-4 text-base text-hc-ink outline-none transition-all focus:border-hc-brand focus:ring-2 focus:ring-hc-brand/10"
                         />
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">Urgent?</label>
+                    <label className="mb-2 block text-sm font-semibold text-hc-ink">Urgent?</label>
                     <div className="flex gap-2">
                       {[true, false].map((val) => (
                         <button
@@ -192,8 +192,8 @@ export default function HireProModal({ pro, isOpen, onClose, mode = 'hire' }) {
                           onClick={() => setUrgent(val)}
                           className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
                             urgent === val
-                              ? 'bg-gray-900 text-white shadow-sm'
-                              : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-50'
+                              ? 'bg-hc-ink text-white shadow-sm'
+                              : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-hc-brand-50'
                           }`}
                         >
                           <Zap size={14} /> {val ? 'Yes' : 'No'}

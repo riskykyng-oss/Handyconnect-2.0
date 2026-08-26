@@ -24,7 +24,7 @@ function Stars({ value }) {
   return (
     <span className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star key={i} size={12} className={i <= Math.round(value || 0) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'} />
+        <Star key={i} size={12} className={i <= Math.round(value || 0) ? 'fill-amber-400 text-amber-400' : 'text-hc-ink-4'} />
       ))}
     </span>
   );
@@ -256,15 +256,15 @@ export default function CommunityPage() {
                       >
                         <div className="relative mx-auto">
                           {p.avatar ? (
-                            <img src={p.avatar} alt={p.name} className="h-16 w-16 rounded-full border-2 border-gray-100 object-cover dark:border-gray-700" />
+                            <img src={p.avatar} alt={p.name} className="h-16 w-16 rounded-full border-2 border-hc-hairline object-cover dark:border-gray-700" />
                           ) : (
-                            <ColoredAvatar id={p.id} name={p.name} size="lg" className="border-2 border-gray-100 dark:border-gray-700" />
+                            <ColoredAvatar id={p.id} name={p.name} size="lg" className="border-2 border-hc-hairline dark:border-gray-700" />
                           )}
                           {p.verified && (
                             <BadgeCheck size={16} className="absolute -right-1 -top-0.5 fill-hc-brand text-white" />
                           )}
                           <span
-                            className={`absolute -left-1 bottom-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800 ${isAvailable ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                            className={`absolute -left-1 bottom-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800 ${isAvailable ? 'bg-emerald-500' : 'bg-hc-ink-4'}`}
                             title={isAvailable ? 'Available for work' : 'Currently unavailable'}
                           />
                         </div>
@@ -321,7 +321,7 @@ export default function CommunityPage() {
               {query && (
                 <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-hc-hairline bg-hc-tile px-4 py-2 text-sm font-semibold text-hc-ink-2 dark:border-gray-700 dark:bg-gray-800">
                   <Hash size={12} /> {query}
-                  <button onClick={() => setQuery('')} aria-label="Clear tag filter" className="rounded-full hover:bg-gray-200">
+                  <button onClick={() => setQuery('')} aria-label="Clear tag filter" className="rounded-full hover:bg-hc-page">
                     <X size={12} />
                   </button>
                 </div>

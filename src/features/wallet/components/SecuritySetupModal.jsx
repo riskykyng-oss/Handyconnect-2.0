@@ -96,7 +96,7 @@ export default function SecuritySetupModal({ uid, mode, onClose }) {
               onChange={(e) => setCurrent(e.target.value)}
               placeholder={isPin ? 'Current PIN' : 'Current password'}
               autoFocus
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
             />
             {error && <p className="mt-2 text-xs font-semibold text-red-500">{error}</p>}
             <button
@@ -120,7 +120,7 @@ export default function SecuritySetupModal({ uid, mode, onClose }) {
               placeholder={placeholder}
               maxLength={isPin ? 6 : undefined}
               autoFocus
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
             />
             <input
               type="password"
@@ -129,7 +129,7 @@ export default function SecuritySetupModal({ uid, mode, onClose }) {
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="Confirm"
               maxLength={isPin ? 6 : undefined}
-              className="mt-2.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="mt-2.5 w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
             />
             {error && <p className="mt-2 text-xs font-semibold text-red-500">{error}</p>}
             <button
@@ -153,7 +153,7 @@ export default function SecuritySetupModal({ uid, mode, onClose }) {
               placeholder={placeholder}
               maxLength={isPin ? 6 : undefined}
               autoFocus
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
             />
             <input
               type="password"
@@ -162,7 +162,7 @@ export default function SecuritySetupModal({ uid, mode, onClose }) {
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="Confirm"
               maxLength={isPin ? 6 : undefined}
-              className="mt-2.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="mt-2.5 w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-3 text-sm outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
             />
             {error && <p className="mt-2 text-xs font-semibold text-red-500">{error}</p>}
             <button

@@ -94,13 +94,13 @@ export default function ClientLayout() {
               onClick={() => setDrawerOpen(false)}
               className={`group relative flex min-h-11 items-center gap-3 rounded-xl border-l-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                 active
-                  ? 'border-hc-brand bg-white text-hc-ink shadow-sm'
-                  : 'border-transparent text-gray-600 hover:bg-white/70 hover:text-hc-ink'
+                  ? 'border-hc-brand bg-hc-brand-50 text-hc-brand-strong'
+                  : 'border-transparent text-hc-ink-2 hover:bg-hc-brand-50/50 hover:text-hc-ink'
               }`}
             >
               <item.icon
                 size={20}
-                className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'}
+                className={active ? 'text-hc-brand' : 'text-hc-ink-3 group-hover:text-hc-brand'}
               />
               <span className="flex-1">{item.name}</span>
               {item.name === 'Messages' && unreadMessages > 0 && (
@@ -123,13 +123,13 @@ export default function ClientLayout() {
               onClick={() => setDrawerOpen(false)}
               className={`group flex min-h-11 items-center gap-3 rounded-xl border-l-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                 active
-                  ? 'border-hc-brand bg-white text-hc-ink shadow-sm'
-                  : 'border-transparent text-gray-600 hover:bg-white/70 hover:text-hc-ink'
+                  ? 'border-hc-brand bg-hc-brand-50 text-hc-brand-strong'
+                  : 'border-transparent text-hc-ink-2 hover:bg-hc-brand-50/50 hover:text-hc-ink'
               }`}
             >
               <item.icon
                 size={20}
-                className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'}
+                className={active ? 'text-hc-brand' : 'text-hc-ink-3 group-hover:text-hc-brand'}
               />
               {item.name}
             </Link>
@@ -141,7 +141,7 @@ export default function ClientLayout() {
       <div className="border-t border-hc-hairline px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gray-400 text-sm font-bold text-white">
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-hc-ink-3 text-sm font-bold text-white">
               {avatar}
             </div>
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-hc-tile bg-green-500" />
@@ -152,7 +152,7 @@ export default function ClientLayout() {
           </div>
           <button
             onClick={handleLogout}
-            className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 hover:bg-white hover:text-red-500 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-lg text-hc-ink-2 hover:bg-hc-surface hover:text-red-500 transition-colors"
             title="Logout"
           >
             <LogOut size={16} />
@@ -179,7 +179,7 @@ export default function ClientLayout() {
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="absolute right-3 top-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white text-gray-600 shadow-sm transition-colors hover:bg-gray-100"
+                className="absolute right-3 top-4 flex h-11 w-11 items-center justify-center rounded-lg bg-hc-surface text-hc-ink-2 shadow-sm transition-colors hover:bg-hc-page"
               >
                 <X size={20} />
               </button>
@@ -195,7 +195,7 @@ export default function ClientLayout() {
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Open menu"
-              className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-gray-100"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-hc-ink-2 transition-colors hover:bg-hc-page"
             >
               <Menu size={22} />
             </button>
@@ -212,7 +212,7 @@ export default function ClientLayout() {
               <button
                 aria-label="Notifications"
                 onClick={() => setNotifOpen((o) => !o)}
-                className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+                className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-hc-page"
               >
                 <Bell size={20} className="text-hc-ink-2" />
                 {!!unreadCount && (
@@ -239,7 +239,7 @@ export default function ClientLayout() {
                       <div
                         key={n.id}
                         onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
-                        className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
+                        className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-hc-page cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
                       >
                         <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-hc-hairline' : 'bg-hc-brand'}`} />
                         <div className="min-w-0">
@@ -249,7 +249,7 @@ export default function ClientLayout() {
                       </div>
                     ))}
                   </div>
-                  <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+                  <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-hc-page rounded-b-xl">
                     View all notifications
                   </button>
                 </div>
@@ -258,7 +258,7 @@ export default function ClientLayout() {
             <button
               aria-label="Messages"
               onClick={() => navigate('/client/messages')}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-hc-page"
             >
               <MessageSquare size={20} className="text-hc-ink-2" />
               {!!unreadMessages && (
@@ -273,7 +273,7 @@ export default function ClientLayout() {
           <div className="sticky top-0 z-30 hidden border-b border-hc-hairline bg-white/80 backdrop-blur-md lg:flex items-center justify-between gap-4 px-8 py-4">
             <div className="flex-1" />
 
-            <button className="flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200">
+            <button className="flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-hc-page px-4 py-2.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-hc-hairline">
               <MapPin size={16} className="text-hc-ink-3" /> Harare, Zimbabwe
             </button>
 
@@ -281,7 +281,7 @@ export default function ClientLayout() {
               <button
                 aria-label="Messages"
                 onClick={() => navigate('/client/messages')}
-                className="relative rounded-full bg-gray-100 p-2.5 transition-colors hover:bg-gray-200"
+                className="relative rounded-full bg-hc-page p-2.5 transition-colors hover:bg-hc-hairline"
               >
                 <MessageSquare size={18} className="text-hc-ink-2" />
                 {!!unreadMessages && (
@@ -295,7 +295,7 @@ export default function ClientLayout() {
                 <button
                   aria-label="Notifications"
                   onClick={() => setNotifOpen((o) => !o)}
-                  className="relative rounded-full bg-gray-100 p-2.5 transition-colors hover:bg-gray-200"
+                  className="relative rounded-full bg-hc-page p-2.5 transition-colors hover:bg-hc-hairline"
                 >
                   <Bell size={18} className="text-hc-ink-2" />
                   {!!unreadCount && (
@@ -323,7 +323,7 @@ export default function ClientLayout() {
                         <div
                           key={n.id}
                           onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
-                          className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
+                          className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-hc-page cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
                         >
                           <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-hc-hairline' : 'bg-hc-brand'}`} />
                           <div className="min-w-0">
@@ -333,7 +333,7 @@ export default function ClientLayout() {
                         </div>
                       ))}
                     </div>
-                    <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+                    <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-hc-page rounded-b-xl">
                       View all notifications
                     </button>
                   </div>
@@ -345,9 +345,9 @@ export default function ClientLayout() {
                   aria-label="Open account menu"
                   aria-expanded={profileOpen}
                   onClick={() => setProfileOpen((o) => !o)}
-                  className="flex items-center gap-1.5 rounded-full pl-2 pr-3 py-1 transition-colors hover:bg-gray-100"
+                  className="flex items-center gap-1.5 rounded-full pl-2 pr-3 py-1 transition-colors hover:bg-hc-page"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gray-800 text-xs font-bold text-white">
+                    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-hc-ink text-xs font-bold text-white">
                     {avatar}
                   </div>
                   <ChevronDown size={14} className={`text-hc-ink-3 transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
@@ -355,10 +355,10 @@ export default function ClientLayout() {
 
                 {profileOpen && (
                   <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-hc-hairline bg-white py-2 shadow-lg z-50">
-                    <Link to="/client/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-hc-ink-2 hover:bg-gray-50">
+                    <Link to="/client/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-hc-ink-2 hover:bg-hc-page">
                       <User size={16} /> Profile
                     </Link>
-                    <Link to="/client/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-hc-ink-2 hover:bg-gray-50">
+                    <Link to="/client/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-hc-ink-2 hover:bg-hc-page">
                       <Settings size={16} /> Settings
                     </Link>
                     <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50">
@@ -385,7 +385,7 @@ export default function ClientLayout() {
 
             {/* Right Sidebar (Desktop) — Home, Explore, Jobs only */}
             {showRail && (
-              <aside className="sticky top-24 hidden w-[300px] shrink-0 self-start lg:flex flex-col divide-y divide-black/[0.06] rounded-2xl border border-black/[0.05] bg-[#FAFAFA] p-4">
+              <aside className="sticky top-24 hidden w-[300px] shrink-0 self-start lg:flex flex-col divide-y divide-black/[0.06] rounded-2xl border border-black/[0.05] bg-hc-page p-4">
                 <NotificationsPreview />
                 <RailUpcomingJobs />
                 <WalletCard />
@@ -405,7 +405,7 @@ export default function ClientLayout() {
         <button
           aria-label="Notifications"
           onClick={() => setNotifOpen((o) => !o)}
-          className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-lg border border-hc-hairline transition-colors hover:bg-gray-50"
+          className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-lg border border-hc-hairline transition-colors hover:bg-hc-page"
         >
           <Bell size={18} className="text-hc-ink-2" />
           {!!unreadCount && (
@@ -432,7 +432,7 @@ export default function ClientLayout() {
                 <div
                   key={n.id}
                   onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
-                  className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
+                  className={`flex items-start gap-2 rounded-xl px-3 py-2.5 hover:bg-hc-page cursor-pointer ${!n.read ? 'bg-hc-tile' : ''}`}
                 >
                   <div className={`h-2 w-2 mt-1 shrink-0 rounded-full ${n.read ? 'bg-hc-hairline' : 'bg-hc-brand'}`} />
                   <div className="min-w-0">
@@ -442,7 +442,7 @@ export default function ClientLayout() {
                 </div>
               ))}
             </div>
-            <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-gray-50 rounded-b-xl">
+            <button onClick={() => { setNotifOpen(false); navigate('/client/notifications'); }} className="mt-2 w-full text-center text-xs font-semibold text-hc-ink-2 py-2 hover:bg-hc-page rounded-b-xl">
               View all notifications
             </button>
           </div>

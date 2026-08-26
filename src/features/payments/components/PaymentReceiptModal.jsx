@@ -147,10 +147,10 @@ export default function PaymentReceiptModal({ payment, open, onClose }) {
       subtitle={reference}
     >
       <div className="max-h-[85vh] overflow-y-auto p-6">
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-800">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Total paid</p>
+        <div className="rounded-xl border border-dashed border-hc-ink-4 bg-hc-page p-6 text-center dark:border-hc-ink dark:bg-hc-ink">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-hc-ink-3">Total paid</p>
           <p className="mt-1 font-display text-4xl font-semibold text-emerald-600 dark:text-emerald-400">${total.toFixed(2)}</p>
-          <p className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-gray-500">
+          <p className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-hc-ink-2">
             <Wallet size={12} /> via {method}
           </p>
         </div>
@@ -158,44 +158,44 @@ export default function PaymentReceiptModal({ payment, open, onClose }) {
         <dl className="mt-4 space-y-2.5 text-sm">
           {rows.map(([label, value]) => (
             <div key={label} className="flex items-center justify-between gap-3">
-              <dt className="shrink-0 text-gray-400">{label}</dt>
+              <dt className="shrink-0 text-hc-ink-3">{label}</dt>
               <dd className="truncate text-right font-semibold text-hc-ink dark:text-white">{value}</dd>
             </div>
           ))}
         </dl>
 
-        <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm dark:bg-gray-800/60">
-          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Payment breakdown</p>
+        <div className="mt-4 rounded-xl bg-hc-page p-4 text-sm dark:bg-hc-ink/60">
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-hc-ink-3">Payment breakdown</p>
           <div className="space-y-1">
-            <div className="flex justify-between text-gray-600 dark:text-gray-300"><span>Service charge</span><span>${amount.toFixed(2)}</span></div>
-            <div className="flex justify-between text-gray-600 dark:text-gray-300"><span>Platform fee</span><span>${platformFee.toFixed(2)}</span></div>
-            <div className="flex justify-between text-gray-600 dark:text-gray-300"><span>Taxes</span><span>${taxes.toFixed(2)}</span></div>
-            <div className="mt-1 flex justify-between border-t border-dashed border-gray-300 pt-1 font-semibold text-emerald-600 dark:border-gray-700 dark:text-emerald-400">
+            <div className="flex justify-between text-hc-accent-strong dark:text-hc-ink-4"><span>Service charge</span><span>${amount.toFixed(2)}</span></div>
+            <div className="flex justify-between text-hc-accent-strong dark:text-hc-ink-4"><span>Platform fee</span><span>${platformFee.toFixed(2)}</span></div>
+            <div className="flex justify-between text-hc-accent-strong dark:text-hc-ink-4"><span>Taxes</span><span>${taxes.toFixed(2)}</span></div>
+            <div className="mt-1 flex justify-between border-t border-dashed border-hc-ink-4 pt-1 font-semibold text-emerald-600 dark:border-hc-ink dark:text-emerald-400">
               <span>Total</span><span>${total.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-5 text-center dark:border-gray-700 dark:bg-gray-800">
-          <div className="mx-auto flex w-fit items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
+        <div className="mt-4 rounded-xl border border-hc-hairline bg-hc-page p-5 text-center dark:border-hc-ink dark:bg-hc-ink">
+          <div className="mx-auto flex w-fit items-center justify-center rounded-2xl bg-white p-4 shadow-sm ring-1 ring-hc-hairline dark:bg-hc-ink dark:ring-hc-ink">
             <QRCodeSVG value={encodePaymentToken(payment.id)} size={120} fgColor="#111827" bgColor="transparent" />
           </div>
           <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-bold text-hc-ink dark:text-white">
             <ShieldCheck size={14} className="text-emerald-500" /> Verified receipt
           </p>
-          <p className="mt-0.5 text-xs text-gray-500">
+          <p className="mt-0.5 text-xs text-hc-ink-2">
             Scan this code to verify authenticity or share it with support for disputes.
           </p>
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-2">
-          <button onClick={download} className="flex items-center justify-center gap-1.5 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-gray-800">
+          <button onClick={download} className="flex items-center justify-center gap-1.5 rounded-xl bg-hc-ink px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-hc-ink">
             <Download size={14} /> Download
           </button>
-          <button onClick={print} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50">
+          <button onClick={print} className="flex items-center justify-center gap-1.5 rounded-xl border border-hc-hairline px-4 py-2.5 text-sm font-bold text-hc-ink transition-colors hover:bg-hc-page">
             <Printer size={14} /> Print
           </button>
-          <button onClick={email} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50">
+          <button onClick={email} className="flex items-center justify-center gap-1.5 rounded-xl border border-hc-hairline px-4 py-2.5 text-sm font-bold text-hc-ink transition-colors hover:bg-hc-page">
             <Mail size={14} /> Email
           </button>
           <button onClick={share} className="flex items-center justify-center gap-1.5 rounded-xl bg-hc-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong">
@@ -204,7 +204,7 @@ export default function PaymentReceiptModal({ payment, open, onClose }) {
           </button>
         </div>
 
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[11px] text-gray-400">
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[11px] text-hc-ink-3">
           <ShieldCheck size={12} className="text-emerald-500" /> Encrypted and protected by HandyConnect
         </p>
       </div>

@@ -80,26 +80,26 @@ export default function ScanPaymentPage() {
       <div className="mb-5 flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
-          className="rounded-xl border border-gray-200 bg-white p-2.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
+          className="rounded-xl border border-hc-hairline bg-hc-surface p-2.5 text-hc-ink-2 transition-colors hover:bg-hc-brand-50 hover:text-hc-ink"
           aria-label="Go back"
         >
           <ArrowLeft size={18} />
         </button>
         <div>
           <h1 className="font-display text-2xl font-semibold tracking-tight text-hc-ink dark:text-white">Scan &amp; Pay</h1>
-          <p className="mt-0.5 text-sm text-hc-caption dark:text-gray-400">Point your camera at the professional's QR code.</p>
+          <p className="mt-0.5 text-sm text-hc-caption dark:text-hc-ink-3">Point your camera at the professional's QR code.</p>
         </div>
       </div>
 
       {phase === 'scan' && (
         <div className="space-y-5">
-          <div className="overflow-hidden rounded-xl border border-black/[0.07] bg-gray-900 shadow-sm dark:border-gray-700">
+          <div className="overflow-hidden rounded-xl border border-black/[0.07] bg-hc-ink shadow-sm dark:border-hc-ink">
             <PaymentScanner onScan={handleScan} onError={(msg) => toast.error(msg)} />
           </div>
 
-          <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+          <div className="rounded-xl border border-black/[0.07] bg-white p-5 shadow-sm dark:border-hc-ink dark:bg-hc-ink">
             <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-hc-ink dark:text-white">
-              <KeyRound size={15} className="text-gray-400" />
+              <KeyRound size={15} className="text-hc-ink-3" />
               Manual code entry
             </div>
             <div className="flex gap-2">
@@ -108,7 +108,7 @@ export default function ScanPaymentPage() {
                 onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
                 placeholder="e.g. AB12CD"
                 maxLength={8}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 font-mono text-sm uppercase tracking-widest outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-2.5 font-mono text-sm uppercase tracking-widest outline-none transition-all focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
               />
               <button
                 onClick={handleManual}
@@ -119,7 +119,7 @@ export default function ScanPaymentPage() {
                 Verify
               </button>
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-xs text-gray-400">
+            <p className="mt-3 flex items-center gap-1.5 text-xs text-hc-ink-3">
               <ShieldCheck size={13} className="text-emerald-500" />
               Payments are escrowed and credited instantly to the professional's wallet.
             </p>
@@ -128,19 +128,19 @@ export default function ScanPaymentPage() {
       )}
 
       {phase === 'confirm' && (
-        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-hc-ink dark:bg-hc-ink">
+          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-hc-hairline text-hc-accent-strong dark:bg-hc-ink dark:text-hc-ink-4">
             <ScanLine size={22} />
           </div>
           <h2 className="text-lg font-semibold tracking-tight text-hc-ink dark:text-white">Confirm payment</h2>
-          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">
+          <p className="mt-1 text-sm text-hc-caption dark:text-hc-ink-3">
             You are paying <span className="font-semibold text-hc-ink dark:text-white">{payment.recipientName}</span> for "{payment.jobTitle}".
           </p>
 
-          <div className="mt-5 rounded-xl bg-gray-100/70 p-5 text-center dark:bg-gray-800/60">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount due</p>
+          <div className="mt-5 rounded-xl bg-hc-brand-100/70 p-5 text-center dark:bg-hc-ink/60">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-hc-ink-3">Amount due</p>
             <p className="mt-1 font-display text-4xl font-semibold tracking-tight text-hc-ink dark:text-white">${Number(payment.amount).toFixed(2)}</p>
-            <p className="mt-1 text-xs text-gray-400">USD · EcoCash</p>
+            <p className="mt-1 text-xs text-hc-ink-3">USD · EcoCash</p>
           </div>
 
           {errorMsg && (
@@ -158,7 +158,7 @@ export default function ScanPaymentPage() {
           </div>
           <button
             onClick={() => setPhase('scan')}
-            className="mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+            className="mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-bold text-hc-caption transition-colors hover:bg-hc-hairline dark:text-hc-ink-3 dark:hover:bg-hc-ink"
           >
             Scan again
           </button>
@@ -170,10 +170,10 @@ export default function ScanPaymentPage() {
       )}
 
       {phase === 'error' && (
-        <div className="rounded-xl border border-black/[0.07] bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900">
+        <div className="rounded-xl border border-black/[0.07] bg-white p-8 text-center shadow-sm dark:border-hc-ink dark:bg-hc-ink">
           <AlertCircle size={44} className="mx-auto mb-3 text-red-500" />
           <h2 className="font-display text-xl font-semibold tracking-tight text-hc-ink dark:text-white">Payment unavailable</h2>
-          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">{errorMsg}</p>
+          <p className="mt-1 text-sm text-hc-caption dark:text-hc-ink-3">{errorMsg}</p>
           <button
             onClick={() => { setPhase('scan'); setErrorMsg(''); }}
             className="mt-6 w-full rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-hc-brand-strong"

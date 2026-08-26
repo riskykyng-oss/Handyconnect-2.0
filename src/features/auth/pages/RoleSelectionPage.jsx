@@ -10,8 +10,8 @@ const roles = [
     name: 'Client',
     tagline: 'I want to hire professionals',
     Icon: Home,
-    accent: 'bg-[#F97316]',
-    iconBg: 'bg-orange-50 text-[#F97316]',
+    accent: 'bg-hc-brand',
+    iconBg: 'bg-hc-brand-50 text-hc-brand',
     features: ['Hire professionals', 'Post jobs & get quotes', 'Track progress in real time', 'Pay securely & manage invoices'],
   },
   {
@@ -19,8 +19,8 @@ const roles = [
     name: 'Professional',
     tagline: 'I want to offer my services',
     Icon: Wrench,
-    accent: 'bg-gray-900',
-    iconBg: 'bg-gray-100 text-gray-700',
+    accent: 'bg-hc-ink',
+    iconBg: 'bg-hc-brand-100 text-hc-ink',
     features: ['Find nearby work', 'Build your portfolio', 'Get paid instantly', 'Grow your client base'],
   },
 ];
@@ -62,7 +62,7 @@ export default function RoleSelectionPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F5F6F8] px-4 py-10 sm:px-6">
+    <div className="flex min-h-screen items-center justify-center bg-hc-page px-4 py-10 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ export default function RoleSelectionPage() {
         {/* Logo */}
         <div className="mb-8 flex items-center justify-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-hc-brand text-sm font-extrabold text-white shadow-md">HC</span>
-          <span className="font-display text-xl font-extrabold tracking-tight text-gray-900">
+          <span className="font-display text-xl font-extrabold tracking-tight text-hc-ink">
             Handy<span className="text-hc-brand">Connect</span>
           </span>
         </div>
@@ -99,8 +99,8 @@ export default function RoleSelectionPage() {
                   disabled={loading}
                   className={`group relative flex h-full w-full flex-col rounded-[28px] border-2 bg-white p-6 text-left transition-all duration-200 ${
                     isSelected
-                      ? 'border-[#F97316] shadow-[0_20px_50px_rgba(249,115,22,0.15)]'
-                      : 'border-transparent shadow-[0_12px_30px_rgba(15,23,42,0.06)] hover:-translate-y-1 hover:border-[#F97316]/60 hover:shadow-[0_20px_50px_rgba(15,23,42,0.1)]'
+                      ? 'border-hc-brand shadow-[0_20px_50px_rgba(249,115,22,0.15)]'
+                      : 'border-transparent shadow-[0_12px_30px_rgba(15,23,42,0.06)] hover:-translate-y-1 hover:border-hc-brand/60 hover:shadow-[0_20px_50px_rgba(15,23,42,0.1)]'
                   } disabled:cursor-not-allowed`}
                 >
                   {isSelected && (
@@ -108,7 +108,7 @@ export default function RoleSelectionPage() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 14 }}
-                      className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#F97316] text-white shadow-md"
+                      className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-hc-brand text-white shadow-md"
                     >
                       <Check size={16} strokeWidth={3} />
                     </motion.div>

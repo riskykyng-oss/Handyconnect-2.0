@@ -243,7 +243,7 @@ export default function GroupPage() {
               <button
                 key={p.id}
                 onClick={() => setTab('posts')}
-                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-hc-page dark:hover:bg-gray-700/50"
               >
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hc-tile text-[10px] font-semibold text-hc-ink-3">
                   {(p.authorName || '?').charAt(0)}
@@ -360,7 +360,7 @@ export default function GroupPage() {
               </div>
               <Link
                 to={`/pro/${m.uid}`}
-                className="shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold text-hc-ink-3 transition-colors hover:bg-gray-100 hover:text-hc-ink dark:hover:bg-gray-700"
+                className="shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold text-hc-ink-3 transition-colors hover:bg-hc-page hover:text-hc-ink dark:hover:bg-gray-700"
               >
                 View
               </Link>
@@ -463,7 +463,7 @@ export default function GroupPage() {
               )}
               <div className="min-w-0 pb-0.5">
                 <h1 className="truncate text-xl font-bold tracking-tight text-hc-ink dark:text-gray-100">{group.name}</h1>
-                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-medium text-hc-ink-2 dark:text-gray-400">
                   {group.category && (
                     <span className="flex items-center gap-0.5"><Hash size={11} /> {group.category}</span>
                   )}
@@ -482,7 +482,7 @@ export default function GroupPage() {
                   {myRole === 'owner' && (
                     <button
                       onClick={() => setManageHint(true)}
-                      className="rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                      className="rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                     >
                       Manage
                     </button>
@@ -504,13 +504,13 @@ export default function GroupPage() {
               )}
               <button
                 onClick={() => setInviteOpen(true)}
-                className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
                 <Mail size={13} /> Invite
               </button>
               <button
                 onClick={handleShare}
-                className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3 py-1.5 text-xs font-semibold text-hc-ink-2 shadow-sm transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
               >
                 <Share2 size={13} /> Share
               </button>
@@ -547,26 +547,26 @@ export default function GroupPage() {
           <div className="fixed inset-x-4 top-1/2 z-50 mx-auto max-w-md -translate-y-1/2 rounded-2xl border border-hc-hairline bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800">
             <div className="mb-5 flex items-center justify-between">
               <h3 className="text-lg font-bold text-hc-ink dark:text-gray-100">Invite to group</h3>
-              <button onClick={() => setInviteOpen(false)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700"><X size={18} /></button>
+              <button onClick={() => setInviteOpen(false)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-hc-page dark:hover:bg-gray-700"><X size={18} /></button>
             </div>
             <p className="mb-4 text-sm text-hc-caption dark:text-gray-400">Share this group with friends and colleagues.</p>
             <div className="space-y-2.5">
-              <button onClick={() => handleInvite('copy')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <button onClick={() => handleInvite('copy')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
                 <Link2 size={18} className="text-hc-brand" />
                 <div>
                   <p className="font-semibold">Copy link</p>
                   <p className="text-xs font-normal text-hc-caption">Copy the group URL to clipboard</p>
                 </div>
               </button>
-              <button onClick={() => handleInvite('whatsapp')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <button onClick={() => handleInvite('whatsapp')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
                 <MessageCircle size={18} className="text-emerald-500" />
                 <div>
                   <p className="font-semibold">WhatsApp</p>
                   <p className="text-xs font-normal text-hc-caption">Share via WhatsApp message</p>
                 </div>
               </button>
-              <button onClick={() => handleInvite('sms')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                <Send size={18} className="text-blue-500" />
+              <button onClick={() => handleInvite('sms')} className="flex w-full items-center gap-3 rounded-xl border border-hc-hairline bg-white px-4 py-3 text-left text-[15px] font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                <Send size={18} className="text-hc-accent" />
                 <div>
                   <p className="font-semibold">Text message</p>
                   <p className="text-xs font-normal text-hc-caption">Send an SMS with the invite link</p>
@@ -599,7 +599,7 @@ export default function GroupPage() {
               <>
                 <div className="mb-5 flex items-center justify-between">
                   <h3 className="text-lg font-bold text-hc-ink dark:text-gray-100">Report group</h3>
-                  <button onClick={() => setReportOpen(false)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700"><X size={18} /></button>
+                  <button onClick={() => setReportOpen(false)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-hc-page dark:hover:bg-gray-700"><X size={18} /></button>
                 </div>
                 <p className="mb-4 text-sm text-hc-caption dark:text-gray-400">Why are you reporting this group? All reports are sent to the admin team.</p>
                 <div className="space-y-2">
@@ -610,10 +610,10 @@ export default function GroupPage() {
                       className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-[15px] font-medium transition-colors ${
                         reportReason === r
                           ? 'border-hc-brand bg-hc-tint text-hc-brand'
-                          : 'border-hc-hairline bg-white text-hc-ink-2 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                          : 'border-hc-hairline bg-white text-hc-ink-2 hover:border-hc-hairline dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
                       }`}
                     >
-                      <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${reportReason === r ? 'border-hc-brand' : 'border-gray-300 dark:border-gray-600'}`}>
+                      <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${reportReason === r ? 'border-hc-brand' : 'border-hc-hairline dark:border-gray-600'}`}>
                         {reportReason === r && <div className="h-2 w-2 rounded-full bg-hc-brand" />}
                       </div>
                       {r}
@@ -649,7 +649,7 @@ export default function GroupPage() {
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-              tab === t.id ? 'bg-hc-brand text-white shadow-sm' : 'text-hc-ink-2 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+              tab === t.id ? 'bg-hc-brand text-white shadow-sm' : 'text-hc-ink-2 hover:bg-hc-page dark:text-gray-300 dark:hover:bg-gray-700'
             }`}
           >
             <t.icon size={13} /> {t.label}

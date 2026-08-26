@@ -23,6 +23,7 @@ export default function useClientJobs() {
     }
   }, [currentUser]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch(); }, [fetch]);
 
   const postJob = async (jobData) => {
@@ -30,5 +31,5 @@ export default function useClientJobs() {
     await fetch();
   };
 
-  return { jobs, loading, postJob };
+  return { jobs, loading, postJob, refetch: fetch };
 }

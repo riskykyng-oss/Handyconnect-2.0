@@ -110,7 +110,7 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
       <form onSubmit={handleSubmit} className="space-y-5 pt-2">
         {/* Category Grid */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">Category</label>
+          <label className="block text-sm font-semibold text-hc-ink mb-3">Category</label>
           <div className="grid grid-cols-3 gap-2">
             {Object.entries(categoryIcons).map(([cat, CatIcon]) => (
               <button
@@ -119,11 +119,11 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
                 onClick={() => setCategory(cat)}
                 className={`flex flex-col items-center gap-1.5 rounded-xl px-3 py-3 text-[13px] font-medium transition-all border ${
                   category === cat
-                    ? 'bg-orange-50 border-orange-300 text-orange-700 shadow-sm'
-                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-100'
+                    ? 'bg-hc-brand-50 border-hc-brand-300 text-hc-brand-700 shadow-sm'
+                    : 'bg-hc-page border-hc-hairline text-hc-ink-2 hover:border-hc-ink-4 hover:bg-hc-brand-50'
                 }`}
               >
-                <CatIcon size={20} className={category === cat ? 'text-orange-500' : 'text-gray-400'} />
+                <CatIcon size={20} className={category === cat ? 'text-hc-brand' : 'text-hc-ink-3'} />
                 {cat}
               </button>
             ))}
@@ -132,21 +132,21 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
 
         {/* Price Guide */}
         {priceGuide && (
-          <div className="flex items-start gap-3 rounded-xl bg-blue-50 border border-blue-100 px-4 py-3">
-            <Info size={16} className="mt-0.5 shrink-0 text-blue-500" />
+          <div className="flex items-start gap-3 rounded-xl bg-hc-accent-50 border border-hc-accent-100 px-4 py-3">
+            <Info size={16} className="mt-0.5 shrink-0 text-hc-accent" />
             <div>
-              <p className="text-sm font-medium text-blue-800">Suggested for {category}</p>
-              <p className="text-sm text-blue-600">${priceGuide.low} – ${priceGuide.high} USD</p>
+              <p className="text-sm font-medium text-hc-accent-800">Suggested for {category}</p>
+              <p className="text-sm text-hc-accent">${priceGuide.low} – ${priceGuide.high} USD</p>
             </div>
           </div>
         )}
 
         {/* Description */}
         <div>
-          <label htmlFor="post-job-desc" className="block text-sm font-semibold text-gray-700 mb-2">Describe the problem</label>
+          <label htmlFor="post-job-desc" className="block text-sm font-semibold text-hc-ink mb-2">Describe the problem</label>
           <textarea
             id="post-job-desc"
-            className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-base text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-[#F97316] focus:border-transparent outline-none transition-all resize-none"
+            className="w-full px-4 py-3.5 bg-hc-page border border-hc-hairline rounded-2xl text-base text-hc-ink placeholder:text-hc-ink-3 focus:ring-2 focus:ring-hc-brand focus:border-transparent outline-none transition-all resize-none"
             rows="3"
             placeholder="Include what, where, and when..."
             value={description}
@@ -157,8 +157,8 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
           <div className="mt-2 flex items-center gap-2">
             <label className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors ${
               photos.length >= 3
-                ? 'border-gray-200 text-gray-300 cursor-not-allowed'
-                : 'border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300'
+                ? 'border-hc-hairline text-hc-ink-4 cursor-not-allowed'
+                : 'border-hc-hairline text-hc-ink-2 hover:bg-hc-brand-50 hover:border-hc-ink-4'
             }`}>
               <ImagePlus size={14} />
               {photos.length === 0 ? 'Add photos' : `${photos.length}/3`}
@@ -171,13 +171,13 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
                 disabled={photos.length >= 3}
               />
             </label>
-            <span className="text-[11px] text-gray-400">Up to 3 photos</span>
+            <span className="text-[11px] text-hc-ink-3">Up to 3 photos</span>
           </div>
           {/* Photo previews */}
           {photos.length > 0 && (
             <div className="mt-2 flex gap-2">
               {photos.map((p, i) => (
-                <div key={i} className="relative h-16 w-16 rounded-lg overflow-hidden border border-gray-200">
+                <div key={i} className="relative h-16 w-16 rounded-lg overflow-hidden border border-hc-hairline">
                   <img src={p.preview} alt="" className="h-full w-full object-cover" />
                   <button
                     type="button"
@@ -195,13 +195,13 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
         {/* Budget */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label htmlFor="post-job-budget" className="text-sm font-semibold text-gray-700">Budget (USD)</label>
-            <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
+            <label htmlFor="post-job-budget" className="text-sm font-semibold text-hc-ink">Budget (USD)</label>
+            <label className="flex items-center gap-2 text-xs text-hc-ink-2 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={noBudget}
                 onChange={(e) => { setNoBudget(e.target.checked); if (e.target.checked) setBudget(''); }}
-                className="h-3.5 w-3.5 rounded border-gray-300 text-orange-500 focus:ring-orange-400"
+                className="h-3.5 w-3.5 rounded border-hc-hairline text-hc-brand focus:ring-hc-brand-400"
               />
               Not sure — let pros send quotes
             </label>
@@ -209,7 +209,7 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
           {!noBudget && (
             <>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base font-medium">$</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-hc-ink-3 text-base font-medium">$</span>
                 <input
                   id="post-job-budget"
                   type="number"
@@ -217,12 +217,12 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
                   placeholder={priceGuide ? `e.g., ${Math.round((priceGuide.low + priceGuide.high) / 2)}` : 'e.g., 50'}
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                  className="w-full pl-8 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-base text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-[#F97316] focus:border-transparent outline-none transition-all"
+                  className="w-full pl-8 pr-4 py-3.5 bg-hc-page border border-hc-hairline rounded-2xl text-base text-hc-ink placeholder:text-hc-ink-3 focus:ring-2 focus:ring-hc-brand focus:border-transparent outline-none transition-all"
                 />
               </div>
               {budgetWarning && (
                 <div className={`mt-2 flex items-start gap-2 rounded-lg px-3 py-2 text-xs ${
-                  budgetWarning.type === 'low' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'
+                  budgetWarning.type === 'low' ? 'bg-amber-50 text-amber-700' : 'bg-hc-accent-50 text-hc-accent-700'
                 }`}>
                   <AlertTriangle size={13} className="mt-0.5 shrink-0" />
                   <span>{budgetWarning.msg}</span>
@@ -231,24 +231,24 @@ export default function PostJobModal({ isOpen, onClose, onSave }) {
             </>
           )}
           {noBudget && (
-            <p className="text-xs text-gray-400 italic">Professions will send you quotes based on your description.</p>
+            <p className="text-xs text-hc-ink-3 italic">Professions will send you quotes based on your description.</p>
           )}
         </div>
 
         {/* Live title preview */}
         {category && (
-          <div className="rounded-xl bg-gray-50 border border-gray-100 px-4 py-3">
-            <p className="text-[11px] text-gray-400 mb-1">Job title (auto-generated)</p>
-            <p className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              {Icon && <Icon size={14} className="text-orange-500" />}
+          <div className="rounded-xl bg-hc-page border border-hc-hairline px-4 py-3">
+            <p className="text-[11px] text-hc-ink-3 mb-1">Job title (auto-generated)</p>
+            <p className="text-sm font-medium text-hc-ink flex items-center gap-2">
+              {Icon && <Icon size={14} className="text-hc-brand" />}
               {previewTitle}
             </p>
           </div>
         )}
 
         {/* Location Hint */}
-        <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 p-3 rounded-xl border border-gray-100">
-          <MapPin size={14} className="text-[#F97316]" /> Location: Harare, ZW (Default)
+        <div className="flex items-center gap-2 text-xs text-hc-ink-2 bg-hc-page p-3 rounded-xl border border-hc-hairline">
+          <MapPin size={14} className="text-hc-brand" /> Location: Harare, ZW (Default)
         </div>
 
         {error && (

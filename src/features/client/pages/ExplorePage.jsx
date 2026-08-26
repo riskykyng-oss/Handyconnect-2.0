@@ -67,11 +67,11 @@ const truncateLocation = (label) => {
 
 function Avatar({ pro, size = 'h-12 w-12' }) {
   return (
-    <div className={`${size} shrink-0 overflow-hidden rounded-full bg-orange-50 ring-2 ring-orange-100`}>
+    <div className={`${size} shrink-0 overflow-hidden rounded-full bg-hc-brand-50 ring-2 ring-hc-brand-100`}>
       {pro.image ? (
         <img src={pro.image} alt={pro.name} className="h-full w-full object-cover" />
       ) : (
-        <span className="flex h-full w-full items-center justify-center text-sm font-bold text-orange-500">
+        <span className="flex h-full w-full items-center justify-center text-sm font-bold text-hc-brand">
           {initials(pro.name)}
         </span>
       )}
@@ -93,7 +93,7 @@ function ProCard({ pro, index, onView, onHire }) {
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1 truncate text-[15px] font-semibold text-hc-ink">
             {pro.name}
-            {pro.verified && <BadgeCheck size={15} className="shrink-0 fill-orange-500 text-white" />}
+            {pro.verified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
           </p>
           <p className="mt-0.5 truncate text-sm text-hc-caption">{pro.role}</p>
         </div>
@@ -110,7 +110,7 @@ function ProCard({ pro, index, onView, onHire }) {
         )}
         {pro.distanceLabel && (
           <span className="flex items-center gap-1 truncate text-sm" title={pro.distanceLabel}>
-            <MapPin size={13} className="shrink-0 text-gray-400" /> {truncateLocation(pro.distanceLabel)}
+            <MapPin size={13} className="shrink-0 text-hc-ink-3" /> {truncateLocation(pro.distanceLabel)}
           </span>
         )}
       </div>
@@ -122,15 +122,15 @@ function ProCard({ pro, index, onView, onHire }) {
           </span>
         )}
         {!pro.available && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-semibold text-gray-500">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-hc-page px-2.5 py-1 text-[11px] font-semibold text-hc-ink-2">
             Offline
           </span>
         )}
         {pro.jobs === 0 && pro.rating == null && (
-          <span className="inline-flex rounded-full bg-orange-50 px-2.5 py-1 text-[11px] font-semibold text-orange-600">New</span>
+          <span className="inline-flex rounded-full bg-hc-brand-50 px-2.5 py-1 text-[11px] font-semibold text-hc-brand">New</span>
         )}
         {pro.jobs > 0 && (
-          <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-hc-caption">{pro.jobs} {pro.jobs === 1 ? 'job' : 'jobs'}</span>
+          <span className="inline-flex rounded-full bg-hc-page px-2.5 py-1 text-[11px] font-medium text-hc-caption">{pro.jobs} {pro.jobs === 1 ? 'job' : 'jobs'}</span>
         )}
       </div>
 
@@ -162,7 +162,7 @@ function ServiceCard({ service, onClick }) {
       onClick={onClick}
       className={`${cardClass} flex items-center gap-3 p-4 text-left transition-shadow hover:shadow-md`}
     >
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-hc-brand-50 text-hc-brand">
         <Icon size={20} />
       </div>
       <div className="min-w-0 flex-1">
@@ -178,7 +178,7 @@ function ServiceCard({ service, onClick }) {
 function EmptyState({ label, onPostJob }) {
   return (
     <div className={`${cardClass} p-10 text-center`}>
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-hc-page text-hc-ink-3">
         <Search size={20} />
       </div>
       <p className="mt-3 text-sm font-semibold text-hc-ink">No professionals found</p>
@@ -336,7 +336,7 @@ export default function ExplorePage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/client/map')}
-            className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3.5 py-2 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100 hover:text-hc-ink"
+            className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3.5 py-2 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-hc-brand-50 hover:text-hc-ink"
           >
             <MapIcon size={13} /> Map View
           </button>
@@ -344,26 +344,26 @@ export default function ExplorePage() {
             onClick={() => pickFilter(activeFilter === 'Recommended' ? 'All' : 'Recommended')}
             className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
               activeFilter === 'Recommended'
-                ? 'bg-gray-900 text-white shadow-sm'
-                : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+                ? 'bg-hc-ink text-white shadow-sm'
+                : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-hc-brand-50 hover:text-hc-ink'
             }`}
           >
-            <Sparkles size={13} className={activeFilter === 'Recommended' ? 'text-white' : 'text-gray-400'} />
+            <Sparkles size={13} className={activeFilter === 'Recommended' ? 'text-white' : 'text-hc-ink-3'} />
             Recommended
           </button>
         </div>
       </div>
 
       <div className="flex items-center gap-2 rounded-xl border border-black/[0.07] bg-white px-4 py-3 shadow-sm focus-within:border-hc-brand focus-within:ring-2 focus-within:ring-hc-brand/10">
-        <Search size={16} className="shrink-0 text-gray-400" />
+        <Search size={16} className="shrink-0 text-hc-ink-3" />
         <input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search service, skill, or professional name..."
-          className="min-w-0 flex-1 bg-transparent text-base text-hc-ink outline-none placeholder:text-gray-400"
+          className="min-w-0 flex-1 bg-transparent text-base text-hc-ink outline-none placeholder:text-hc-ink-3"
         />
         {activeQuery && (
-          <button onClick={() => onQueryChange('')} aria-label="Clear search" className="text-gray-400 hover:text-gray-600">
+          <button onClick={() => onQueryChange('')} aria-label="Clear search" className="text-hc-ink-3 hover:text-hc-ink-2">
             <X size={15} />
           </button>
         )}
@@ -380,8 +380,8 @@ export default function ExplorePage() {
               onClick={() => active ? onQueryChange('') : pickService(cat)}
               className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
                 active
-                  ? 'bg-gray-900 text-white shadow-sm'
-                  : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+                  ? 'bg-hc-ink text-white shadow-sm'
+                  : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-hc-brand-50 hover:text-hc-ink'
               }`}
             >
               <Icon size={13} />
@@ -395,9 +395,9 @@ export default function ExplorePage() {
             key={f}
             onClick={() => pickFilter(f)}
             className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
-              activeFilter === f && !selectedCategory
-                ? 'bg-gray-900 text-white shadow-sm'
-                : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+                activeFilter === f && !selectedCategory
+                  ? 'bg-hc-ink text-white shadow-sm'
+                  : 'border border-black/[0.08] bg-white text-hc-ink-2 hover:bg-hc-brand-50 hover:text-hc-ink'
             }`}
           >
             {f}
@@ -406,13 +406,13 @@ export default function ExplorePage() {
       </div>
 
       {/* Tab toggle */}
-      <div className="flex w-48 items-center rounded-xl bg-gray-100 p-1">
+      <div className="flex w-48 items-center rounded-xl bg-hc-page p-1">
         {['professionals', 'services'].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 rounded-lg py-2 text-xs font-semibold capitalize transition-colors ${
-              tab === t ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              tab === t ? 'bg-white text-hc-ink shadow-sm' : 'text-hc-ink-2 hover:text-hc-ink'
             }`}
           >
             {t}
@@ -464,7 +464,7 @@ export default function ExplorePage() {
                 </div>
               ) : results.length > 0 && results.length <= 3 ? (
                 <div className={`${cardClass} flex items-center gap-5 p-6`}>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-500">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-hc-brand-50 text-hc-brand">
                     <Sparkles size={20} />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -518,7 +518,7 @@ export default function ExplorePage() {
                 <button
                   key={item.label}
                   onClick={() => { item.action(); setShowFAB(false); }}
-                  className={`flex items-center gap-2 rounded-full ${item.color || 'bg-gray-800'} px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-transform hover:scale-105`}
+                  className={`flex items-center gap-2 rounded-full ${item.color || 'bg-hc-ink'} px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-transform hover:scale-105`}
                 >
                   <item.icon size={14} />
                   {item.label}

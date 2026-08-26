@@ -112,7 +112,7 @@ export default function ProfilePage() {
         {/* Avatar */}
         <div className="flex items-center gap-5 bg-hc-tile p-5 sm:p-6">
           <div className="relative shrink-0">
-            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-gray-100 shadow-sm">
+            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-hc-hairline shadow-sm">
               {profile.photoURL ? <img src={profile.photoURL} alt="" className="h-full w-full object-cover" /> : <User size={30} className="text-hc-ink-3" />}
             </div>
             <button type="button" onClick={() => fileRef.current?.click()} className="absolute -bottom-0.5 -right-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-hc-brand text-white shadow-sm border-2 border-white hover:bg-hc-brand-strong transition-colors">
@@ -164,21 +164,21 @@ export default function ProfilePage() {
           <div>
             <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Full Name</label>
             <input value={profile.displayName} onChange={(e) => setProfile({ ...profile, displayName: e.target.value })} placeholder="Your full name"
-              className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
+              className="w-full rounded-lg border border-black/[0.08] bg-hc-page px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
           </div>
           <div>
             <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Bio</label>
             <textarea value={profile.bio} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} rows={3} placeholder="Tell clients about your experience..."
-              className="w-full resize-none rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
+              className="w-full resize-none rounded-lg border border-black/[0.08] bg-hc-page px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
           </div>
           <div>
             <label className="text-xs font-medium text-hc-ink-2 mb-1 block">Trade / Job type</label>
             <input value={profile.skills} onChange={(e) => setProfile({ ...profile, skills: e.target.value })} placeholder="Type your trade, e.g. Electrician, Plumber..."
-              className="w-full rounded-lg border border-black/[0.08] bg-gray-50 px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
+              className="w-full rounded-lg border border-black/[0.08] bg-hc-page px-3.5 py-2 text-sm text-hc-ink outline-none transition-colors placeholder:text-hc-caption focus:border-hc-brand focus:bg-white" />
             <p className="mt-1 text-[11px] text-hc-caption">Free text. Separate multiple trades with commas — the first one is shown as your primary job type.</p>
           </div>
           <div>
-            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-hc-ink-2"><MapPin size={13} className="text-gray-400" /> Service Location</label>
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-hc-ink-2"><MapPin size={13} className="text-hc-ink-3" /> Service Location</label>
             <LocationPicker initialLocation={location} onLocationChange={(loc) => setLocation(loc)} />
           </div>
           <div className="flex justify-end pt-2">

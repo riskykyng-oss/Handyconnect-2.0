@@ -59,7 +59,7 @@ export default function WithdrawModal({ open, onClose, balance }) {
       {done ? (
         <div className="px-6 py-10 text-center">
           <p className="font-display text-3xl font-semibold text-hc-ink dark:text-white">-${value.toFixed(2)}</p>
-          <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">sent to {method} · arrives in ~30 min (demo)</p>
+          <p className="mt-1 text-sm text-hc-caption dark:text-hc-ink-3">sent to {method} · arrives in ~30 min (demo)</p>
           <button
             onClick={onClose}
             className="mt-6 w-full rounded-xl bg-hc-brand px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-hc-brand-strong"
@@ -70,7 +70,7 @@ export default function WithdrawModal({ open, onClose, balance }) {
       ) : (
         <div className="p-6">
           <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">$</span>
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-bold text-hc-ink-3">$</span>
             <input
               type="number"
               min={MIN_WITHDRAWAL}
@@ -78,20 +78,20 @@ export default function WithdrawModal({ open, onClose, balance }) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-8 pr-3.5 text-lg font-bold text-hc-ink outline-none transition-all placeholder:text-gray-400 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-xl border-hc-hairline bg-hc-page py-3 pl-8 pr-3.5 text-lg font-bold text-hc-ink outline-none transition-all placeholder:text-hc-ink-3 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
             />
           </div>
           <div className="mt-3 flex items-center justify-between">
-            <button onClick={() => setAmount(String(Math.min(available, available)))} className="rounded-lg bg-gray-100 px-3.5 py-1.5 text-xs font-bold text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
+            <button onClick={() => setAmount(String(Math.min(available, available)))} className="rounded-lg bg-hc-hairline px-3.5 py-1.5 text-xs font-bold text-hc-accent-strong transition-colors hover:bg-hc-hairline dark:bg-hc-ink dark:text-hc-ink-4 dark:hover:bg-hc-ink">
               Max
             </button>
-            <p className="text-xs text-gray-400">Minimum ${MIN_WITHDRAWAL}</p>
+            <p className="text-xs text-hc-ink-3">Minimum ${MIN_WITHDRAWAL}</p>
           </div>
-          <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-gray-400">Send to</label>
+          <label className="mb-1.5 mt-5 block text-xs font-bold uppercase tracking-wider text-hc-caption dark:text-hc-ink-3">Send to</label>
           <MethodSelect methods={METHODS} value={method} onChange={setMethod} />
-          <div className="mt-4 flex items-start gap-2 rounded-xl bg-gray-50 p-3">
-            <Info size={14} className="mt-0.5 shrink-0 text-gray-400" />
-            <p className="text-[11px] leading-relaxed text-hc-caption dark:text-gray-400">
+          <div className="mt-4 flex items-start gap-2 rounded-xl bg-hc-page p-3">
+            <Info size={14} className="mt-0.5 shrink-0 text-hc-ink-3" />
+            <p className="text-[11px] leading-relaxed text-hc-caption dark:text-hc-ink-3">
               No fees on your first withdrawal. Processing time ~30 minutes (demo instant).
             </p>
           </div>

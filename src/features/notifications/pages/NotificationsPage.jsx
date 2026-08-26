@@ -5,13 +5,13 @@ import { timeAgo } from '@/utils/time';
 import { Bell, Briefcase, Wallet, MessageCircle, Star, UserPlus, CheckCheck, Flag } from 'lucide-react';
 
 const typeConfig = {
-  job: { icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
+  job: { icon: Briefcase, color: 'text-hc-accent-strong', bg: 'bg-hc-accent-50' },
   payment: { icon: Wallet, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   message: { icon: MessageCircle, color: 'text-purple-600', bg: 'bg-purple-50' },
   follow: { icon: UserPlus, color: 'text-pink-600', bg: 'bg-pink-50' },
   review: { icon: Star, color: 'text-amber-500', bg: 'bg-amber-50' },
   group_report: { icon: Flag, color: 'text-red-600', bg: 'bg-red-50' },
-  announcement: { icon: Bell, color: 'text-orange-600', bg: 'bg-orange-50' },
+  announcement: { icon: Bell, color: 'text-hc-brand-strong', bg: 'bg-hc-brand-50' },
 };
 
 export default function NotificationsPage() {
@@ -28,7 +28,7 @@ export default function NotificationsPage() {
         {unreadCount > 0 && (
           <button
             onClick={() => markAllNotificationsRead(currentUser.uid).catch(() => {})}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-hc-tile px-4 py-2.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-hc-tile px-4 py-2.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page"
           >
             <CheckCheck size={16} /> Mark all read
           </button>
@@ -51,7 +51,7 @@ export default function NotificationsPage() {
           </div>
         )}
         {notifications.map((n) => {
-          const cfg = typeConfig[n.type] || { icon: Bell, color: 'text-gray-500', bg: 'bg-gray-50' };
+          const cfg = typeConfig[n.type] || { icon: Bell, color: 'text-hc-ink-2', bg: 'bg-hc-page' };
           const Icon = cfg.icon;
           return (
             <button
@@ -60,7 +60,7 @@ export default function NotificationsPage() {
               className={`flex w-full items-start gap-3 rounded-2xl border px-4 py-4 text-left transition-all hover:shadow-sm ${
                 n.read
                   ? 'border-hc-hairline bg-white'
-                  : 'border-hc-brand/20 bg-orange-50/40'
+                  : 'border-hc-brand/20 bg-hc-brand-50/40'
               }`}
             >
               <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${cfg.color} ${cfg.bg}`}>

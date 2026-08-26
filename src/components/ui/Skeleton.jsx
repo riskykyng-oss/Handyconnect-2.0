@@ -1,11 +1,11 @@
 
 export const Skeleton = ({ className = '' }) => (
-  <div aria-hidden="true" className={`animate-pulse rounded-xl bg-black/[0.06] dark:bg-white/10 ${className}`}></div>
+  <div aria-hidden="true" className={`animate-pulse rounded-xl bg-hc-hairline ${className}`}></div>
 );
 
 // A specific skeleton for Job Cards
 export const JobCardSkeleton = () => (
-  <div className="flex flex-col justify-between rounded-xl border border-black/[0.07] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+  <div className="flex flex-col justify-between rounded-xl border border-hc-hairline bg-hc-surface p-6 shadow-sm">
     <div>
       <div className="flex justify-between mb-3">
         <Skeleton className="w-2/3 h-6" />
@@ -23,7 +23,7 @@ export const JobCardSkeleton = () => (
 
 // Skeleton for professional/explore cards (avatar + name + role + buttons)
 export const ProCardSkeleton = () => (
-  <div className="flex flex-col rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+  <div className="flex flex-col rounded-xl border border-hc-hairline bg-hc-surface p-4 shadow-sm">
     <div className="flex items-start gap-3">
       <Skeleton className="h-12 w-12 rounded-full shrink-0" />
       <div className="min-w-0 flex-1 space-y-2">
@@ -31,7 +31,7 @@ export const ProCardSkeleton = () => (
         <Skeleton className="h-3 w-1/2" />
       </div>
     </div>
-    <div className="mt-3 flex gap-2 border-t border-black/[0.07] pt-3">
+    <div className="mt-3 flex gap-2 border-t border-hc-hairline pt-3">
       <Skeleton className="h-8 flex-1 rounded-lg" />
       <Skeleton className="h-8 flex-1 rounded-lg" />
     </div>
@@ -40,7 +40,7 @@ export const ProCardSkeleton = () => (
 
 // Skeleton for stat cards (icon + value + label)
 export const StatCardSkeleton = () => (
-  <div className="rounded-2xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+  <div className="rounded-2xl border border-hc-hairline bg-hc-surface p-4 shadow-sm">
     <div className="flex items-center gap-3">
       <Skeleton className="h-11 w-11 rounded-xl shrink-0" />
       <div className="flex-1 space-y-2">
@@ -55,7 +55,7 @@ export const StatCardSkeleton = () => (
 export const TableSkeleton = ({ rows = 5 }) => (
   <div className="space-y-3">
     {Array.from({ length: rows }).map((_, i) => (
-      <div key={i} className="flex items-center gap-4 rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      <div key={i} className="flex items-center gap-4 rounded-xl border border-hc-hairline bg-hc-surface p-4 shadow-sm">
         <Skeleton className="h-10 w-10 rounded-full shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-1/3" />
@@ -86,7 +86,7 @@ export const PageSkeleton = () => (
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className={`rounded-xl border border-black/[0.07] bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 ${
+            className={`rounded-xl border border-hc-hairline bg-hc-surface p-4 shadow-sm ${
               i === 2 ? 'sm:col-span-2' : ''
             }`}
           >

@@ -105,7 +105,46 @@ export const completeJob = async (jobId, handymanId, budget) => {
   await updateDoc(walletRef, { balance: increment(budget) });
 };
 
-export const submitQuote = async (jobId, quote) => updateDoc(doc(db, 'jobs', jobId), { quotes: arrayUnion({ ...quote, createdAt: new Date(), status: 'pending' }), timeline: arrayUnion({ type: 'quote', label: 'New quote received', createdAt: new Date() }) });
+export const submitQuote = async (jobId, quote, clientUid) => {
+  await updateDoc(doc(db, 'jobs', jobId), {
+    quotes: arrayUnion({ ...quote, createdAt: new Date(), status: 'pending' }),
+    timeline: arrayUnion({ type: 'quote', label: `${quote.handymanName || 'A professional'} sent a quote`, createdAt: new Date() }),
+  });
+  if (clientUid) {
+    createNotification(clientUid, quote.handymanId, 'quote', {
+      text: `${quote.handymanName || 'A professional'} sent you a quote ($${quote.price}) for "${quote.jobTitle || 'your job'}"`,
+    }).catch(() => {});
+  }
+};
+
+// Client accepts a specific quote → assigns the job to that handyman
+export const acceptQuote = async (jobId, quote) => {
+  const jobRef = doc(db, 'jobs', jobId);
+  const jobSnap = await getDoc(jobRef);
+  const job = jobSnap.data() || {};
+
+  // Update the quote's status to accepted and all others to rejected
+  const updatedQuotes = (job.quotes || []).map((q) => {
+    if (q.handymanId === quote.handymanId && q.createdAt?.seconds === quote.createdAt?.seconds) {
+      return { ...q, status: 'accepted' };
+    }
+    return { ...q, status: 'rejected' };
+  });
+
+  await updateDoc(jobRef, {
+    status: 'assigned',
+    handymanId: quote.handymanId,
+    handymanName: quote.handymanName,
+    quotes: updatedQuotes,
+    timeline: arrayUnion({ type: 'quote_accepted', label: `Quote accepted — ${quote.handymanName}`, createdAt: new Date() }),
+  });
+
+  // Notify the winning handyman
+  createNotification(quote.handymanId, job.clientId, 'job', {
+    text: `Your quote ($${quote.price}) was accepted! Job: "${job.title || 'Job'}"`,
+  }).catch(() => {});
+};
+
 export const addMilestone = async (jobId, milestone) => updateDoc(doc(db, 'jobs', jobId), { milestones: arrayUnion({ ...milestone, status: 'pending', createdAt: new Date() }), timeline: arrayUnion({ type: 'milestone', label: milestone.title, createdAt: new Date() }) });
 export const updateJobProgress = async (jobId, progress, label = 'Progress updated') => updateDoc(doc(db, 'jobs', jobId), { progress, timeline: arrayUnion({ type: 'progress', label, createdAt: new Date() }) });
 export const openDispute = async (jobId, reason, openedBy) => updateDoc(doc(db, 'jobs', jobId), { status: 'disputed', dispute: { reason, openedBy, openedAt: new Date(), status: 'open' }, timeline: arrayUnion({ type: 'dispute', label: 'Dispute opened', createdAt: new Date() }) });

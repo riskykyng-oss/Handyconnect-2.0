@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Briefcase, MapPin, ArrowRight, Plus, DollarSign, Search, Wrench,
+  X, Clock, CheckCircle2, MessageSquare,
 } from 'lucide-react';
 import useClientJobs from '@/hooks/useClientJobs';
+import { acceptQuote } from '@/services/jobService';
 import { timeAgo } from '@/utils/time';
 import { categoryIcons } from '@/constants/categories';
 import { JobCardSkeleton, StatCardSkeleton } from '@/components/ui/Skeleton';
@@ -24,7 +26,7 @@ function statusOf(job) {
 
 const statusStyles = {
   open: 'bg-hc-tint text-hc-brand',
-  'in-progress': 'bg-blue-50 text-blue-600',
+  'in-progress': 'bg-hc-accent-50 text-hc-accent',
   completed: 'bg-emerald-50 text-emerald-700',
   cancelled: 'bg-red-50 text-red-600',
 };
@@ -38,9 +40,11 @@ const statusLabels = {
 
 export default function ClientJobsPage() {
   const navigate = useNavigate();
-  const { jobs, loading } = useClientJobs();
+  const { jobs, loading, refetch } = useClientJobs();
   const [activeTab, setActiveTab] = useState('open');
   const [query, setQuery] = useState('');
+  const [quoteJob, setQuoteJob] = useState(null);
+  const [acceptingId, setAcceptingId] = useState(null);
 
   const all = useMemo(() => jobs.map((j) => ({ ...j, tab: statusOf(j) })), [jobs]);
 
@@ -69,6 +73,19 @@ export default function ClientJobsPage() {
   ];
 
   const activeCount = openJobs.length + progressJobs.length;
+
+  const handleAcceptQuote = async (job, quote) => {
+    setAcceptingId(`${job.id}-${quote.handymanId}`);
+    try {
+      await acceptQuote(job.id, quote);
+      setQuoteJob(null);
+      if (refetch) await refetch();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAcceptingId(null);
+    }
+  };
 
   return (
     <div className="space-y-6 pb-28 lg:pb-0">
@@ -178,6 +195,8 @@ export default function ClientJobsPage() {
           ) : (
             filtered.map((job, i) => {
               const Icon = categoryIcons[job.category] || Wrench;
+              const quoteCount = job.quotes?.length || 0;
+              const hasPendingQuotes = job.tab === 'open' && quoteCount > 0;
               return (
                 <motion.div
                   key={job.id}
@@ -213,21 +232,34 @@ export default function ClientJobsPage() {
                       <p className="mt-3 text-sm leading-relaxed text-hc-ink-2 line-clamp-2">{job.description}</p>
                     )}
 
-                    {job.tab === 'open' && job.quotes?.length > 0 && (
-                      <div className="mt-4 rounded-xl bg-hc-tint/50 px-4 py-3 text-xs font-semibold text-hc-tint-text">
-                        {job.quotes.length} {job.quotes.length === 1 ? 'quote' : 'quotes'} received
-                      </div>
+                    {/* Quotes received — tappable to open detail */}
+                    {hasPendingQuotes && (
+                      <button
+                        onClick={() => setQuoteJob(job)}
+                        className="mt-4 flex w-full items-center gap-3 rounded-xl bg-hc-brand-50 border border-hc-brand-200 px-4 py-3 text-left transition-colors hover:bg-hc-brand-100"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-hc-brand text-white">
+                          <MessageSquare size={16} />
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-hc-brand-700">
+                            {quoteCount} {quoteCount === 1 ? 'quote' : 'quotes'} received
+                          </p>
+                          <p className="text-xs text-hc-ink-2">Tap to view and accept</p>
+                        </div>
+                        <ArrowRight size={16} className="text-hc-brand" />
+                      </button>
                     )}
 
                     <div className="mt-4 flex items-center justify-between gap-3 border-t border-hc-hairline pt-4">
                       <p className="text-[11px] font-medium text-hc-ink-3">
-                        {job.tab === 'open' ? 'Waiting for quotes' : job.tab === 'in-progress' ? 'In progress' : 'Completed'}
+                        {job.tab === 'open' ? (quoteCount > 0 ? 'Quotes pending review' : 'Waiting for quotes') : job.tab === 'in-progress' ? 'In progress' : 'Completed'}
                       </p>
                       <button
                         onClick={() => navigate(job.status === 'assigned' ? `/client/chat/${job.id}` : '/client/jobs')}
                         className="flex items-center gap-1 rounded-lg border border-hc-hairline bg-white px-3.5 py-1.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:border-hc-brand hover:text-hc-brand"
                       >
-                        View Details <ArrowRight size={12} />
+                        {job.status === 'assigned' ? 'Open Chat' : 'View Details'} <ArrowRight size={12} />
                       </button>
                     </div>
                   </div>
@@ -248,6 +280,120 @@ export default function ClientJobsPage() {
       >
         <Plus size={20} /> Post New Job
       </motion.button>
+
+      {/* Quote Detail Modal */}
+      <AnimatePresence>
+        {quoteJob && (
+          <QuoteDetailModal
+            job={quoteJob}
+            onClose={() => setQuoteJob(null)}
+            onAccept={handleAcceptQuote}
+            acceptingId={acceptingId}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function QuoteDetailModal({ job, onClose, onAccept, acceptingId }) {
+  const quotes = job.quotes || [];
+  const [selectedQuote, setSelectedQuote] = useState(null);
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center sm:p-4">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <motion.div
+        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+        transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+        className="relative flex max-h-[85dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl bg-white shadow-xl sm:rounded-2xl z-10"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-hc-hairline px-5 py-4">
+          <div>
+            <h2 className="text-lg font-bold text-hc-ink">Quotes for {job.title}</h2>
+            <p className="text-xs text-hc-ink-2">{quotes.length} {quotes.length === 1 ? 'quote' : 'quotes'} received</p>
+          </div>
+          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full text-hc-ink-3 hover:bg-hc-brand-50 hover:text-hc-brand">
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Quote list */}
+        <div className="flex-1 overflow-y-auto overscroll-contain p-5 space-y-3">
+          {quotes.map((q, i) => {
+            const isAccepted = q.status === 'accepted';
+            const isRejected = q.status === 'rejected';
+            const isActive = selectedQuote?.handymanId === q.handymanId && selectedQuote?.createdAt?.seconds === q.createdAt?.seconds;
+            const isBusy = acceptingId === `${job.id}-${q.handymanId}`;
+
+            return (
+              <div
+                key={`${q.handymanId}-${i}`}
+                className={`rounded-xl border p-4 transition-all ${
+                  isAccepted ? 'border-emerald-300 bg-emerald-50' :
+                  isRejected ? 'border-gray-200 bg-gray-50 opacity-60' :
+                  isActive ? 'border-hc-brand ring-2 ring-hc-brand/20 bg-hc-brand-50' :
+                  'border-hc-hairline bg-white hover:border-hc-brand/40'
+                }`}
+                onClick={() => !isAccepted && !isRejected && setSelectedQuote(q)}
+              >
+                <div className="flex items-start gap-3">
+                  {/* Avatar */}
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-hc-accent-50 text-sm font-bold text-hc-accent">
+                    {(q.handymanName || 'P')[0].toUpperCase()}
+                  </span>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-semibold text-hc-ink truncate">{q.handymanName || 'Professional'}</p>
+                      {isAccepted && (
+                        <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                          <CheckCircle2 size={10} /> Accepted
+                        </span>
+                      )}
+                      {isRejected && (
+                        <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">
+                          Not selected
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-1.5 flex items-center gap-3">
+                      <span className="flex items-center gap-1 text-lg font-bold text-hc-brand">
+                        <DollarSign size={16} />{q.price}
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-hc-ink-3">
+                        <Clock size={11} /> {timeAgo(q.createdAt)}
+                      </span>
+                    </div>
+
+                    {q.message && (
+                      <p className="mt-2 text-sm text-hc-ink-2 leading-relaxed">{q.message}</p>
+                    )}
+
+                    {/* Accept button — only for pending quotes */}
+                    {!isAccepted && !isRejected && isActive && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onAccept(job, q); }}
+                        disabled={isBusy}
+                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-hc-brand py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-60"
+                      >
+                        {isBusy ? 'Accepting...' : (
+                          <>
+                            <CheckCircle2 size={16} />
+                            Accept Quote — ${q.price}
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
     </div>
   );
 }

@@ -81,23 +81,23 @@ export default function PaymentSuccessScreen({ payment, onDone }) {
           </motion.svg>
         </motion.div>
         <h2 className="mt-4 font-display text-2xl font-semibold tracking-tight text-hc-ink dark:text-white">Payment Successful!</h2>
-        <p className="mt-1 text-sm text-hc-caption dark:text-gray-400">Your payment has been completed.</p>
+        <p className="mt-1 text-sm text-hc-caption dark:text-hc-ink-3">Your payment has been completed.</p>
       </div>
 
-      <div className="mt-6 rounded-xl border border-black/[0.07] bg-white p-6 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900">
-        <p className="text-[11px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount paid</p>
+      <div className="mt-6 rounded-xl border border-black/[0.07] bg-white p-6 text-center shadow-sm dark:border-hc-ink dark:bg-hc-ink">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-hc-caption dark:text-hc-ink-3">Amount paid</p>
         <p className="mt-1 font-display text-5xl font-semibold tracking-tight text-hc-ink dark:text-white">${amount.toFixed(2)}</p>
-        <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-hc-caption dark:text-gray-400">
+        <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-hc-caption dark:text-hc-ink-3">
           <Wallet size={13} /> Paid via HandyConnect Balance
         </p>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-black/[0.07] bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900">
-        <div className="flex items-center gap-3 border-b border-gray-200/70 p-4 dark:border-gray-700">
+      <div className="mt-4 overflow-hidden rounded-xl border border-black/[0.07] bg-white shadow-sm dark:border-hc-ink dark:bg-hc-ink">
+        <div className="flex items-center gap-3 border-b border-hc-hairline/70 p-4 dark:border-hc-ink">
           {recipient?.photoURL ? (
             <img src={recipient.photoURL} alt={payment.recipientName} className="h-11 w-11 rounded-full object-cover" />
           ) : (
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-hc-hairline text-hc-accent-strong dark:bg-hc-ink dark:text-hc-ink-4">
               {initials(payment.recipientName)}
             </span>
           )}
@@ -106,7 +106,7 @@ export default function PaymentSuccessScreen({ payment, onDone }) {
               {payment.recipientName}
               {recipient?.verified && <BadgeCheck size={15} className="shrink-0 fill-emerald-500 text-white" />}
             </p>
-            <p className="truncate text-xs text-gray-500 dark:text-gray-400">{trade}</p>
+            <p className="truncate text-xs text-hc-ink-2 dark:text-hc-ink-3">{trade}</p>
           </div>
           {recipient?.verified && (
             <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
@@ -117,28 +117,28 @@ export default function PaymentSuccessScreen({ payment, onDone }) {
 
         <dl className="space-y-3 p-4 text-sm">
           <div className="flex items-center justify-between gap-3">
-            <dt className="flex items-center gap-1.5 text-gray-400"><ClipboardList size={13} /> Service</dt>
+            <dt className="flex items-center gap-1.5 text-hc-ink-3"><ClipboardList size={13} /> Service</dt>
             <dd className="truncate text-right font-semibold text-hc-ink dark:text-white">{payment.jobTitle}</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="flex items-center gap-1.5 text-gray-400"><Hash size={13} /> Job number</dt>
+            <dt className="flex items-center gap-1.5 text-hc-ink-3"><Hash size={13} /> Job number</dt>
             <dd className="font-mono text-xs font-bold text-hc-ink dark:text-white">{jobRef}</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="flex items-center gap-1.5 text-gray-400"><CalendarClock size={13} /> Date &amp; time</dt>
+            <dt className="flex items-center gap-1.5 text-hc-ink-3"><CalendarClock size={13} /> Date &amp; time</dt>
             <dd className="font-semibold text-hc-ink dark:text-white">{format(completedAt, 'MMM d, yyyy · h:mm a')}</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="flex items-center gap-1.5 text-gray-400"><CreditCard size={13} /> Payment method</dt>
+            <dt className="flex items-center gap-1.5 text-hc-ink-3"><CreditCard size={13} /> Payment method</dt>
             <dd className="font-semibold text-hc-ink dark:text-white">HandyConnect Balance</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="flex items-center gap-1.5 text-gray-400"><Hash size={13} /> Transaction ID</dt>
+            <dt className="flex items-center gap-1.5 text-hc-ink-3"><Hash size={13} /> Transaction ID</dt>
             <dd className="font-mono text-xs font-bold text-hc-ink dark:text-white">{reference}</dd>
           </div>
         </dl>
 
-        <div className="flex items-center justify-between border-t border-gray-200/70 bg-emerald-50/70 px-4 py-3 dark:border-gray-700 dark:bg-emerald-500/10">
+        <div className="flex items-center justify-between border-t border-hc-hairline/70 bg-emerald-50/70 px-4 py-3 dark:border-hc-ink dark:bg-emerald-500/10">
           <span className="text-xs font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">Total paid</span>
           <span className="font-display text-xl font-semibold text-emerald-600 dark:text-emerald-400">${amount.toFixed(2)}</span>
         </div>
@@ -159,12 +159,12 @@ export default function PaymentSuccessScreen({ payment, onDone }) {
       </button>
       <button
         onClick={onDone}
-        className="mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+        className="mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-bold text-hc-caption transition-colors hover:bg-hc-hairline dark:text-hc-ink-3 dark:hover:bg-hc-ink"
       >
         Done
       </button>
 
-      <div className="mt-5 rounded-xl border border-black/[0.07] bg-white p-5 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900">
+      <div className="mt-5 rounded-xl border border-black/[0.07] bg-white p-5 text-center shadow-sm dark:border-hc-ink dark:bg-hc-ink">
         <div className="mb-2 flex items-center justify-center gap-1">
           {[1, 2, 3, 4, 5].map((n) => (
             <button key={n} onClick={() => { setPresetRating(n); setReviewOpen(true); }} aria-label={`Rate ${n} star${n > 1 ? 's' : ''}`}>
@@ -173,21 +173,21 @@ export default function PaymentSuccessScreen({ payment, onDone }) {
           ))}
         </div>
         <p className="font-display text-sm font-semibold text-hc-ink dark:text-white">How was your experience?</p>
-        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Leave a review and help others find trusted professionals.</p>
+        <p className="mt-0.5 text-xs text-hc-ink-2 dark:text-hc-ink-3">Leave a review and help others find trusted professionals.</p>
       </div>
 
       {isClient && (
         <div className="mt-4 grid grid-cols-2 gap-2">
-          <button onClick={() => { setPresetRating(0); setReviewOpen(true); }} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-3 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+          <button onClick={() => { setPresetRating(0); setReviewOpen(true); }} className="flex items-center justify-center gap-1.5 rounded-xl border border-hc-hairline bg-hc-hairline px-3 py-3 text-xs font-bold text-hc-ink transition-colors hover:bg-hc-hairline dark:border-hc-ink dark:bg-hc-ink dark:text-hc-ink-4 dark:hover:bg-hc-ink">
             <Star size={14} className="text-amber-500" /> Leave a Review
           </button>
-          <button onClick={() => goTo(`/client/chat/direct/${payment.recipientId}`)} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-3 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
-            <MessageCircle size={14} className="text-gray-500" /> Message
+          <button onClick={() => goTo(`/client/chat/direct/${payment.recipientId}`)} className="flex items-center justify-center gap-1.5 rounded-xl border border-hc-hairline bg-hc-hairline px-3 py-3 text-xs font-bold text-hc-ink transition-colors hover:bg-hc-hairline dark:border-hc-ink dark:bg-hc-ink dark:text-hc-ink-4 dark:hover:bg-hc-ink">
+            <MessageCircle size={14} className="text-hc-ink-2" /> Message
           </button>
-          <button onClick={() => goTo('/client/explore')} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-3 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
-            <Search size={14} className="text-blue-500" /> Book Again
+          <button onClick={() => goTo('/client/explore')} className="flex items-center justify-center gap-1.5 rounded-xl border border-hc-hairline bg-hc-hairline px-3 py-3 text-xs font-bold text-hc-ink transition-colors hover:bg-hc-hairline dark:border-hc-ink dark:bg-hc-ink dark:text-hc-ink-4 dark:hover:bg-hc-ink">
+            <Search size={14} className="text-hc-accent" /> Book Again
           </button>
-          <button onClick={() => goTo('/client/jobs')} className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-3 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+          <button onClick={() => goTo('/client/jobs')} className="flex items-center justify-center gap-1.5 rounded-xl border border-hc-hairline bg-hc-hairline px-3 py-3 text-xs font-bold text-hc-ink transition-colors hover:bg-hc-hairline dark:border-hc-ink dark:bg-hc-ink dark:text-hc-ink-4 dark:hover:bg-hc-ink">
             <ClipboardList size={14} className="text-violet-500" /> View Job
           </button>
         </div>

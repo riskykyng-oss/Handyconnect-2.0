@@ -59,7 +59,7 @@ export default function StoryViewer({ stories, initialIndex = 0, onClose }) {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative flex h-full max-h-[820px] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-gray-900 shadow-2xl"
+          className="relative flex h-full max-h-[820px] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-hc-ink shadow-2xl"
         >
           {/* Progress bars */}
           <div className="absolute left-0 right-0 top-0 z-20 flex gap-1 p-3">
@@ -82,7 +82,7 @@ export default function StoryViewer({ stories, initialIndex = 0, onClose }) {
           {/* Header */}
           <div className="absolute left-0 right-0 top-6 z-20 flex items-center gap-3 px-4 pt-3">
             <span className="rounded-full bg-white/20 p-[2px]">
-              <img src={story.avatar} alt={story.name} className="h-10 w-10 rounded-full border-2 border-gray-900 object-cover" />
+              <img src={story.avatar} alt={story.name} className="h-10 w-10 rounded-full border-2 border-hc-ink object-cover" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-white">{story.name}</p>

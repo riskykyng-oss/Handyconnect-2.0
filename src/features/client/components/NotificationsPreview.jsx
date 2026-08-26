@@ -49,8 +49,8 @@ export default function NotificationsPreview() {
               <li key={n.id}>
                 <button
                   onClick={() => markNotificationRead(n.id)}
-                  className={`flex w-full items-center gap-3 rounded-lg p-2.5 text-left transition-colors hover:bg-gray-100 ${
-                    !n.read ? 'bg-gray-50' : ''
+                  className={`flex w-full items-center gap-3 rounded-lg p-2.5 text-left transition-colors hover:bg-hc-page ${
+                    !n.read ? 'bg-hc-page' : ''
                   }`}
                 >
                   <span className={`${iconChip} h-8 w-8 shrink-0 rounded-full`}>

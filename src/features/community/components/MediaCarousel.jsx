@@ -7,20 +7,20 @@ export default function MediaCarousel({ images = [], alt = 'Post media' }) {
 
   return (
     <div className="relative group">
-      <div className="relative max-h-[560px] w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
+      <div className="relative max-h-[560px] w-full overflow-hidden bg-hc-hairline dark:bg-gray-700">
         <img src={images[index]} alt={`${alt} ${index + 1}`} className="max-h-[560px] w-full object-cover" />
         {images.length > 1 && (
           <>
             <button
               onClick={() => setIndex((i) => (i === 0 ? images.length - 1 : i - 1))}
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-gray-800 shadow-sm transition-colors hover:bg-white dark:bg-gray-800/90 dark:text-gray-100"
+              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-hc-ink shadow-sm transition-colors hover:bg-white dark:bg-gray-800/90 dark:text-gray-100"
               aria-label="Previous image"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={() => setIndex((i) => (i === images.length - 1 ? 0 : i + 1))}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-gray-800 shadow-sm transition-colors hover:bg-white dark:bg-gray-800/90 dark:text-gray-100"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 text-hc-ink shadow-sm transition-colors hover:bg-white dark:bg-gray-800/90 dark:text-gray-100"
               aria-label="Next image"
             >
               <ChevronRight size={18} />

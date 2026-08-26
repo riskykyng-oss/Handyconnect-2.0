@@ -109,9 +109,9 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
     <Card className="dark:border-gray-700 dark:bg-gray-800">
       <div className="mb-3 flex items-center gap-3">
         {user?.photoURL ? (
-          <img src={user.photoURL} alt={user.displayName || 'You'} className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-gray-100 dark:ring-gray-700" />
+          <img src={user.photoURL} alt={user.displayName || 'You'} className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-hc-hairline dark:ring-gray-700" />
         ) : (
-          <ColoredAvatar id={user?.uid} name={user?.displayName || (isClient ? 'Client' : 'Handyman')} className="ring-2 ring-gray-100 dark:ring-gray-700" />
+          <ColoredAvatar id={user?.uid} name={user?.displayName || (isClient ? 'Client' : 'Handyman')} className="ring-2 ring-hc-hairline dark:ring-gray-700" />
         )}
         <h2 className="text-base font-semibold tracking-tight text-hc-ink dark:text-gray-100">
           {isClient ? 'Ask the Community' : 'Share your work'}
@@ -142,7 +142,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
                   placeholder={`Option ${i + 1}`}
                 />
                 {options.length > 2 && (
-                  <button type="button" onClick={() => setOptions((prev) => prev.filter((_, idx) => idx !== i))} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-red-500">
+                  <button type="button" onClick={() => setOptions((prev) => prev.filter((_, idx) => idx !== i))} className="rounded-lg p-1.5 text-hc-ink-3 hover:bg-hc-page hover:text-red-500">
                     <X size={15} />
                   </button>
                 )}
@@ -179,7 +179,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
             key={p}
             type="button"
             onClick={() => setText(text ? `${text} ${p}` : p)}
-            className="mr-2 mt-2 inline-block rounded-full bg-hc-tile px-3 py-1 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
+            className="mr-2 mt-2 inline-block rounded-full bg-hc-tile px-3 py-1 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page hover:text-hc-ink dark:bg-gray-700 dark:text-gray-300"
           >
             {p}
           </button>
@@ -224,7 +224,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
         {/* Media area */}
         <div className={`mt-5 flex flex-wrap items-center justify-between gap-2 ${showFull ? 'border-t border-hc-hairline pt-4' : 'pt-1'}`}>
           <div className="flex flex-wrap items-center gap-1">
-            <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100 hover:text-hc-ink">
+            <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page hover:text-hc-ink">
               <Images size={17} /> Photo
               <input type="file" accept="image/*" onChange={(e) => attach(e.target.files?.[0])} className="hidden" />
             </label>
@@ -233,7 +233,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
                 type="button"
                 onClick={() => setBaMode(!baMode)}
                 className={`flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold transition-colors ${
-                  baMode ? 'bg-gray-100 text-hc-ink' : 'text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+                  baMode ? 'bg-hc-page text-hc-ink' : 'text-hc-ink-2 hover:bg-hc-page hover:text-hc-ink'
                 }`}
               >
                 <Camera size={17} /> Before & After
@@ -243,7 +243,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
               type="button"
               onClick={() => { setPollMode(!pollMode); setBaMode(false); setImage(null); }}
               className={`flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-semibold transition-colors ${
-                pollMode ? 'bg-gray-100 text-hc-ink' : 'text-hc-ink-2 hover:bg-gray-100 hover:text-hc-ink'
+                pollMode ? 'bg-hc-page text-hc-ink' : 'text-hc-ink-2 hover:bg-hc-page hover:text-hc-ink'
               }`}
             >
               <BarChart3 size={17} /> Poll
@@ -258,7 +258,7 @@ export default function CommunityComposer({ role, posting, onSubmit, group, user
           <div className="mt-3 flex items-center gap-3 rounded-xl bg-hc-page p-2 dark:bg-gray-700">
             <img src={URL.createObjectURL(image)} alt="Attachment preview" className="h-14 w-14 rounded-lg object-cover" />
             <p className="min-w-0 flex-1 truncate text-xs text-hc-ink-2 dark:text-gray-300">{image.name}</p>
-            <button type="button" onClick={() => setImage(null)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-gray-200 dark:hover:bg-gray-600"><X size={15} /></button>
+            <button type="button" onClick={() => setImage(null)} className="rounded-lg p-1 text-hc-ink-3 hover:bg-hc-page dark:hover:bg-gray-600"><X size={15} /></button>
           </div>
         )}
 

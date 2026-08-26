@@ -60,30 +60,30 @@ export default function ReceiptModal({ tx, onClose }) {
       subtitle={tx.id?.slice(0, 10)}
     >
       <div className="p-5">
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-5 text-center dark:border-gray-700 dark:bg-gray-800/60">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Amount</p>
+        <div className="rounded-xl border border-dashed border-hc-ink-4 bg-hc-page p-5 text-center dark:border-hc-ink dark:bg-hc-ink/60">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-hc-ink-2 dark:text-hc-ink-3">Amount</p>
           <p className={`mt-1 font-display text-4xl font-semibold ${credit ? 'text-emerald-600 dark:text-emerald-400' : 'text-hc-ink dark:text-white'}`}>
             {credit ? '+' : '-'}${Number(tx.amount || 0).toFixed(2)}
           </p>
-          <p className="mt-1 text-xs text-gray-400">USD</p>
+          <p className="mt-1 text-xs text-hc-ink-3">USD</p>
         </div>
 
         <dl className="mt-4 space-y-2.5 text-sm">
           <div className="flex items-center justify-between gap-3">
-            <dt className="text-gray-400">Description</dt>
+            <dt className="text-hc-ink-3">Description</dt>
             <dd className="truncate text-right font-semibold text-hc-ink dark:text-white">{tx.description || '—'}</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="text-gray-400">Date</dt>
+            <dt className="text-hc-ink-3">Date</dt>
             <dd className="font-semibold text-hc-ink dark:text-white">{format(date, 'MMM d, yyyy · h:mm a')}</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="text-gray-400">Status</dt>
+            <dt className="text-hc-ink-3">Status</dt>
             <dd className="font-semibold text-emerald-600">Completed</dd>
           </div>
           {tx.category && (
             <div className="flex items-center justify-between gap-3">
-              <dt className="text-gray-400">Category</dt>
+              <dt className="text-hc-ink-3">Category</dt>
               <dd className="font-semibold text-hc-ink dark:text-white">{tx.category}</dd>
             </div>
           )}
@@ -92,7 +92,7 @@ export default function ReceiptModal({ tx, onClose }) {
         <div className="mt-5 grid grid-cols-2 gap-2">
           <button
             onClick={download}
-            className="flex items-center justify-center gap-1.5 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+            className="flex items-center justify-center gap-1.5 rounded-xl bg-hc-ink px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-hc-ink dark:bg-white dark:text-hc-ink dark:hover:bg-hc-hairline"
           >
             <Download size={14} /> PDF
           </button>

@@ -62,7 +62,7 @@ export default function PayByCodeModal({ open, onClose }) {
             placeholder="AB12CD"
             maxLength={8}
             autoFocus
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-3 text-center font-mono text-lg uppercase tracking-[0.3em] text-hc-ink outline-none transition-all placeholder:text-gray-400 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            className="w-full rounded-xl border border-hc-hairline bg-hc-page px-3.5 py-3 text-center font-mono text-lg uppercase tracking-[0.3em] text-hc-ink outline-none transition-all placeholder:text-hc-ink-3 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-hc-ink dark:bg-hc-ink dark:text-white"
           />
           {error && <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-red-500"><AlertCircle size={13} /> {error}</p>}
           <button
@@ -76,13 +76,13 @@ export default function PayByCodeModal({ open, onClose }) {
         </div>
       ) : (
         <div className="p-5">
-          <div className="rounded-xl border border-gray-200/80 bg-gray-50 p-4 text-center dark:border-gray-700 dark:bg-gray-800/60">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-gray-400">Amount</p>
+          <div className="rounded-xl border border-hc-hairline/80 bg-hc-page p-4 text-center dark:border-hc-ink dark:bg-hc-ink/60">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-hc-caption dark:text-hc-ink-3">Amount</p>
             <p className="mt-1 font-display text-3xl font-semibold text-hc-ink dark:text-white">${Number(payment.amount).toFixed(2)}</p>
           </div>
           <dl className="mt-4 space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-gray-400">Pay to</dt><dd className="font-bold text-hc-ink dark:text-white">{payment.recipientName}</dd></div>
-            <div className="flex justify-between"><dt className="text-gray-400">Job</dt><dd className="truncate font-bold text-hc-ink dark:text-white">{payment.jobTitle}</dd></div>
+            <div className="flex justify-between"><dt className="text-hc-ink-3">Pay to</dt><dd className="font-bold text-hc-ink dark:text-white">{payment.recipientName}</dd></div>
+            <div className="flex justify-between"><dt className="text-hc-ink-3">Job</dt><dd className="truncate font-bold text-hc-ink dark:text-white">{payment.jobTitle}</dd></div>
           </dl>
 
           <div className="mt-5">
@@ -92,7 +92,7 @@ export default function PayByCodeModal({ open, onClose }) {
               onSuccess={handleConfirm}
             />
           </div>
-          <button onClick={() => setStep('enter')} className="mt-2 w-full rounded-xl px-4 py-2 text-sm font-bold text-hc-caption transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+          <button onClick={() => setStep('enter')} className="mt-2 w-full rounded-xl px-4 py-2 text-sm font-bold text-hc-caption transition-colors hover:bg-hc-hairline dark:text-hc-ink-3 dark:hover:bg-hc-ink">
             Enter another code
           </button>
         </div>

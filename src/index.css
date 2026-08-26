@@ -5,20 +5,52 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Orange — primary brand */
   --color-hc-brand: #F97316;
   --color-hc-brand-strong: #EA580C;
+  --color-hc-brand-50: #FFF7ED;
+  --color-hc-brand-100: #FFEDD5;
+  --color-hc-brand-200: #FED7AA;
+  --color-hc-brand-300: #FDBA74;
+  --color-hc-brand-400: #FB923C;
+  --color-hc-brand-500: #F97316;
+  --color-hc-brand-600: #EA580C;
+  --color-hc-brand-700: #C2410C;
+  --color-hc-brand-800: #9A3412;
+  --color-hc-brand-900: #7C2D12;
   --color-hc-tint: #FFF3EA;
   --color-hc-tint-text: #9A3D12;
+
+  /* Blue — accent / links / info */
   --color-hc-accent: #3B6EA5;
   --color-hc-accent-strong: #2F5A88;
+  --color-hc-accent-50: #EFF6FF;
+  --color-hc-accent-100: #DBEAFE;
+  --color-hc-accent-200: #BFDBFE;
+  --color-hc-accent-300: #93C5FD;
+  --color-hc-accent-400: #60A5FA;
+  --color-hc-accent-500: #3B82F6;
+  --color-hc-accent-600: #3B6EA5;
+  --color-hc-accent-700: #1D4ED8;
+  --color-hc-accent-800: #1E3A5F;
+  --color-hc-accent-900: #1E293B;
   --color-hc-accent-tint: #EAF1F7;
-  --color-hc-page: #F7F7F8;
+
+  /* Dark grey — ink / text */
   --color-hc-ink: #111827;
   --color-hc-ink-2: #6B7280;
   --color-hc-ink-3: #9CA3AF;
+  --color-hc-ink-4: #D1D5DB;
+  --color-hc-ink-5: #F3F4F6;
+
+  /* Surfaces */
+  --color-hc-page: #F7F7F8;
+  --color-hc-surface: #FFFFFF;
   --color-hc-hairline: #E5E7EB;
   --color-hc-caption: #6B7280;
   --color-hc-tile: #ECEEF1;
+
+  /* Avatar palette */
   --color-avatar-teal-bg: #E1F5EE;
   --color-avatar-teal-text: #0F6E56;
   --color-avatar-blue-bg: #E6F1FB;
@@ -27,6 +59,8 @@
   --color-avatar-purple-text: #3C3489;
   --color-avatar-amber-bg: #FAEEDA;
   --color-avatar-amber-text: #854F0B;
+
+  /* Before/After placeholder */
   --color-before-placeholder: #D3D1C7;
   --color-after-placeholder: #9FE1CB;
 }
@@ -44,6 +78,8 @@
 :root {
   --hc-primary: #F97316;
   --hc-primary-strong: #ea580c;
+  --hc-accent: #3B6EA5;
+  --hc-accent-strong: #2F5A88;
   --hc-bg: #F7F7F8;
   --hc-surface: #ffffff;
   --hc-text: #111827;

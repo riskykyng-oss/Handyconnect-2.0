@@ -59,11 +59,11 @@ function SidebarContent({ onNavigate, unread }) {
               onClick={onNavigate}
               className={`group relative flex min-h-11 items-center gap-3 rounded-lg border-l-2 pl-3 pr-3 py-2 text-sm font-semibold transition-all ${
                 active
-                  ? 'border-hc-brand bg-white text-hc-ink shadow-sm'
-                  : 'border-transparent text-gray-600 hover:bg-white/70 hover:text-hc-ink'
+                  ? 'border-hc-brand bg-hc-brand-50 text-hc-brand-strong'
+                  : 'border-transparent text-hc-ink-2 hover:bg-hc-brand-50/50 hover:text-hc-ink'
               }`}
             >
-              <Icon size={17} className={active ? 'text-hc-brand' : 'text-gray-400 group-hover:text-hc-brand'} />
+              <Icon size={17} className={active ? 'text-hc-brand' : 'text-hc-ink-3 group-hover:text-hc-brand'} />
               <span className="flex-1">{item.name}</span>
               {item.name === 'Messages' && unread > 0 && (
                 <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-hc-brand px-1.5 text-[10px] font-bold text-white">
@@ -77,7 +77,7 @@ function SidebarContent({ onNavigate, unread }) {
 
       <div className="border-t border-hc-hairline px-3 py-4">
         <div className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-hc-page text-xs font-semibold text-hc-ink-2">
             {currentUser?.email?.[0]?.toUpperCase() || 'H'}
           </div>
           <div className="min-w-0 flex-1">
@@ -87,7 +87,7 @@ function SidebarContent({ onNavigate, unread }) {
         </div>
         <button
           onClick={handleLogout}
-          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-hc-ink-3 transition-colors hover:bg-red-50 hover:text-red-500"
         >
           <LogOut size={13} /> Sign out
         </button>
@@ -123,7 +123,7 @@ export default function HandymanLayout() {
               <button
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close menu"
-                className="absolute right-3 top-4 flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
+                className="absolute right-3 top-4 flex h-11 w-11 items-center justify-center rounded-lg text-hc-ink-2 hover:bg-hc-page"
               >
                 <X size={20} />
               </button>
@@ -141,7 +141,7 @@ export default function HandymanLayout() {
               <button
                 onClick={() => setDrawerOpen(true)}
                 aria-label="Open menu"
-                className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 md:flex lg:hidden"
+                className="flex h-11 w-11 items-center justify-center rounded-lg text-hc-ink-2 hover:bg-hc-page md:flex lg:hidden"
               >
                 <Menu size={20} />
               </button>
@@ -163,7 +163,7 @@ export default function HandymanLayout() {
                 <button
                   aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
                   onClick={() => setNotifOpen((o) => !o)}
-                  className="relative flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100"
+                  className="relative flex h-11 w-11 items-center justify-center rounded-lg text-hc-ink-2 transition-colors hover:bg-hc-page"
                 >
                   <Bell size={17} />
                   {unreadCount > 0 && (
@@ -181,7 +181,7 @@ export default function HandymanLayout() {
                 />
               </div>
               <div className="hidden items-center gap-2 lg:flex">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-600">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-hc-page text-[10px] font-semibold text-hc-ink-2">
                   {currentUser?.email?.[0]?.toUpperCase() || 'H'}
                 </div>
                 <span className="text-sm font-medium text-hc-ink-2">{currentUser?.displayName || 'Handyman'}</span>
@@ -218,7 +218,7 @@ export default function HandymanLayout() {
                 key={item.path}
                 to={item.path}
                 className={`relative flex h-full w-full flex-col items-center justify-center gap-1 transition-colors ${
-                  active ? 'text-hc-brand' : 'text-gray-400'
+                  active ? 'text-hc-brand' : 'text-hc-ink-3'
                 }`}
               >
                 <Icon size={20} strokeWidth={active ? 2.5 : 1.5} />

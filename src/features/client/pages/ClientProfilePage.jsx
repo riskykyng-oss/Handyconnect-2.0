@@ -119,10 +119,10 @@ export default function ClientProfilePage() {
   }, [jobs]);
 
   const statCards = [
-    { label: 'Jobs Posted', value: jobs.length, icon: Briefcase, color: 'text-gray-500', bg: 'bg-gray-100' },
-    { label: 'Completed', value: completed, icon: CheckCircle, color: 'text-gray-500', bg: 'bg-gray-100' },
-    { label: 'In Progress', value: inProgress, icon: Clock, color: 'text-gray-500', bg: 'bg-gray-100' },
-    { label: 'Open', value: open, icon: Star, color: 'text-gray-500', bg: 'bg-gray-100' },
+    { label: 'Jobs Posted', value: jobs.length, icon: Briefcase, color: 'text-hc-ink-2', bg: 'bg-hc-brand-100' },
+    { label: 'Completed', value: completed, icon: CheckCircle, color: 'text-hc-ink-2', bg: 'bg-hc-brand-100' },
+    { label: 'In Progress', value: inProgress, icon: Clock, color: 'text-hc-ink-2', bg: 'bg-hc-brand-100' },
+    { label: 'Open', value: open, icon: Star, color: 'text-hc-ink-2', bg: 'bg-hc-brand-100' },
   ];
 
   return (
@@ -158,11 +158,11 @@ export default function ClientProfilePage() {
           <Card className="relative !p-6">
             <div className="flex flex-col items-center text-center">
               <div className="relative mb-4">
-                <div className="h-20 w-20 overflow-hidden rounded-full bg-gray-200 border-[3px] border-white shadow-md">
+                <div className="h-20 w-20 overflow-hidden rounded-full bg-hc-hairline border-[3px] border-white shadow-md">
                   {avatar ? (
                     <img src={avatar} alt="" className="h-full w-full object-cover" />
                   ) : (
-                    <User size={28} className="absolute inset-0 m-auto text-gray-400" />
+                    <User size={28} className="absolute inset-0 m-auto text-hc-ink-3" />
                   )}
                 </div>
                 <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-emerald-500" />
@@ -197,12 +197,12 @@ export default function ClientProfilePage() {
                   <p className="text-lg font-semibold text-hc-ink">{jobs.length}</p>
                   <p className="text-[10px] font-medium text-hc-caption">Posted</p>
                 </div>
-                <div className="h-8 w-px bg-gray-200" />
+                <div className="h-8 w-px bg-hc-hairline" />
                 <div>
                   <p className="text-lg font-semibold text-hc-ink">{completed}</p>
                   <p className="text-[10px] font-medium text-hc-caption">Done</p>
                 </div>
-                <div className="h-8 w-px bg-gray-200" />
+                <div className="h-8 w-px bg-hc-hairline" />
                 <div>
                   <p className="text-lg font-semibold text-hc-ink">{inProgress}</p>
                   <p className="text-[10px] font-medium text-hc-caption">Active</p>
@@ -261,14 +261,14 @@ export default function ClientProfilePage() {
                       transition={{ delay: 0.4 + i * 0.06 }}
                       className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50/60 transition-colors cursor-pointer"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-hc-brand-100 text-hc-ink-2">
                         <Icon size={16} />
                       </span>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-hc-ink truncate">{a.text}</p>
                         <p className="text-xs text-hc-caption">{a.time}</p>
                       </div>
-                      <ChevronRight size={14} className="shrink-0 text-gray-300" />
+                      <ChevronRight size={14} className="shrink-0 text-hc-ink-4" />
                     </motion.div>
                   );
                 })
@@ -280,10 +280,10 @@ export default function ClientProfilePage() {
           <motion.div variants={itemAnim}>
             <SectionHeading icon={Wallet} title="Wallet" action="View" />
             <Card className="!p-5 !rounded-xl !border-black/[0.07]">
-              <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-5 text-white shadow-lg">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Available Balance</p>
+              <div className="rounded-2xl bg-gradient-to-br from-hc-ink to-hc-ink p-5 text-white shadow-lg">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-hc-ink-3">Available Balance</p>
                 <p className="mt-1 text-3xl font-semibold tracking-tight">${balance.toFixed(2)}</p>
-                <p className="mt-1 text-[10px] text-gray-400">{wallet?.currency || 'USD'} · updates in real time</p>
+                <p className="mt-1 text-[10px] text-hc-ink-3">{wallet?.currency || 'USD'} · updates in real time</p>
               </div>
             </Card>
           </motion.div>
@@ -307,9 +307,9 @@ export default function ClientProfilePage() {
                   <button
                     key={item.label}
                     onClick={() => navigate(item.route)}
-                    className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-gray-50"
+                    className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-hc-page"
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-hc-brand-100 text-hc-ink-2">
                       <Icon size={15} />
                     </span>
                     <span className="flex-1 text-sm font-semibold text-hc-ink">{item.label}</span>

@@ -78,7 +78,7 @@ export default function StoryComposer({ open, onClose, uid, displayName, photoUR
               <p className="mt-0.5 text-xs text-hc-caption dark:text-gray-400">Visible for 24 hours</p>
             </div>
           </div>
-          <button onClick={handleClose} className="rounded-lg p-2 text-hc-ink-3 transition-colors hover:bg-gray-100 hover:text-hc-ink-2" aria-label="Close">
+          <button onClick={handleClose} className="rounded-lg p-2 text-hc-ink-3 transition-colors hover:bg-hc-page hover:text-hc-ink-2" aria-label="Close">
             <X size={18} />
           </button>
         </div>
@@ -96,7 +96,7 @@ export default function StoryComposer({ open, onClose, uid, displayName, photoUR
               </button>
             </div>
           ) : (
-            <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-black/[0.15] bg-hc-page py-10 text-center transition-colors hover:border-black/[0.25] hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-900">
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-black/[0.15] bg-hc-page py-10 text-center transition-colors hover:border-black/[0.25] hover:bg-hc-page dark:border-gray-600 dark:bg-gray-900">
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-hc-tile text-hc-ink-3">
                 <Camera size={20} />
               </span>
@@ -112,7 +112,7 @@ export default function StoryComposer({ open, onClose, uid, displayName, photoUR
             onChange={(e) => setCaption(e.target.value)}
             placeholder="What are you up to?"
             maxLength={90}
-            className="w-full rounded-xl border border-black/[0.12] bg-gray-50 px-3.5 py-3 text-sm text-hc-ink outline-none transition-all placeholder:text-hc-ink-3 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:focus:bg-gray-900"
+            className="w-full rounded-xl border border-black/[0.12] bg-hc-page px-3.5 py-3 text-sm text-hc-ink outline-none transition-all placeholder:text-hc-ink-3 focus:border-hc-brand focus:bg-white focus:ring-2 focus:ring-hc-brand/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:focus:bg-gray-900"
           />
 
           {error && <p className="mt-2 text-xs font-semibold text-red-500">{error}</p>}

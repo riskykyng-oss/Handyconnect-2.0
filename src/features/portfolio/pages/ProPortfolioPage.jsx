@@ -14,7 +14,7 @@ function Stars({ value }) {
   return (
     <span className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star key={i} size={13} className={i <= Math.round(value || 0) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'} />
+        <Star key={i} size={13} className={i <= Math.round(value || 0) ? 'fill-amber-400 text-amber-400' : 'text-hc-ink-4'} />
       ))}
     </span>
   );
@@ -93,13 +93,13 @@ export default function ProPortfolioPage() {
           <div className="min-w-0 flex-1 space-y-5">
             {/* Pro header card */}
             <div className="overflow-hidden rounded-xl border border-hc-hairline bg-white shadow-sm">
-              <div className="h-24 bg-gradient-to-r from-gray-100 to-gray-50" />
+              <div className="h-24 bg-gradient-to-r from-hc-hairline to-hc-page" />
               <div className="px-5 pb-5 sm:px-6">
                 <div className="-mt-10 flex items-end gap-4">
                   {pro.avatar ? (
                     <img src={pro.avatar} alt={pro.name} className="h-16 w-16 rounded-xl border-2 border-white bg-white object-cover shadow-sm" />
                   ) : (
-                    <div className="grid h-16 w-16 place-items-center rounded-xl border-2 border-white bg-gray-100 text-lg font-bold text-hc-ink-2 shadow-sm">
+                    <div className="grid h-16 w-16 place-items-center rounded-xl border-2 border-white bg-hc-hairline text-lg font-bold text-hc-ink-2 shadow-sm">
                       {pro.name.split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase()}
                     </div>
                   )}
@@ -120,11 +120,11 @@ export default function ProPortfolioPage() {
                 </div>
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-hc-hairline pt-3 text-xs font-semibold text-hc-ink-2">
                   {pro.jobs != null && (
-                    <span className="flex items-center gap-1"><Briefcase size={12} className="text-gray-400" /> {pro.jobs} jobs</span>
+                    <span className="flex items-center gap-1"><Briefcase size={12} className="text-hc-ink-3" /> {pro.jobs} jobs</span>
                   )}
-                  <span className="flex items-center gap-1"><MapPin size={12} className="text-gray-400" /> {pro.area || 'Harare'}</span>
+                  <span className="flex items-center gap-1"><MapPin size={12} className="text-hc-ink-3" /> {pro.area || 'Harare'}</span>
                   <span className="flex items-center gap-1">
-                    <Clock size={12} className={pro.available ? 'text-emerald-500' : 'text-gray-400'} />
+                    <Clock size={12} className={pro.available ? 'text-emerald-500' : 'text-hc-ink-3'} />
                     <span className={pro.available ? 'text-emerald-600' : 'text-hc-caption'}>{pro.available ? 'Available' : 'Busy'}</span>
                   </span>
                 </div>
@@ -157,7 +157,7 @@ export default function ProPortfolioPage() {
               <div className="flex flex-wrap gap-2">
                 {['Today', 'Tomorrow', 'This Weekend'].map((d) => (
                   <span key={d} className="flex items-center gap-2 rounded-lg border border-hc-hairline px-3 py-2 text-xs font-semibold text-hc-ink-2">
-                    <span className={`h-2 w-2 rounded-full ${pro.available ? 'bg-emerald-500' : 'bg-gray-300'}`} />
+                    <span className={`h-2 w-2 rounded-full ${pro.available ? 'bg-emerald-500' : 'bg-hc-ink-4'}`} />
                     {d}
                   </span>
                 ))}
@@ -173,7 +173,7 @@ export default function ProPortfolioPage() {
                 <div className="divide-y divide-hc-hairline">
                   {reviews.map((r) => (
                     <div key={r.id} className="flex items-start gap-2.5 py-3 first:pt-0 last:pb-0">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-white">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hc-ink text-[10px] font-bold text-white">
                         {(r.clientName || 'C')[0]}
                       </span>
                       <div className="min-w-0 flex-1">
@@ -219,13 +219,13 @@ export default function ProPortfolioPage() {
                   <div className="mt-2.5 grid grid-cols-2 gap-2">
                     <button
                       onClick={() => navigate(`/client/chat/direct/${pro.id}`)}
-                      className="flex items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-50"
+                      className="flex items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-hc-brand-50"
                     >
                       <MessageCircle size={14} /> Chat
                     </button>
                     <button
                       onClick={() => openHire('quote')}
-                      className="flex items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-50"
+                      className="flex items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-hc-brand-50"
                     >
                       <Zap size={14} /> Quote
                     </button>
@@ -233,7 +233,7 @@ export default function ProPortfolioPage() {
                   {pro.phone && (
                     <a
                       href={`tel:${pro.phone}`}
-                      className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-50"
+                      className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-hc-hairline bg-white px-3 py-2.5 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-hc-brand-50"
                     >
                       <Phone size={14} /> Call
                     </a>
@@ -244,16 +244,16 @@ export default function ProPortfolioPage() {
                 <div className="rounded-xl border border-hc-hairline bg-white p-4 shadow-sm">
                   <div className="space-y-3 text-xs">
                     <div className="flex items-center gap-2">
-                      <Clock size={14} className={pro.available ? 'text-emerald-500' : 'text-gray-400'} />
+                      <Clock size={14} className={pro.available ? 'text-emerald-500' : 'text-hc-ink-3'} />
                       <span className="font-semibold text-hc-ink-2">{pro.available ? 'Available Today' : 'Currently Busy'}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MapPin size={14} className="text-gray-400" />
+                      <MapPin size={14} className="text-hc-ink-3" />
                       <span className="font-semibold text-hc-ink-2">{pro.area || 'Harare'}</span>
                     </div>
                     {pro.jobs != null && (
                       <div className="flex items-center gap-2">
-                        <Briefcase size={14} className="text-gray-400" />
+                        <Briefcase size={14} className="text-hc-ink-3" />
                         <span className="font-semibold text-hc-ink-2">{pro.jobs} jobs completed</span>
                       </div>
                     )}
@@ -277,7 +277,7 @@ export default function ProPortfolioPage() {
           <div className="mx-auto flex max-w-lg gap-3">
             <button
               onClick={() => navigate(`/client/chat/direct/${pro.id}`)}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-hc-hairline py-3 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-gray-100"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-hc-hairline py-3 text-xs font-bold text-hc-ink-2 transition-colors hover:bg-hc-hairline"
             >
               <MessageCircle size={15} /> Message
             </button>

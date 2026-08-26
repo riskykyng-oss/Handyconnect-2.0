@@ -25,7 +25,7 @@ export default function AdminLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex font-sans">
+    <div className="min-h-screen bg-hc-page text-hc-ink flex font-sans">
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
@@ -33,16 +33,16 @@ export default function AdminLayout() {
       )}
 
       {/* Sidebar - Deep Dark Gray */}
-      <aside className={`fixed md:sticky top-0 left-0 h-screen w-72 bg-gray-900 text-white z-40 transform transition-transform duration-300 flex-shrink-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      <aside className={`fixed md:sticky top-0 left-0 h-screen w-72 bg-hc-surface text-hc-ink z-40 transform transition-transform duration-300 flex-shrink-0 flex flex-col border-r border-hc-hairline ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="p-6 flex items-center justify-between flex-shrink-0">
           <span className="font-display font-extrabold text-xl">
-            Handy<span className="text-[#F97316]">Connect</span>
+            Handy<span className="text-hc-brand">Connect</span>
           </span>
-          <button aria-label="Close menu" className="md:hidden text-white/70 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(false)}><X size={22} /></button>
+          <button aria-label="Close menu" className="md:hidden text-hc-ink-3 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(false)}><X size={22} /></button>
         </div>
 
         <div className="px-6 mb-6">
-          <span className="bg-orange-500/10 text-[#F97316] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Admin Portal</span>
+          <span className="bg-hc-brand-50 text-hc-brand text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Admin Portal</span>
         </div>
 
         <nav className="mt-2 px-4 space-y-1 flex-1 overflow-y-auto">
@@ -54,7 +54,7 @@ export default function AdminLayout() {
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  active ? 'bg-[#F97316] text-white shadow-lg shadow-orange-500/20' : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  active ? 'bg-hc-brand-50 text-hc-brand-strong border-l-hc-brand' : 'text-hc-ink-2 hover:bg-hc-brand-50/50 hover:text-hc-ink'
                 }`}
               >
                 <item.icon size={19} />
@@ -64,19 +64,19 @@ export default function AdminLayout() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/10 flex-shrink-0">
+        <div className="p-4 border-t border-hc-hairline flex-shrink-0">
           <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-10 h-10 rounded-full bg-[#F97316] flex items-center justify-center font-bold text-sm flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-hc-brand flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
               {currentUser?.email?.[0]?.toUpperCase()}
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-medium truncate text-white">{currentUser?.email}</p>
-              <p className="text-xs text-gray-500">Administrator</p>
+              <p className="text-sm font-medium truncate text-hc-ink">{currentUser?.email}</p>
+              <p className="text-xs text-hc-ink-3">Administrator</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-hc-ink-2 hover:bg-red-50 hover:text-red-500 transition-colors"
           >
             <LogOut size={19} />
             <span>Logout</span>
@@ -87,31 +87,31 @@ export default function AdminLayout() {
       {/* Main column */}
       <div className="flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-black/[0.08] bg-white/80 px-4 py-3 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/80 md:px-8">
-          <button aria-label="Open navigation menu" className="md:hidden text-hc-ink dark:text-gray-100 h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-hc-hairline bg-white/80 px-4 py-3 backdrop-blur-md md:px-8">
+          <button aria-label="Open navigation menu" className="md:hidden text-hc-ink h-11 w-11 flex items-center justify-center" onClick={() => setSidebarOpen(true)}>
             <Menu size={22} />
           </button>
 
-          <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-gray-100 rounded-full px-4 py-2.5">
-            <Search size={17} className="text-hc-ink-3 dark:text-gray-400" />
+          <div className="hidden md:flex items-center gap-2 flex-1 max-w-md bg-hc-page rounded-full px-4 py-2.5">
+            <Search size={17} className="text-hc-ink-3" />
             <input
               type="search"
               aria-label="Search users, jobs, reports"
               placeholder="Search users, jobs, reports..."
-              className="w-full bg-transparent outline-none text-sm text-hc-ink placeholder:text-hc-ink-3 dark:text-gray-100 dark:placeholder:text-gray-500"
+              className="w-full bg-transparent outline-none text-sm text-hc-ink placeholder:text-hc-ink-3"
             />
           </div>
 
-          <span className="md:hidden font-display font-extrabold text-lg flex-1 text-center text-gray-900">
-            Handy<span className="text-[#F97316]">Connect</span>
+          <span className="md:hidden font-display font-extrabold text-lg flex-1 text-center text-hc-ink">
+            Handy<span className="text-hc-brand">Connect</span>
           </span>
 
           <div className="flex items-center gap-2 ml-auto">
-            <button aria-label="Notifications" className="relative w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+            <button aria-label="Notifications" className="relative w-10 h-10 rounded-full hover:bg-hc-page flex items-center justify-center transition-colors">
               <Bell size={19} className="text-hc-ink-2" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-hc-brand rounded-full" />
             </button>
-            <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-hc-ink flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
               {currentUser?.email?.[0]?.toUpperCase()}
             </div>
           </div>

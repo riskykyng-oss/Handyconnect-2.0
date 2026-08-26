@@ -69,7 +69,7 @@ const getAuthError = (err) => {
 function SettingRow({ icon: Icon, label, description, right, onClick, danger, divider }) {
   const content = (
     <>
-      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${danger ? 'bg-red-50 text-red-500' : 'bg-gray-100 text-gray-600'}`}>
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${danger ? 'bg-red-50 text-red-500' : 'bg-hc-brand-100 text-hc-ink-2'}`}>
         <Icon size={17} />
       </span>
       <span className="min-w-0 flex-1">
@@ -84,7 +84,7 @@ function SettingRow({ icon: Icon, label, description, right, onClick, danger, di
         <button
           type="button"
           onClick={onClick}
-          className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-gray-50/70"
+          className="flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-hc-page/70"
         >
           {content}
           {right || <ChevronRight size={15} className="shrink-0 text-hc-ink-3" />}
@@ -104,7 +104,7 @@ function Toggle({ enabled, onChange }) {
       role="switch"
       aria-checked={enabled}
       onClick={onChange}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? 'bg-hc-brand' : 'bg-gray-300'}`}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? 'bg-hc-brand' : 'bg-hc-ink-4'}`}
     >
       <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-5' : ''}`} />
     </button>
@@ -406,7 +406,7 @@ export default function SettingsPage() {
               key={key}
               type="button"
               onClick={() => chooseFontSize(key)}
-              className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors ${fontSize === key ? 'border-hc-brand bg-hc-tint' : 'border-black/[0.08] bg-white hover:bg-gray-50'}`}
+              className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors ${fontSize === key ? 'border-hc-brand bg-hc-tint' : 'border-black/[0.08] bg-white hover:bg-hc-page'}`}
             >
               <span className="text-sm font-semibold text-hc-ink">{FONT_LABELS[key]}</span>
               <span className="text-hc-caption" style={{ fontSize: px }}>Aa</span>

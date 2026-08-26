@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getOpenJobs, acceptJob, declineJob, submitQuote } from '@/services/jobService';
+import { getOpenJobs, declineJob, submitQuote } from '@/services/jobService';
 import { getUserProfile, updateUserProfile } from '@/services/userService';
 import { rankJobsForHandyman } from '@/utils/jobRanking';
 import { formatDistance } from '@/utils/distance';
@@ -15,7 +15,6 @@ export default function JobsPage() {
   const [available, setAvailable] = useState(true);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
-  const [accepting, setAccepting] = useState(false);
   const [search, setSearch] = useState('');
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quotePrice, setQuotePrice] = useState('');
@@ -59,20 +58,6 @@ export default function JobsPage() {
     job.description?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleAccept = async () => {
-    if (!selected || !currentUser) return;
-    setAccepting(true);
-    try {
-      await acceptJob(selected.id, currentUser.uid, currentUser.displayName || currentUser.email);
-      setSelected(null);
-      await fetch();
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setAccepting(false);
-    }
-  };
-
   const handleDecline = async () => {
     if (!selected) return;
     try {
@@ -86,6 +71,12 @@ export default function JobsPage() {
 
   const handleSendQuote = async () => {
     if (!selected || !currentUser || !quotePrice) return;
+    // Guard: prevent duplicate quotes from same handyman
+    const alreadyQuoted = (selected.quotes || []).some((q) => q.handymanId === currentUser.uid && q.status !== 'rejected');
+    if (alreadyQuoted) {
+      alert('You have already sent a quote for this job.');
+      return;
+    }
     setSending(true);
     try {
       await submitQuote(selected.id, {
@@ -93,7 +84,8 @@ export default function JobsPage() {
         handymanName: currentUser.displayName || currentUser.email,
         price: Number(quotePrice),
         message: quoteMsg.trim(),
-      });
+        jobTitle: selected.title,
+      }, selected.clientId);
       setSelected(null);
       setQuotePrice('');
       setQuoteMsg('');
@@ -258,15 +250,10 @@ export default function JobsPage() {
                   </div>
                 ) : (
                   <div className="mt-5 flex flex-col gap-2">
-                    <button onClick={() => setQuoteOpen(true)} className="flex items-center justify-center gap-1.5 rounded-lg border border-black/[0.08] bg-white py-2.5 text-sm font-semibold text-hc-ink-2 transition-colors hover:bg-gray-100">
+                    <button onClick={() => setQuoteOpen(true)} className="flex items-center justify-center gap-1.5 rounded-lg bg-hc-brand py-2.5 text-sm font-semibold text-white transition-colors hover:bg-hc-brand-strong">
                       <FileText size={15} /> Send Quote
                     </button>
-                    <div className="flex gap-3">
-                      <button onClick={handleDecline} className="flex-1 rounded-lg border border-red-200 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50">Decline</button>
-                      <button onClick={handleAccept} disabled={accepting} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-hc-brand py-2.5 text-sm font-medium text-white transition-colors hover:bg-hc-brand-strong disabled:opacity-60">
-                        {accepting ? 'Accepting...' : (<><Zap size={15} /> Accept</>)}
-                      </button>
-                    </div>
+                    <button onClick={handleDecline} className="rounded-lg border border-red-200 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50">Decline</button>
                   </div>
                 )}
               </div>

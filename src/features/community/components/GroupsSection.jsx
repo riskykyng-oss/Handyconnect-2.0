@@ -108,7 +108,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, onCreat
         <button
           onClick={() => { setError(null); setCreating(!creating); }}
           disabled={!canCreate && !creating}
-          className="flex shrink-0 items-center gap-1 rounded-lg bg-hc-tile px-2.5 py-1.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 hover:text-hc-ink disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300"
+          className="flex shrink-0 items-center gap-1 rounded-lg bg-hc-tile px-2.5 py-1.5 text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page hover:text-hc-ink disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-300"
         >
           {creating ? <X size={13} /> : <Plus size={13} />} {creating ? 'Close' : 'Create'}
         </button>
@@ -117,7 +117,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, onCreat
       {isHandyman && verified === false && (
         <button
           onClick={() => navigate('/handyman/profile')}
-          className="mb-4 flex w-full items-center gap-2 rounded-xl border border-hc-hairline bg-hc-tile px-3 py-2 text-left text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-gray-200 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300"
+          className="mb-4 flex w-full items-center gap-2 rounded-xl border border-hc-hairline bg-hc-tile px-3 py-2 text-left text-xs font-semibold text-hc-ink-2 transition-colors hover:bg-hc-page dark:border-gray-700 dark:bg-gray-700 dark:text-gray-300"
         >
           <BadgeCheck size={14} />
           Only verified handymen can create groups — request your badge.
@@ -206,7 +206,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, onCreat
           {joinedGroups.map((g) => {
             const count = memberCount(g);
             return (
-              <div key={g.id} className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div key={g.id} className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-hc-page dark:hover:bg-gray-700/50">
                 {g.logo ? (
                   <img src={g.logo} alt="" className="h-8 w-8 shrink-0 rounded-lg object-cover" />
                 ) : (
@@ -218,7 +218,7 @@ export default function GroupsSection({ groups, currentUserId, userRole, onCreat
                 </button>
                 <button
                   onClick={() => toggleJoin(g)}
-                  className="h-7 shrink-0 rounded-lg bg-gray-100 px-2.5 text-[11px] font-medium text-hc-ink-2 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300"
+                  className="h-7 shrink-0 rounded-lg bg-hc-hairline px-2.5 text-[11px] font-medium text-hc-ink-2 transition-colors hover:bg-hc-page dark:bg-gray-700 dark:text-gray-300"
                 >
                   Leave
                 </button>

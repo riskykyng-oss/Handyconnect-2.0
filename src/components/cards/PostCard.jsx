@@ -58,7 +58,7 @@ function PollBlock({ post, currentUserId, onVote }) {
               key={opt.id}
               onClick={() => onVote?.(post.id, opt.id)}
               className={`w-full rounded-lg border px-3 py-2.5 text-left transition-colors ${
-                isMine ? 'border-hc-ink bg-hc-tile dark:border-gray-200 dark:bg-gray-700/60' : isLeading ? 'border-hc-brand/40 bg-hc-tint dark:border-hc-brand/60 dark:bg-hc-brand/10' : 'border-black/[0.12] bg-white hover:border-hc-brand/40 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
+                isMine ? 'border-hc-ink bg-hc-tile dark:border-gray-200 dark:bg-gray-700/60' : isLeading ? 'border-hc-brand/40 bg-hc-tint dark:border-hc-brand/60 dark:bg-hc-brand/10' : 'border-black/[0.12] bg-white hover:border-hc-brand/40 hover:bg-hc-page dark:border-gray-700 dark:bg-gray-800'
               }`}
             >
               <div className="flex items-center justify-between gap-3">
@@ -67,7 +67,7 @@ function PollBlock({ post, currentUserId, onVote }) {
                 </span>
                 <span className="shrink-0 text-xs font-semibold text-hc-caption dark:text-gray-400">{pct}%</span>
               </div>
-              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
+              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-hc-hairline dark:bg-gray-700">
                 <div className={`h-full rounded-full transition-all duration-500 ${isMine ? 'bg-hc-ink dark:bg-gray-200' : 'bg-hc-brand'}`} style={{ width: `${pct}%` }} />
               </div>
               {isMine && <p className="mt-1 text-[10px] font-semibold text-hc-ink">Your vote</p>}
@@ -189,7 +189,7 @@ export default function PostCard({
     }
     if (post.videoUrl) {
       return (
-        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl bg-gray-100">
+        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl bg-hc-hairline">
           <video src={post.videoUrl} controls className="h-full w-full object-cover" />
         </div>
       );
@@ -204,7 +204,7 @@ export default function PostCard({
     const src = post.media?.[0] || post.imageUrl;
     if (src) {
       return (
-        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl bg-gray-100">
+        <div className="aspect-video max-h-[420px] w-full overflow-hidden rounded-xl bg-hc-hairline">
           <img src={src} alt="Post attachment" className="h-full w-full object-cover" />
         </div>
       );
@@ -240,7 +240,7 @@ export default function PostCard({
               )}
               {post.authorVerified && <BadgeCheck size={15} className="shrink-0 fill-hc-brand text-white" />}
             </p>
-            <p className="mt-0.5 flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-0.5 flex items-center gap-1 text-sm text-hc-ink-2 dark:text-gray-400">
               <span className="truncate">{post.authorTrade || <span className="capitalize">{post.authorRole}</span>}</span>
               <span>&middot;</span>
               <span className="shrink-0">{timeAgo(post.createdAt)}</span>
@@ -256,7 +256,7 @@ export default function PostCard({
             <button
               onClick={() => onToggleFollow(post.authorId, isFollowing)}
               className={`shrink-0 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors ${
-                isFollowing ? 'bg-hc-tile text-hc-ink-2 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300' : 'bg-hc-brand text-white hover:bg-hc-brand-strong'
+                isFollowing ? 'bg-hc-tile text-hc-ink-2 hover:bg-hc-page dark:bg-gray-700 dark:text-gray-300' : 'bg-hc-brand text-white hover:bg-hc-brand-strong'
               }`}
             >
               {isFollowing ? 'Following' : 'Follow'}
@@ -266,7 +266,7 @@ export default function PostCard({
             <div className="relative shrink-0">
               <button
                 onClick={() => setMenuOpen((o) => !o)}
-                className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                className="rounded-lg p-1.5 text-hc-ink-3 transition-colors hover:bg-hc-page hover:text-hc-ink-2"
                 aria-label="Post options"
               >
                 <MoreHorizontal size={17} />
@@ -277,7 +277,7 @@ export default function PostCard({
                   <div className="absolute right-0 z-40 mt-1 w-40 rounded-xl border border-hc-hairline bg-white py-1.5 shadow-lg dark:border-gray-700 dark:bg-gray-800">
                     <button
                       onClick={() => { setMenuOpen(false); setEditing(true); setEditText(post.text); setEditTrade(post.trade || ''); setEditLocation(post.location || ''); }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-hc-ink-2 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-hc-ink-2 transition-colors hover:bg-hc-page dark:text-gray-300 dark:hover:bg-gray-700"
                     >
                       <Pencil size={14} className="text-hc-ink-3" /> Edit post
                     </button>
@@ -319,7 +319,7 @@ export default function PostCard({
               </div>
             )}
             <div className="mt-2 flex justify-end gap-2">
-              <button onClick={() => setEditing(false)} className="rounded-xl px-3 py-1.5 text-xs font-semibold text-hc-ink-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <button onClick={() => setEditing(false)} className="rounded-xl px-3 py-1.5 text-xs font-semibold text-hc-ink-2 hover:bg-hc-page dark:hover:bg-gray-700">
                 Cancel
               </button>
               <button onClick={saveEdit} className="rounded-xl bg-hc-brand px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-hc-brand-strong">
@@ -355,7 +355,7 @@ export default function PostCard({
             <button
               onClick={() => setReactOpen((o) => !o)}
               className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold transition sm:gap-3 sm:px-5 ${
-                myReaction ? 'text-hc-ink' : 'text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700'
+                myReaction ? 'text-hc-ink' : 'text-hc-ink-3 hover:bg-hc-page hover:text-hc-brand dark:hover:bg-gray-700'
               }`}
               aria-haspopup="menu"
               aria-expanded={reactOpen}
@@ -371,7 +371,7 @@ export default function PostCard({
                     <button
                       key={r}
                       onClick={() => { onReact(post.id, r, reactions[r]?.includes(currentUserId)); setReactOpen(false); }}
-                      className={`rounded-lg p-1 text-lg transition-transform hover:scale-125 ${myReaction === r ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
+                      className={`rounded-lg p-1 text-lg transition-transform hover:scale-125 ${myReaction === r ? 'bg-hc-page dark:bg-gray-700' : ''}`}
                       aria-label={`React ${r}`}
                     >
                       {r}
@@ -384,13 +384,13 @@ export default function PostCard({
 
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-3 sm:px-5"
+            className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold text-hc-ink-3 hover:bg-hc-page hover:text-hc-brand dark:hover:bg-gray-700 sm:gap-3 sm:px-5"
           >
             <MessageCircle size={20} />
             {post.commentCount || comments.length || 0}
           </button>
 
-          <button onClick={share} className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700 sm:gap-3 sm:px-5">
+          <button onClick={share} className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold text-hc-ink-3 hover:bg-hc-page hover:text-hc-brand dark:hover:bg-gray-700 sm:gap-3 sm:px-5">
             {copied ? <Check size={20} className="text-emerald-500" /> : <Share2 size={20} />}
             {copied ? 'Copied' : 'Share'}
           </button>
@@ -400,7 +400,7 @@ export default function PostCard({
             <button
               onClick={() => setSaveOpen(!saveOpen)}
               className={`flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-semibold transition sm:gap-3 sm:px-5 ${
-                savedIn.length ? 'text-hc-ink hover:bg-gray-100 dark:hover:bg-gray-700' : 'text-hc-ink-3 hover:bg-gray-100 dark:hover:bg-gray-700'
+                savedIn.length ? 'text-hc-ink hover:bg-hc-page dark:hover:bg-gray-700' : 'text-hc-ink-3 hover:bg-hc-page dark:hover:bg-gray-700'
               }`}
             >
               <Bookmark size={20} className={savedIn.length ? 'fill-current' : ''} />
@@ -417,7 +417,7 @@ export default function PostCard({
                       <button
                         key={c}
                         onClick={() => { onSave(post.id, c, saved); setSaveOpen(false); }}
-                        className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-hc-ink-2 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+                        className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-hc-ink-2 transition-colors hover:bg-hc-page dark:text-gray-300 dark:hover:bg-gray-700"
                       >
                         <span className="inline-flex items-center gap-2">
                           <Link2 size={14} className="text-hc-ink-3" /> {c}
@@ -446,13 +446,13 @@ export default function PostCard({
             <div className="flex gap-2.5">
               <button
                 onClick={() => navigate(`/${viewerRole === 'client' ? 'client' : 'handyman'}/chat/direct/${post.authorId}`)}
-                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+                className="h-10 flex-1 rounded-xl border border-hc-hairline bg-white text-sm font-semibold text-hc-ink-2 transition-colors hover:border-hc-brand/40 hover:bg-hc-page dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
               >
                 Message
               </button>
               <button
                 onClick={() => navigate(`/pro/${post.authorId}`)}
-                className="h-10 flex-1 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-hc-ink-2 transition-colors hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+                className="h-10 flex-1 rounded-xl border border-hc-hairline bg-white text-sm font-semibold text-hc-ink-2 transition-colors hover:border-hc-brand/40 hover:bg-hc-page dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
               >
                 {viewerRole === 'client' ? 'View Profile' : 'View Portfolio'}
               </button>
@@ -476,14 +476,14 @@ export default function PostCard({
                       <>
                         <button
                           onClick={() => { setEditingCommentId(item.id); setEditingCommentText(item.text); }}
-                          className="rounded p-1 text-hc-ink-3 transition-colors hover:bg-gray-200 hover:text-hc-ink-2"
+                          className="rounded p-1 text-hc-ink-3 transition-colors hover:bg-hc-page hover:text-hc-ink-2"
                           aria-label="Edit comment"
                         >
                           <Pencil size={12} />
                         </button>
                         <button
                           onClick={() => onDeleteComment?.(post.id, item.id).catch(() => {})}
-                          className="rounded p-1 text-hc-ink-3 transition-colors hover:bg-gray-200 hover:text-red-500"
+                          className="rounded p-1 text-hc-ink-3 transition-colors hover:bg-hc-page hover:text-red-500"
                           aria-label="Delete comment"
                         >
                           <Trash2 size={12} />
@@ -500,7 +500,7 @@ export default function PostCard({
                         autoFocus
                       />
                       <button onClick={saveCommentEdit} className="rounded-lg bg-hc-brand px-2.5 text-xs font-semibold text-white hover:bg-hc-brand-strong">Save</button>
-                      <button onClick={() => setEditingCommentId(null)} className="rounded-lg px-2 text-xs font-semibold text-hc-ink-2 hover:bg-gray-100 dark:hover:bg-gray-700"><X size={13} /></button>
+                      <button onClick={() => setEditingCommentId(null)} className="rounded-lg px-2 text-xs font-semibold text-hc-ink-2 hover:bg-hc-page dark:hover:bg-gray-700"><X size={13} /></button>
                     </div>
                   ) : (
                     <p className="mt-1 text-hc-ink-2 dark:text-gray-300">{item.text}</p>
@@ -513,7 +513,7 @@ export default function PostCard({
                         {reply.authorId === currentUserId && (
                           <button
                             onClick={() => onDeleteComment?.(post.id, reply.id).catch(() => {})}
-                            className="ml-auto rounded p-1 text-hc-ink-3 transition-colors hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-700"
+                            className="ml-auto rounded p-1 text-hc-ink-3 transition-colors hover:bg-hc-page hover:text-red-500 dark:hover:bg-gray-700"
                             aria-label="Delete reply"
                           >
                             <Trash2 size={11} />
